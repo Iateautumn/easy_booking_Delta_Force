@@ -6,6 +6,7 @@ from enum import Enum
 
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/bookingsystem?charset=utf8'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
