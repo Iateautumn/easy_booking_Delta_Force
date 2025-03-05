@@ -2,6 +2,7 @@
 from app import db,app
 from datetime import datetime
 from enum import Enum
+import json
 
 
 # app = Flask(__name__)
@@ -26,7 +27,7 @@ class User(db.Model):
     salt = db.Column(db.String(10), nullable=False)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
-    isDeleted = not db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
+    isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -35,19 +36,42 @@ class User(db.Model):
         self.password_hash = password_hash
         self.salt = salt
 
+
+def get_all_users():
+    list_usrs = User.query.all()
+    # for usr in list_usrs:
+    #     print(usr.name, 
+    #           usr.email, 
+    #           usr.status, 
+    #           usr.createdAt, 
+    #           usr.updatedAt, 
+    #           usr.isDeleted
+    #           )
+    return list_usrs
+
+
+def each_user_info(list_usrs):
+    result = ''
+    for usr in list_usrs:
+        result += f'User ID: {usr.userId}\n'
+        result += f'Status: {usr.status.value}\n'
+        result += f'Name: {usr.name}\n'
+        result += f'Email: {usr.email}\n'
+        result += f'Password: {usr.password}\n'
+        result += f'Salt: {usr.salt}\n'
+        result += f'Created At: {usr.createdAt}\n'
+        result += f'Updated At: {usr.updatedAt}\n'
+        result += f'Is Deleted: {usr.isDeleted}\n'
+        result += '--\n'
+    return result
+
+
 @app.route('/')
 def index():
-    list_usrs = User.query.all()
-    for usr in list_usrs:
-        print(usr.name, 
-              usr.email, 
-              usr.status, 
-              usr.createdAt, 
-              usr.updatedAt, 
-              usr.isDeleted
-              )
-    return 'hello world'
-        
+    list_usrs = get_all_users()
+    return each_user_info(list_usrs)
+
+
 # if __name__ == '__main__':
     
 #     app.run(debug=True)
