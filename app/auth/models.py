@@ -1,15 +1,13 @@
 # models/user.py
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from app import db,app
 from datetime import datetime
 from enum import Enum
 
 
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/bookingsystem?charset=utf8'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-db = SQLAlchemy(app)
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/bookingsystem?charset=utf8'
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+# db = SQLAlchemy(app)
 
 class UserStatus(Enum):
     Student = 'Student'
@@ -28,7 +26,7 @@ class User(db.Model):
     salt = db.Column(db.String(10), nullable=False)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
-    isDeleted = db.Column(db.Boolean, default=False)
+    isDeleted = not db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -50,9 +48,9 @@ def index():
               )
     return 'hello world'
         
-if __name__ == '__main__':
+# if __name__ == '__main__':
     
-    app.run(debug=True)
+#     app.run(debug=True)
 
 
 
