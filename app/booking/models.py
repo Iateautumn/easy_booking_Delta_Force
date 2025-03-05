@@ -1,5 +1,5 @@
 # models/booking.py
-from app import db,app
+from app.extensions import db
 from datetime import datetime
 from enum import Enum
 
@@ -67,9 +67,9 @@ def each_classroom_info(list_classroom):
     return result
 
 
-@app.route('/classroom_model')
-def index2():
-    return each_classroom_info(get_all_classeooms())
+# @app.route('/classroom_model')
+# def index2():
+#     return each_classroom_info(get_all_classeooms())
 
 
 # if __name__ == '__main__':

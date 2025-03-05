@@ -1,5 +1,5 @@
 # models/user.py
-from app import db,app
+from app.extensions import db
 from datetime import datetime
 from enum import Enum
 
@@ -66,10 +66,10 @@ def each_user_info(list_usrs):
     return result
 
 
-@app.route('/user_model')
-def index():
-    list_usrs = get_all_users()
-    return each_user_info(list_usrs)
+# @app.route('/user_model')
+# def index():
+#     list_usrs = get_all_users()
+#     return each_user_info(list_usrs)
 
 
 # if __name__ == '__main__':
