@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Reservation System</title>
+    <link rel="stylesheet" href="../../static/css/booking.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h2>HotinGo</h2>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><span class="icon">🏠</span>Dashboard</a></li>
+                    <li><a href="#"><span class="icon">🛏️</span>Rooms</a></li>
+                    <li><a href="#"><span class="icon">📅</span>Reservations</a></li>
+                    <li><a href="#"><span class="icon">👤</span>Guests</a></li>
+                    <li><a href="#"><span class="icon">ℹ️</span>About</a></li>
+                </ul>
+            </nav>
+            <a href="#" class="logout"><span class="icon">🔒</span>Logout</a>
+        </aside>
+        <main>
+            <header>
+                <button class="menu-btn" id="menu-btn">☰</button>
+                <h1>Reservations</h1>
+                <span class="admin">Administrator</span>
+            </header>
+            <section class="reservation-form">
+                <h2>Add a Reservation</h2>
+                <div class="form-grid">
+                    <div class="form-item">
+                        <span>Guest Id</span>
+                        <span>12</span>
+                    </div>
+                    <div class="form-item">
+                        <span>Room Id</span>
+                        <span>345</span>
+                    </div>
+                    <div class="form-item">
+                        <span>Is Taking Meal</span>
+                        <span>true</span>
+                    </div>
+                    <div class="form-item">
+                        <span>Check-in Time</span>
+                        <span>now</span>
+                    </div>
+                </div>
+                <button class="reserve-btn">Reserve</button>
+            </section>
+            <section class="operations">
+                <h2>Operations</h2>
+                <div class="operation-item">
+                    <span>View Reservations</span>
+                    <a href="#">Get past details ></a>
+                </div>
+                <div class="operation-item">
+                    <span>Update single</span>
+                    <a href="#">Reservation ></a>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../../static/js/booking.js"></script>
+</body>
+</html>
