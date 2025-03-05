@@ -1,7 +1,7 @@
 # app/auth/routes.py
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, current_user
-from app.auth.services import register_user, login_user
+import app.auth.services as Services
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -47,3 +47,14 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+@auth_bp.route('/test')
+def test():
+    # print((str)(Services.Model.get_all_users()))
+    # print((str)(Services.Model.get_user_by_id(1).name))
+    # Services.Model.delete_user(1)
+
+    # Services.Model.add_user("Teacher", "test", "test@test.com", "test", "test")
+    Services.Model.update_user(3, "Teacher", "test", "test2@test.com", "test", "test")
+    
+    return "test"

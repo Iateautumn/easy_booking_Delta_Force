@@ -28,8 +28,8 @@ def create_app():
         if request.endpoint in ['auth.login', 'auth.register']:
             return
 
-        if not current_user.is_authenticated:
-            return redirect(url_for('auth.login', next=request.full_path))
+        # if not current_user.is_authenticated:
+        #     return redirect(url_for('auth.login', next=request.full_path))
 
     return app
 

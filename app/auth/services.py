@@ -1,6 +1,6 @@
 # app/auth/services.py
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.auth.models import User
+import app.auth.models as Model
 from app.extensions import db
 
 def register_user(username, email, password):
