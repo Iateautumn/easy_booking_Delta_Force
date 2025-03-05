@@ -2,9 +2,24 @@ from flask import Flask, redirect, url_for, request  # 导入 request
 from flask_login import current_user, LoginManager    # 导入 LoginManager
 from app.auth.routes import auth_bp
 from app.extensions import login_manager, db
+import json
 
 def create_app():
     app = Flask(__name__)
+
+
+    with open('config.json', 'r') as f:
+        data = json.load(f)
+
+    database_config = data['database']
+    database_url = database_config['url']
+    database_port = database_config['port']
+    database_username = database_config['username']
+    database_password = database_config['password']
+    database_name = database_config['database_name']
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{database_username}:{database_password}@{database_url}:{database_port}/{database_name}?charset=utf8'
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+
     app.config['SECRET_KEY'] = 'your-secret-key-here'  # 设置密钥
 
     # 初始化 Flask-Login
