@@ -42,3 +42,4 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app)
 
 from app.auth import models
+from app.booking import models

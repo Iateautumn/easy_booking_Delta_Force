@@ -2,7 +2,7 @@
 from app import db,app
 from datetime import datetime
 from enum import Enum
-import json
+
 
 
 # app = Flask(__name__)
@@ -66,7 +66,7 @@ def each_user_info(list_usrs):
     return result
 
 
-@app.route('/')
+@app.route('/user_model')
 def index():
     list_usrs = get_all_users()
     return each_user_info(list_usrs)
