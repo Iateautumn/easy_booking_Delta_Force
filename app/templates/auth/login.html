@@ -1,0 +1,12 @@
+<!-- app/templates/auth/login.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-form">
+  <h2>登录</h2>
+  <!-- 登录表单内容 -->
+  <div class="mt-3">
+    没有账号？<a href="{{ url_for('auth.register') }}">立即注册</a>
+  </div>
+</div>
+{% endblock %}
