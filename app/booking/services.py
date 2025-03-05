@@ -1,8 +1,10 @@
 # app/bookings/services.py
 from datetime import datetime
 from sqlalchemy import and_
-from /app/extensions import db
-from .models import Booking
+from werkzeug.http import parse_age
+
+from app.extensions import db
+from app.booking.models import Booking
 
 
 class ConflictError(Exception):
@@ -42,3 +44,6 @@ def create_booking(user_id, classroom_id, start_time, end_time):
     db.session.add(booking)
     db.session.commit()
     return booking
+
+def filter_classrooms(capacity_range, equipments, days):
+    pass

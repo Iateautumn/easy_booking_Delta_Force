@@ -1,9 +1,6 @@
 # app/classrooms/routes.py
 from flask import Blueprint, request, jsonify
-from .services import (
-    get_all_classrooms,
-    filter_classrooms
-)
+from app.booking.services import create_booking,filter_classrooms
 
 classroom_bp = Blueprint('classrooms', __name__)
 
@@ -18,7 +15,7 @@ def list_classrooms():
 
     classrooms = filter_classrooms(
         capacity_range=(capacity_min, capacity_max),
-        equipment=equipment,
+        equipment=equipments,
         days=days
     )
 
