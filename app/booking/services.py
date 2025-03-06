@@ -4,7 +4,8 @@ from sqlalchemy import and_
 from werkzeug.http import parse_age
 
 from app.extensions import db
-from app.booking.models import Booking
+from app.booking.models import Reservation as Booking
+import app.booking.models as Models
 
 
 class ConflictError(Exception):
