@@ -8,10 +8,10 @@ login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(user_id):
     from app.auth.models import User
-    return User.query.get(int(user_id))
+    return User.query.filter_by(userId=int(user_id)).first()
 
 def init_db(app):
-    # 数据库配置
+
     with open('config.json', 'r') as f:
         data = json.load(f)
 
@@ -24,5 +24,4 @@ def init_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{database_username}:{database_password}@{database_url}:{database_port}/{database_name}?charset=utf8'
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
-    # 初始化数据库
     db.init_app(app)
