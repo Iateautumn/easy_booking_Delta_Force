@@ -60,20 +60,50 @@
 
             <section id="book-room-section" class="content-section">
                 <div class="search-bar">
-                    <input type="text" placeholder="Search for rooms...">
-                    <button class="search-btn">Search</button>
+<!--                    <input type="text" placeholder="Search for rooms...">-->
+<!--                    <button class="search-btn">Search</button>-->
                     <button class="filter-btn" id="filter-btn">Filter</button>
                 </div>
                 <div class="room-list">
                     <!-- Example Room Cards -->
                     <div class="room-card">
-                        <h3>Room 101</h3>
+                        <h3>DIICSU 635</h3>
                         <p>Capacity: 20</p>
+                        <p>Date/Time: Mon. Tue. Fri. Sat. Sun.</p>
+                        <p>Equipment: Smart Screen</p>
+                        <p>Constrain: none</p>
                         <button class="action-btn">Book Now</button>
                     </div>
                     <div class="room-card">
-                        <h3>Room 102</h3>
+                        <h3>DIICSU 622</h3>
                         <p>Capacity: 15</p>
+                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
+                        <p>Equipment: White Board, Smart Screen</p>
+                        <p>Constrain: none</p>
+                        <button class="action-btn">Book Now</button>
+                    </div>
+                    <div class="room-card">
+                        <h3>DIICSU 1st Floor Formal Meeting Room</h3>
+                        <p>Capacity: 15</p>
+                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
+                        <p>Equipment: Smart Screen</p>
+                        <p>Constrain: staff bookings only</p>
+                        <button class="action-btn">Book Now</button>
+                    </div>
+                    <div class="room-card">
+                        <h3>DIICSU 1st Floor Informal Meeting Room</h3>
+                        <p>Capacity: 15</p>
+                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
+                        <p>Equipment: Smart Screen</p>
+                        <p>Constrain: staff bookings only</p>
+                        <button class="action-btn">Book Now</button>
+                    </div>
+                    <div class="room-card">
+                        <h3>Room 101</h3>
+                        <p>Capacity: 30</p>
+                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
+                        <p>Equipment: White Board, Smart Screen</p>
+                        <p>Constrain: none</p>
                         <button class="action-btn">Book Now</button>
                     </div>
                 </div>
@@ -82,7 +112,7 @@
     </div>
 
     <!-- Booking Modal -->
-    <div class="booking-modal" id="booking-modal">
+    <div class="booking-modal hidden" id="booking-modal">
         <div class="booking-content">
             <h2>Book Room</h2>
             <div class="booking-group">
@@ -90,12 +120,19 @@
                 <input type="date" id="booking-date" class="input">
             </div>
             <div class="booking-group">
-                <label class="booking-label" for="start-time">Start Time:</label>
-                <input type="time" id="start-time" class="input">
-            </div>
-            <div class="booking-group">
-                <label class="booking-label" for="end-time">End Time:</label>
-                <input type="time" id="end-time" class="input">
+                <label class="booking-label">Time Slots:</label>
+                <div class="time-slots">
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="8:00~8:45"> 8:00~8:45</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="8:55~9:40"> 8:55~9:40</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="10:00~10:45"> 9:50~10:35</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="10:55~11:40"> 10:45~11:30</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="14:00~14:45"> 11:40~12:25</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="14:55~15:40"> 12:35~13:20</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="16:00~16:45"> 13:30~14:15</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="16:55~17:40"> 14:25~15:10</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="19:00~19:45"> 15:20~16:05</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="19:55~20:40"> 16:15~17:00</label>
+                </div>
             </div>
             <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
         </div>
