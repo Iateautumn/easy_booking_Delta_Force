@@ -3,11 +3,8 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
-
-# app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/bookingsystem?charset=utf8'
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-# db = SQLAlchemy(app)
+from app.classroom.models import Classroom, ClassroomType
+from app.booking.models import Reservation
 
 class UserStatus(Enum):
     Student = 'Student'
@@ -16,7 +13,7 @@ class UserStatus(Enum):
 
 class User(UserMixin,db.Model):
     
-    __tablename__ = 'User'
+    __tablename__ = 'user'
     
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.Enum(UserStatus), nullable=False)
@@ -27,6 +24,11 @@ class User(UserMixin,db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
+    Classrooms = db.relationship(
+        "Classroom", 
+        secondary="reservation",
+        back_populates="Users"  # 使用back_populates代替backref
+    )
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -38,6 +40,7 @@ class User(UserMixin,db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
+# add user
 def add_user(status, name, email, password_hash, salt):
     user = User(status, name, email, password_hash, salt)
     db.session.add(user)
@@ -50,13 +53,16 @@ def get_all_users():
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
+def get_user_by_name(name):
+    return User.query.filter_by(name=name).first()
+
 def get_user_by_id(user_id):
     return User.query.filter_by(userId=user_id).first()
 
 def get_user_by_status(status):
     return User.query.filter_by(status=status).all()
 
-def update_user(user_id, status, name, email, password_hash, salt):
+def update_user(user_id, status = None, name = None, email = None, password_hash = None, salt = None):
     if user_id is not None:
         user = get_user_by_id(user_id)
     if status is not None:
@@ -64,7 +70,10 @@ def update_user(user_id, status, name, email, password_hash, salt):
     if name is not None:
         user.name = name
     if email is not None:
-        user.email = email
+        if get_user_by_email(email) is None:
+            user.email = email
+        else:
+            return False
     if password_hash is not None:
         user.password_hash = password_hash
     if salt is not None:    
@@ -81,44 +90,7 @@ def delete_user(user_id):
 
 
 
-# def get_all_users():
-#     list_usrs = User.query.all()
-#     # for usr in list_usrs:
-#     #     print(usr.name, 
-#     #           usr.email, 
-#     #           usr.status, 
-#     #           usr.createdAt, 
-#     #           usr.updatedAt, 
-#     #           usr.isDeleted
-#     #           )
-#     return list_usrs
 
-
-# def each_user_info(list_usrs):
-#     result = ''
-#     for usr in list_usrs:
-#         result += f'User ID: {usr.userId}\n'
-#         result += f'Status: {usr.status.value}\n'
-#         result += f'Name: {usr.name}\n'
-#         result += f'Email: {usr.email}\n'
-#         result += f'Password: {usr.password}\n'
-#         result += f'Salt: {usr.salt}\n'
-#         result += f'Created At: {usr.createdAt}\n'
-#         result += f'Updated At: {usr.updatedAt}\n'
-#         result += f'Is Deleted: {usr.isDeleted}\n'
-#         result += '--\n'
-#     return result
-
-
-# @app.route('/user_model')
-# def index():
-#     list_usrs = get_all_users()
-#     return each_user_info(list_usrs)
-
-
-# if __name__ == '__main__':
-    
-#     app.run(debug=True)
 
 
 

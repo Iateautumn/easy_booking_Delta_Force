@@ -1,80 +1,86 @@
-# models/booking.py
+# models/reservation.py
 from app.extensions import db
 from datetime import datetime
 from enum import Enum
+from app.auth.models import User
+from app.classroom.models import Classroom
 
 
-class ClassroomType(db.Model):
-    __tablename__ = 'classroomType'
+class ReservationStatus(Enum):
     
-    typeId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    typeName = db.Column(db.String(50), unique=True, nullable=False)
-    capacity = db.Column(db.Integer, nullable=False)
-    equipment = db.Column(db.Text, nullable=False)
+    Reserved = "Reserved"       
+    Cancelled = "Cancelled"     
+    Finished = "Finished"       
+    Rejected = "Rejected"  
+
+ 
+class Reservation(db.Model):
+    __tablename__ = 'reservation'
+    reservationId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
+    classroomId = db.Column(db.Integer, db.ForeignKey('classroom.classroomId'), nullable=False)
+    startTime = db.Column(db.DateTime, nullable=False)
+    endTime = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.Enum(ReservationStatus), nullable=False, default=ReservationStatus.Reserved)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
 
-    def __init__(self, typeName, capacity, equipment):
-        self.typeName = typeName
-        self.capacity = capacity
-        self.equipment = equipment
-        self.createdAt = datetime.now()
-        self.updatedAt = datetime.now()
-        self.isDeleted = False
+    # user = db.relationship('User', back_populates='classrooms')
+    # classroom = db.relationship('Classroom', back_populates='users')
 
-class Classroom(db.Model):
+# list all reservations
+def get_all_reservations():
+    list_reservation = Reservation.query.all()
+    return list_reservation
 
-    __tablename__ = 'classroom'
-    
-    classroomId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    classroomNumber = db.Column(db.String(20), nullable=False)
-    building = db.Column(db.String(50), nullable=False)
-    typeId = db.Column(db.Integer, db.ForeignKey('classroomType.typeId'), nullable=False)
-    createdAt = db.Column(db.DateTime)
-    updatedAt = db.Column(db.DateTime)
-    isDeleted = db.Column(db.Boolean, default=False)
+# add a new reservation
+def add_reservation(userId, classroomId, startTime, endTime):
+    new_reservation = Reservation(userId, classroomId, startTime, endTime)
+    db.session.add(new_reservation)
+    db.session.commit()
+    return new_reservation
 
-    classroomType = db.relationship('ClassroomType')
+def get_reservation_by_time(startTime, endTime):
+    list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime).all()
+    return list_reservation
 
-    def __init__(self, classroomNumber, building, typeId):
-        self.classroomNumber = classroomNumber
-        self.building = building
-        self.typeId = typeId
-        self.createdAt = datetime.now()
-        self.updatedAt = datetime.now()
-        self.isDeleted = False
+def get_reservation_by_id(reservationId):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    return reservation
 
+def get_reservation_by_user_id(userId):
+    list_reservation = Reservation.query.filter_by(userId=userId).all()
+    return list_reservation
 
+def get_reservation_by_classroom_id(classroomId):
+    list_reservation = Reservation.query.filter_by(classroomId=classroomId).all()
+    return list_reservation
 
+def get_reservation_by_status(status):
+    list_reservation = Reservation.query.filter_by(status=status).all()
+    return list_reservation
 
-def get_all_classeooms():
-    list_classroom = Classroom.query.all()
-    return list_classroom
+def delete_reservation(reservationId):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation.isDeleted = True
+    db.session.commit()
+    return reservation
 
-
-def each_classroom_info(list_classroom):
-    result = ''
-    for classroom in list_classroom:
-        result += f'Classroom Number: {classroom.classroomNumber}\n'
-        result += f'Building: {classroom.building}\n'
-        result += f'Type: {classroom.classroomType.typeName}\n'
-        result += f'Capacity: {classroom.classroomType.capacity}\n'
-        result += f'Equipment: {classroom.classroomType.equipment}\n'
-        result += f'Created At: {classroom.createdAt}\n'
-        result += f'Updated At: {classroom.updatedAt}\n'
-        result += f'Is Deleted: {classroom.isDeleted}\n\n'
-    return result
-
-
-# @app.route('/classroom_model')
-# def index2():
-#     return each_classroom_info(get_all_classeooms())
-
-
-# if __name__ == '__main__':
-    
-#     app.run(debug=True)
-
-
-
+def update_reservation(reservationId, userId, classroomId, startTime, endTime, status):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    if reservation is None:
+        return False
+    if userId is not None:
+        reservation.userId = userId
+    if classroomId is not None:
+        reservation.classroomId = classroomId    
+    if startTime is not None:
+        reservation.startTime = startTime
+    if endTime is not None:
+        reservation.endTime = endTime
+    if status is not None:
+        reservation.status = status
+    reservation.updatedAt = datetime.now()
+    db.session.commit()
+    return reservation
