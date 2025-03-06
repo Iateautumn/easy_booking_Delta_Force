@@ -1,67 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Reservation System</title>
-    <link rel="stylesheet" href="../../static/css/booking.css">
+    <title>Easy Booking</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
 </head>
+
 <body>
     <div class="container">
         <aside class="sidebar" id="sidebar">
-            <h2>HotinGo</h2>
+            <h2>Easy Booking</h2>
             <nav>
                 <ul>
-                    <li class="active"><a href="#"><span class="icon">🏠</span>Dashboard</a></li>
-                    <li><a href="#"><span class="icon">🛏️</span>Rooms</a></li>
-                    <li><a href="#"><span class="icon">📅</span>Reservations</a></li>
-                    <li><a href="#"><span class="icon">👤</span>Guests</a></li>
-                    <li><a href="#"><span class="icon">ℹ️</span>About</a></li>
+                    <li id="book-room-nav" class="active">
+                        <a href="#book-room">
+                            <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                            Book Room
+                        </a>
+                    </li>
+                    <li id="my-bookings-nav">
+                        <a href="#my-bookings">
+                            <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                            My Bookings
+                        </a>
+                    </li>
+                    <li id="room-management-nav">
+                        <a href="#room-management">
+                            <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                            Room Management
+                        </a>
+                    </li>
+                    <li id="approval-request-nav">
+                        <a href="#approval-request">
+                            <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                            Approval Request
+                        </a>
+                    </li>
+                    <li id="report-nav">
+                        <a href="#report">
+                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                            Report
+                        </a>
+                    </li>
                 </ul>
             </nav>
-            <a href="#" class="logout"><span class="icon">🔒</span>Logout</a>
+            <a href="#report" class="logout">
+                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                Logout
+            </a>
         </aside>
+
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1>Reservations</h1>
-                <span class="admin">Administrator</span>
+                <h1 id="page-title">Book Room</h1>
             </header>
-            <section class="reservation-form">
-                <h2>Add a Reservation</h2>
-                <div class="form-grid">
-                    <div class="form-item">
-                        <span>Guest Id</span>
-                        <span>12</span>
-                    </div>
-                    <div class="form-item">
-                        <span>Room Id</span>
-                        <span>345</span>
-                    </div>
-                    <div class="form-item">
-                        <span>Is Taking Meal</span>
-                        <span>true</span>
-                    </div>
-                    <div class="form-item">
-                        <span>Check-in Time</span>
-                        <span>now</span>
-                    </div>
+
+            <section id="book-room-section" class="content-section">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for rooms...">
+                    <button class="search-btn">Search</button>
+                    <button class="filter-btn" id="filter-btn">Filter</button>
                 </div>
-                <button class="reserve-btn">Reserve</button>
-            </section>
-            <section class="operations">
-                <h2>Operations</h2>
-                <div class="operation-item">
-                    <span>View Reservations</span>
-                    <a href="#">Get past details ></a>
-                </div>
-                <div class="operation-item">
-                    <span>Update single</span>
-                    <a href="#">Reservation ></a>
+                <div class="room-list">
+                    <!-- Example Room Cards -->
+                    <div class="room-card">
+                        <h3>Room 101</h3>
+                        <p>Capacity: 20</p>
+                        <button class="action-btn">Book Now</button>
+                    </div>
+                    <div class="room-card">
+                        <h3>Room 102</h3>
+                        <p>Capacity: 15</p>
+                        <button class="action-btn">Book Now</button>
+                    </div>
                 </div>
             </section>
         </main>
     </div>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal" id="booking-modal">
+        <div class="booking-content">
+            <h2>Book Room</h2>
+            <div class="booking-group">
+                <label class="booking-label" for="booking-date">Date:</label>
+                <input type="date" id="booking-date" class="input">
+            </div>
+            <div class="booking-group">
+                <label class="booking-label" for="start-time">Start Time:</label>
+                <input type="time" id="start-time" class="input">
+            </div>
+            <div class="booking-group">
+                <label class="booking-label" for="end-time">End Time:</label>
+                <input type="time" id="end-time" class="input">
+            </div>
+            <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
+        </div>
+    </div>
+    <!-- Filter Modal -->
+    <div class="filter-modal" id="filter-modal">
+        <div class="filter-content">
+            <h2>Filter Rooms</h2>
+            <div class="filter-group">
+                <label class="filter-label" for="capacity">Capacity:</label>
+                <div class="capacity-inputs">
+                    <input type="number" id="capacity-min" placeholder="Min" min="1">
+                    <span>~</span>
+                    <input type="number" id="capacity-max" placeholder="Max" min="1">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Date/Time:</label>
+                <div class="days">
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Monday"> Mon</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Tuesday"> Tue</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Wednesday"> Wed</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Thursday"> Thu</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Friday"> Fri</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Saturday"> Sat</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Sunday"> Sun</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <!-- <label for="equipment">Equipment:</label> -->
+                <!-- <input type="text" id="equipment" placeholder="Enter equipment..."> -->
+                <label class="filter-label">Equipment:</label>
+                <input autocomplete="off" name="equipment" id="equipment" class="input" type="email">
+            </div>
+            <button class="apply-btn" id="apply-filter">Apply Filters</button>
+        </div>
+    </div>
+
+
+
     <script src="../../static/js/booking.js"></script>
 </body>
+
 </html>
