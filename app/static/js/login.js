@@ -59,24 +59,19 @@ async function loginUser(email, password) {
     body: JSON.stringify(userData),
   });
 
-  const Data = await response.json();
-  if (Data) {
-    switch (Data.code) {
-      case 200:
-        alert('Register Success! Please login now!');
-        window.location.href = '/login';
-        break;
-      case 400:
-        alert(`Validation failed: ${Data.details?.join(', ') || 'Invalid parameters'}`);
-        break;
-      case 409:
-        alert(`Resource conflict: ${Data.message || 'Duplicate username/email'}`);
-        break;
-      default:
-        alert(`Internal server error (${Data.message})`);
+  console.log(response);
+
+  if (response.redirected) {
+    window.location.href = response.url; // Redirect to the home page
+  }
+  else {
+    const Data = await response.json();
+    if (Data) {
+      alert(`Login unauthorized, (${Data.message})`);
     }
   }
 }
+
 
 function handleRegister() {
   const username = document.getElementById('registration-username').value;
