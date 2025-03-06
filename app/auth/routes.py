@@ -16,7 +16,7 @@ def login():
     except Exception:
         return render_template('auth/login.html')
     if request.method == 'POST':
-        username = data.get('username')
+        username = data.get('email')
         password = data.get('password')
         try:
             user = my_login_user(username, password)
