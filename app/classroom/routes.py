@@ -26,7 +26,7 @@ def list_classrooms():
 
         classrooms = filter_classrooms(
             capacity_range=(capacity_min, capacity_max),
-            equipment=equipment,
+            equipment=equipments,
             days=days
         )
 
