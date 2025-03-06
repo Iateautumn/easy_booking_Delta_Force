@@ -40,7 +40,7 @@ async function registerUser(username, email, password, status) {
         alert(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
         break;
       default:
-        alert(`Internal server error (${response.status})`);
+        alert(`Internal server error (${errorData.message})`);
     }
   }
 }
