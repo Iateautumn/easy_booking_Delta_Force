@@ -25,7 +25,7 @@ async function registerUser(username, email, password, status) {
     },
     body: JSON.stringify(userData),
   });
-  
+
   const errorData = await response.json();
   if (errorData) {
     switch (errorData.status) {
@@ -34,11 +34,13 @@ async function registerUser(username, email, password, status) {
         window.location.href = '/login';
         break;
       case 400:
-          alert(`Validation failed: ${errorData.details?.join(', ') || 'Invalid parameters'}`);
+        alert(`Validation failed: ${errorData.details?.join(', ') || 'Invalid parameters'}`);
+        break;
       case 409:
-          alert(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
+        alert(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
+        break;
       default:
-          alert(`Internal server error (${response.status})`);
+        alert(`Internal server error (${response.status})`);
     }
   }
 }
