@@ -22,10 +22,21 @@ class ClassroomType(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+    
+    def to_dict(self):
+        return {
+            'typeId': self.typeId,
+            'typeName': self.typeName,
+            'capacity': self.capacity,
+            'equipment': self.equipment,
+            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
+            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
+            'isDeleted': self.isDeleted
+        }
 
 def get_all_classroom_types():
     list_classroom_type = ClassroomType.query.all()
-    return list_classroom_type
+    return [cr.to_dict() for cr in list_classroom_type]
 
 def add_classroom_type(typeName, capacity, equipment):
     new_classroom_type = ClassroomType(typeName, capacity, equipment)
@@ -88,10 +99,22 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+    
+    def to_dict(self):
+        return {
+            'classroomId': self.classroomId,
+            'classroomNumber': self.classroomNumber,
+            'building': self.building,
+            'typeId': self.typeId,
+            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
+            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
+            'isDeleted': self.isDeleted,
+            'classroomType': self.classroomType.to_dict() if self.classroomType else None
+        }
 
 def get_all_classrooms():
     list_classroom = Classroom.query.all()
-    return list_classroom
+    return [cr.to_dict() for cr in list_classroom]
 
 def add_classroom(classroomNumber, building, typeId):
     new_classroom = Classroom(classroomNumber, building, typeId)

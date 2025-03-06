@@ -1,10 +1,6 @@
 # app/classrooms/services.py
-from app.classroom.models import Classroom
+from app.classroom.models import Classroom, get_all_classrooms
 
-
-def get_all_classrooms():
-    classroom = Classroom()
-    return classroom.get_all_classrooms()
 
 def filter_classrooms(capacity_range, equipment, days):
     query = Classroom.query

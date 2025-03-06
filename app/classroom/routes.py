@@ -12,6 +12,7 @@ classroom_bp = Blueprint('classroom', __name__, url_prefix='/classroom')
 def list_classrooms():
     if request.method == 'GET':
         classrooms = get_all_classrooms()
+        import pdb; pdb.set_trace()
         return success_response(classrooms)
     elif request.method == 'POST':
         try:
