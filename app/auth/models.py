@@ -47,6 +47,9 @@ def get_all_users():
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
+def get_user_by_name(name):
+    return User.query.filter_by(name=name).first()
+
 def get_user_by_id(user_id):
     return User.query.filter_by(userId=user_id).first()
 
