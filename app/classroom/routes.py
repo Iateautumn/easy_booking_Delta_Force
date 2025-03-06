@@ -6,7 +6,7 @@ from app.classroom.services import (
     filter_classrooms
 )
 
-classroom_bp = Blueprint('classroom', __name__)
+classroom_bp = Blueprint('classroom', __name__, url_prefix='/classroom')
 
 @classroom_bp.route('/filter', methods=['GET','POST'])
 def list_classrooms():
