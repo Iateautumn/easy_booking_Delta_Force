@@ -138,13 +138,15 @@ function getFilteredClassrooms() {
 
 function bookClassroom(roomId) {
     const timePeriod = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
+    const date = document.getElementById('booking-date').value;
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
         "room_id": parseInt(roomId),
-        "time_period": timePeriod
+        "time_period": timePeriod,
+        "date": date
     });
 
     var requestOptions = {
