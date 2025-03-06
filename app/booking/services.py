@@ -2,6 +2,7 @@
 from datetime import datetime
 from sqlalchemy import and_
 from werkzeug.http import parse_age
+from models import add_reservation
 
 from app.extensions import db
 from app.booking.models import Reservation as Booking
@@ -16,8 +17,8 @@ class PermissionError(Exception):
     pass
 
 
-def create_booking(user_id, classroom_id, start_time, end_time):
-    # 检查时间冲突
+def new_booking(user_id, classroom_id, start_time, end_time):
+
     conflict = Booking.query.filter(
         (Booking.classroom_id == classroom_id) &
         ((Booking.start_time < end_time) &
