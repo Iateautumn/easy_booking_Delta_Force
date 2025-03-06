@@ -1,14 +1,11 @@
 # app/bookings/services.py
 from datetime import datetime
-from lib2to3.fixer_util import touch_import
-
+from app.utils.exceptions import BusinessError
 from sqlalchemy import and_
 from werkzeug.http import parse_age
-from models import add_reservation
+from app.booking.models import add_reservation, get_reservation_by_time
 from datetime import datetime, timedelta
 from app.extensions import db
-from app.booking.models import Reservation as Booking
-import app.booking.models as Models
 
 time_slot_map = {
     0: {'start': '08:00:00', 'end': '08:45:00'},
@@ -35,45 +32,49 @@ def add_time(date_str, time_str):
 
     return combined_date
 
-class ConflictError(Exception):
-    pass
-
-
-class PermissionError(Exception):
-    pass
-
+def get_certain_reservation(classrooom_id, start_time, end_time):
+    reservations = get_reservation_by_time(start_time, end_time)
+    for i in reservations:
+        if i.classroomId == classrooom_id:
+            return True
+    return False
 
 def new_booking(user_id, classroom_id, time_period, date):
     start_time = add_time(date, time_slot_map[time_period]['start'])
     end_time = add_time(date, time_slot_map[time_period]['end'])
 
-    conflict = Booking.query.filter(
-        (Booking.classroom_id == classroom_id) &
-        ((Booking.start_time < end_time) &
-         (Booking.end_time > start_time))
-    ).first()
+    # conflict = Booking.query.filter(
+    #     (Booking.classroom_id == classroom_id) &
+    #     ((Booking.start_time < end_time) &
+    #      (Booking.end_time > start_time))
+    # ).first()
 
-    if conflict:
-        raise ConflictError("该时间段已被预约")
+    # if conflict:
+    #     raise ConflictError("该时间段已被预约")
+    if get_certain_reservation(classroom_id, start_time, end_time):
+        raise BusinessError("a reservation is already existed", 400)
+    try:
+        reservation = add_reservation(user_id, classroom_id, start_time, end_time)
+    except Exception as e:
+        raise BusinessError("failed to make a reservation " + str(e),400)
+    # today = datetime.utcnow().date()
+    # today_bookings = Booking.query.filter(
+    #     (Booking.user_id == user_id) &
+    #     (Booking.start_time >= today)
+    # ).count()
 
-    today = datetime.utcnow().date()
-    today_bookings = Booking.query.filter(
-        (Booking.user_id == user_id) &
-        (Booking.start_time >= today)
-    ).count()
-
-    if today_bookings >= 3:
-        raise PermissionError("超出每日预约限制")
-
-    booking = Booking(
-        user_id=user_id,
-        classroom_id=classroom_id,
-        start_time=start_time,
-        end_time=end_time
-    )
-    db.session.add(booking)
-    db.session.commit()
-    return booking
+    # if today_bookings >= 3:
+    #     raise PermissionError("超出每日预约限制")
+    #
+    # booking = Booking(
+    #     user_id=user_id,
+    #     classroom_id=classroom_id,
+    #     start_time=start_time,
+    #     end_time=end_time
+    # )
+    # db.session.add(booking)
+    # db.session.commit()
+    return reservation
 
 def filter_classrooms(capacity_range, equipments, days):
     pass

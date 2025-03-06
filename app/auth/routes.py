@@ -1,7 +1,7 @@
 # app/auth/routes.py
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, current_user
-from app.auth.services import register_user, login_user
+from app.auth.services import register_user, my_login_user
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -13,10 +13,10 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        user = login_user(email, password)
+        user = my_login_user(email, password)
 
         if user:
-            login_user(user)
+            my_login_user(user)
             next_page = request.args.get('next')
             return redirect(next_page or url_for('booking.dashboard'))
         else:

@@ -10,7 +10,7 @@ def register_user(username, email, password):
     db.session.commit()
     return user
 
-def login_user(email, password):
+def my_login_user(email, password):
     user = User.query.filter_by(email=email).first()
     if user and check_password_hash(user.password_hash, password):
         return user
