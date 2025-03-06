@@ -14,23 +14,23 @@ booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
 
 @booking_bp.route('/dashboard', methods=['GET'])
 def dashboard():
-    # if not current_user.is_authenticated:
-    #     return redirect(url_for('auth.login'))
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
 
     return render_template('user/bookroom.html')
 
 @booking_bp.route('/new', methods=['POST'])
 def booking_room():
 
-    # if not current_user.is_authenticated:
-    #     return redirect(url_for('auth.login'))
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
 
     try:
         data = request.get_json()
     except Exception as e:
         return error_response("bad request: " + str(e), 400)
 
-    user_id = 1#current_user.id
+    user_id = current_user.id
     room_id = data['room_id']
     time_period = data['time_period']
     date = data['date']
