@@ -27,7 +27,7 @@ def register_user(status, username, email, password):
     try:
         user = add_user(status, username, email, password_hash, salt)
     except Exception as e:
-        raise BusinessError('Failed to register user: ' + str(e), 500)
+        raise BusinessError('Failed to register user: ' + str(e), 409)
 
     return user
 
