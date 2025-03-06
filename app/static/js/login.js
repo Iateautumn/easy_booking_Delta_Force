@@ -25,20 +25,55 @@ async function registerUser(username, email, password, status) {
     },
     body: JSON.stringify(userData),
   });
-  
-  const errorData = await response.json();
-  if (errorData) {
-    switch (errorData.status) {
+
+  const Data = await response.json();
+  if (Data) {
+    switch (Data.code) {
       case 200:
         alert('Register Success! Please login now!');
         window.location.href = '/login';
         break;
       case 400:
-          alert(`Validation failed: ${errorData.details?.join(', ') || 'Invalid parameters'}`);
+        alert(`Validation failed: ${Data.details?.join(', ') || 'Invalid parameters'}`);
+        break;
       case 409:
-          alert(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
+        alert(`Resource conflict: ${Data.message || 'Duplicate username/email'}`);
+        break;
       default:
-          alert(`Internal server error (${response.status})`);
+        alert(`Internal server error (${Data.message})`);
+    }
+  }
+}
+
+async function loginUser(email, password) {
+  const apiUrl = '/auth/login';
+  const userData = {
+    email,
+    password,
+  };
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+
+  const Data = await response.json();
+  if (Data) {
+    switch (Data.code) {
+      case 200:
+        alert('Register Success! Please login now!');
+        window.location.href = '/login';
+        break;
+      case 400:
+        alert(`Validation failed: ${Data.details?.join(', ') || 'Invalid parameters'}`);
+        break;
+      case 409:
+        alert(`Resource conflict: ${Data.message || 'Duplicate username/email'}`);
+        break;
+      default:
+        alert(`Internal server error (${Data.message})`);
     }
   }
 }
@@ -55,5 +90,17 @@ function handleRegister() {
   }
 
   registerUser(username, email, password, status);
+}
+
+function handleLogin() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  if (!email || !password) {
+    alert("Please fill in all fields!");
+    return;
+  }
+
+  loginUser(email, password);
 
 }

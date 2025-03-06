@@ -34,6 +34,9 @@ class User(UserMixin,db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
+    def get_id(self):
+        return self.userId
+
 # add user
 def add_user(status, name, email, password_hash, salt):
     user = User(status, name, email, password_hash, salt)

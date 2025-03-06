@@ -1,7 +1,7 @@
 # app/auth/routes.py
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user
-from app.auth.services import register_user, login_user
+from app.auth.services import register_user, my_login_user
 from app.utils.response import success_response, error_response
 from app.utils.exceptions import BusinessError
 
@@ -16,10 +16,10 @@ def login():
     except Exception:
         return render_template('auth/login.html')
     if request.method == 'POST':
-        username = data.get('username')
+        username = data.get('email')
         password = data.get('password')
         try:
-            user = login_user(username, password)
+            user = my_login_user(username, password)
         except BusinessError as e:
             return error_response(str(e), e.code)
 
@@ -33,12 +33,10 @@ def login():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('booking.dashboard'))
-
     try:
         data = request.get_json()
-    except Exception:
-        return error_response("bad request", 400)
-
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
     if request.method == 'POST':
         status = data.get('status')
         username = data.get('username')
@@ -50,7 +48,6 @@ def register():
             return success_response("register successfully")
         except BusinessError as e:
             return error_response(str(e),e.code)
-
     return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
