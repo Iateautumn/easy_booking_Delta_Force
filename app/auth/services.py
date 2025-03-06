@@ -1,6 +1,7 @@
 # app/auth/services.py
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.auth.models import User
+import app.auth.models as Models
 from app.extensions import db
 from app.auth.exceptions import BusinessError
 
