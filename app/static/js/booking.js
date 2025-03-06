@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     const filterBtn = document.getElementById('filter-btn');
     const filterModal = document.getElementById('filter-modal');
-    const capacitySlider = document.getElementById('capacity');
-    const capacityValue = document.getElementById('capacity-value');
     const applyFilterBtn = document.getElementById('apply-filter');
 
     filterBtn.addEventListener('click', function () {
         filterModal.style.display = 'flex';
+        getEquipmentType();
     });
 
     filterModal.addEventListener('click', function (event) {
@@ -16,9 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     applyFilterBtn.addEventListener('click', function () {
-        // Add your filter logic here
+        getFilteredClassrooms();
         filterModal.style.display = 'none';
     });
+
+    getAllClassrooms();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,11 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bookNowButtons.forEach(button => {
         button.addEventListener('click', () => {
             bookingModal.style.display = 'flex';
+            bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
         });
     });
 
     confirmBookingButton.addEventListener('click', () => {
-        // Add your booking confirmation logic here
+        const roomId = bookingModal.getAttribute('data-room-id');
+        bookClassroom(roomId);
         bookingModal.style.display = 'none';
     });
 
@@ -45,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// use /classroom/filter GET to get all classrooms
 function getAllClassrooms() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -64,21 +66,6 @@ function getAllClassrooms() {
         .then(response => response.json())
         .then(result => {
             if (result.code === 200) {
-                result.data.forEach(classroom => {
-                    console.log(`Classroom ID: ${classroom.classroomId}`);
-                    console.log(`Classroom Name: ${classroom.classroomName}`);
-                    console.log(`Capacity: ${classroom.capacity}`);
-                    console.log(`Is Deleted: ${classroom.isDeleted}`);
-                    console.log(`Created At: ${classroom.createdAt}`);
-                    console.log(`Updated At: ${classroom.updatedAt}`);
-                    classroom.equipments.forEach(equipment => {
-                        console.log(`  Equipment ID: ${equipment.equipmentId}`);
-                        console.log(`  Equipment Name: ${equipment.equipmentName}`);
-                        console.log(`  Created At: ${equipment.createAt}`);
-                        console.log(`  Updated At: ${equipment.updateAt}`);
-                        console.log(`  Is Deleted: ${equipment.idDeleted}`);
-                    });
-                });
                 roomList.innerHTML = '';
                 result.data.forEach(classroom => {
                     const li = document.createElement('li');
@@ -87,9 +74,9 @@ function getAllClassrooms() {
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: </p>
+                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
                         </div>
-                        <button class="action-btn">Book Now</button>
+                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
                     `;
                     roomList.appendChild(li);
                 });
@@ -98,7 +85,6 @@ function getAllClassrooms() {
             }
         })
         .catch(error => console.log('error', error));
-    // TODO
 }
 
 function getFilteredClassrooms() {
@@ -106,6 +92,7 @@ function getFilteredClassrooms() {
     const capacityMax = document.getElementById('capacity-max').value;
     const daysOfWeek = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => parseInt(checkbox.value));
     const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => parseInt(checkbox.value));
+    const roomList = document.getElementById('room-list');
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -128,22 +115,19 @@ function getFilteredClassrooms() {
         .then(response => response.json())
         .then(result => {
             if (result.code === 200) {
+                roomList.innerHTML = '';
                 result.data.forEach(classroom => {
-                    console.log(`Classroom ID: ${classroom.classroomId}`);
-                    console.log(`Classroom Name: ${classroom.classroomName}`);
-                    console.log(`Capacity: ${classroom.capacity}`);
-                    console.log(`Is Deleted: ${classroom.isDeleted}`);
-                    console.log(`Created At: ${classroom.createdAt}`);
-                    console.log(`Updated At: ${classroom.updatedAt}`);
-                    classroom.equipments.forEach(equipment => {
-                        console.log(`  Equipment ID: ${equipment.equipmentId}`);
-                        console.log(`  Equipment Name: ${equipment.equipmentName}`);
-                        console.log(`  Created At: ${equipment.createAt}`);
-                        console.log(`  Updated At: ${equipment.updateAt}`);
-                        console.log(`  Is Deleted: ${equipment.idDeleted}`);
-                    });
-                    // TODO
-                    
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div class="room-info">
+                            <h3>${classroom.classroomName}</h3>
+                            <p>Capacity: ${classroom.capacity}</p>
+                            <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
+                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
+                        </div>
+                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                    `;
+                    roomList.appendChild(li);
                 });
             } else {
                 console.log(`Error: ${result.message}`);
@@ -152,15 +136,14 @@ function getFilteredClassrooms() {
         .catch(error => console.log('error', error));
 }
 
-function bookClassroom() {
-    const roomId = 0; // TODO
+function bookClassroom(roomId) {
     const timePeriod = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-        "room_id": roomId.parseInt(),
+        "room_id": parseInt(roomId),
         "time_period": timePeriod
     });
 
@@ -176,6 +159,7 @@ function bookClassroom() {
         .then(result => {
             if (result.code === 200) {
                 console.log('Booking successful');
+                alert("Booking successful");
             } else {
                 console.log(`Error: ${result.message}`);  // TODO
             }
@@ -195,12 +179,20 @@ function getEquipmentType() {
             if (result.code === 200) {
                 result.data.forEach(equipment => {
                     console.log(`Equipment ID: ${equipment.equipmentId}`);
-                    console.log(`Equipment Name: ${equipment.equipment_name}`);
+                    console.log(`Equipment Name: ${equipment.equipmentName}`);
+                });
+                const equipmentContainer = document.getElementById('equipment');
+                equipmentContainer.innerHTML = '';
+
+                result.data.forEach(equipment => {
+                    const label = document.createElement('label');
+                    label.className = 'date_label';
+                    label.innerHTML = `<input type="checkbox" class="ui-checkbox" name="equipment" value="${equipment.equipmentId}"> ${equipment.equipmentName}`;
+                    equipmentContainer.appendChild(label);
                 });
             } else {
                 console.log(`Error: ${result.message}`);
             }
         })
         .catch(error => console.log('error', error));
-    // TODO
 }

@@ -65,46 +65,13 @@
                     <button class="filter-btn" id="filter-btn">Filter</button>
                 </div>
                 <div class="room-list" id="room-list">
-                    <!-- Example Room Cards -->
                     <div class="room-card">
-                        <h3>DIICSU 635</h3>
-                        <p>Capacity: 20</p>
-                        <p>Date/Time: Mon. Tue. Fri. Sat. Sun.</p>
-                        <p>Equipment: Smart Screen</p>
-                        <p>Constrain: none</p>
-                        <button class="action-btn">Book Now</button>
-                    </div>
-                    <div class="room-card">
-                        <h3>DIICSU 622</h3>
-                        <p>Capacity: 15</p>
-                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
-                        <p>Equipment: White Board, Smart Screen</p>
-                        <p>Constrain: none</p>
-                        <button class="action-btn">Book Now</button>
-                    </div>
-                    <div class="room-card">
-                        <h3>DIICSU 1st Floor Formal Meeting Room</h3>
-                        <p>Capacity: 15</p>
-                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
-                        <p>Equipment: Smart Screen</p>
-                        <p>Constrain: staff bookings only</p>
-                        <button class="action-btn">Book Now</button>
-                    </div>
-                    <div class="room-card">
-                        <h3>DIICSU 1st Floor Informal Meeting Room</h3>
-                        <p>Capacity: 15</p>
-                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
-                        <p>Equipment: Smart Screen</p>
-                        <p>Constrain: staff bookings only</p>
-                        <button class="action-btn">Book Now</button>
-                    </div>
-                    <div class="room-card">
-                        <h3>Room 101</h3>
-                        <p>Capacity: 30</p>
-                        <p>Date/Time: Mon. Tue. Thu. Fri. Sat. Sun.</p>
-                        <p>Equipment: White Board, Smart Screen</p>
-                        <p>Constrain: none</p>
-                        <button class="action-btn">Book Now</button>
+                        <h3>Room ?</h3>
+                        <p>Capacity: ?</p>
+<!--                        <p>Date/Time: Mon. Tue. Fri. Sat. Sun.</p>-->
+                        <p>Equipment: ?</p>
+                        <p>Constrain: ?</p>
+<!--                        <button class="action-btn">Book Now</button>-->
                     </div>
                 </div>
             </section>
@@ -122,16 +89,16 @@
             <div class="booking-group">
                 <label class="booking-label">Time Slots:</label>
                 <div class="time-slots">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="8:00~8:45"> 8:00~8:45</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="8:55~9:40"> 8:55~9:40</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="10:00~10:45"> 9:50~10:35</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="10:55~11:40"> 10:45~11:30</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="14:00~14:45"> 11:40~12:25</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="14:55~15:40"> 12:35~13:20</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="16:00~16:45"> 13:30~14:15</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="16:55~17:40"> 14:25~15:10</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="19:00~19:45"> 15:20~16:05</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="19:55~20:40"> 16:15~17:00</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="0"> 8:00~8:45</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="1"> 8:55~9:40</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="2"> 9:50~10:35</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="3"> 10:45~11:30</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="4"> 11:40~12:25</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="5"> 12:35~13:20</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="6"> 13:30~14:15</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="7"> 14:25~15:10</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="8"> 15:20~16:05</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="9"> 16:15~17:00</label>
                 </div>
             </div>
             <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
@@ -152,20 +119,18 @@
             <div class="filter-group">
                 <label class="filter-label">Date/Time:</label>
                 <div class="days">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Monday"> Mon</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Tuesday"> Tue</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Wednesday"> Wed</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Thursday"> Thu</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Friday"> Fri</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Saturday"> Sat</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" value="Sunday"> Sun</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
                 </div>
             </div>
             <div class="filter-group">
-                <!-- <label for="equipment">Equipment:</label> -->
-                <!-- <input type="text" id="equipment" placeholder="Enter equipment..."> -->
                 <label class="filter-label">Equipment:</label>
-                <input autocomplete="off" name="equipment" id="equipment" class="input" type="email">
+                <div id="equipment"></div>
             </div>
             <button class="apply-btn" id="apply-filter">Apply Filters</button>
         </div>
