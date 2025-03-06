@@ -89,7 +89,7 @@ class Classroom(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
-def get_all_classeooms():
+def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 
@@ -104,7 +104,7 @@ def get_classroom_by_id(classroomId):
     return classroom
 
 def get_classroom_by_number(classroomNumber):
-    classroom = Classroom.query.filter_by(classroomNumber=classroomNumber).first()
+    classroom = Classroom.query.filter_by(classroomNumber=classroomNumber).all()
     return classroom
 def get_classroom_by_building(building):
     list_classroom = Classroom.query.filter_by(building=building).all()
