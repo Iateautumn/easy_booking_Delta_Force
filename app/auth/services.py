@@ -1,6 +1,6 @@
 # app/auth/services.py
 from werkzeug.security import generate_password_hash
-from app.auth.models import User, add_user
+from app.auth.models import User, add_user, get_user_by_email
 from app.utils.exceptions import BusinessError
 from flask import current_app
 import os
@@ -29,7 +29,7 @@ def register_user(status, username, email, password):
 
 def login_user(username, password):
 
-    user = User.query.filter_by(username=username).first()
+    user = get_user_by_email(username)
 
     if not user:
         raise BusinessError('Invalid username or password', 401)
