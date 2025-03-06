@@ -25,11 +25,7 @@ async function registerUser(username, email, password, status) {
     },
     body: JSON.stringify(userData),
   });
-
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-
+  
   const errorData = await response.json();
   if (errorData) {
     switch (errorData.status) {
@@ -37,12 +33,12 @@ async function registerUser(username, email, password, status) {
         alert('Register Success! Please login now!');
         window.location.href = '/login';
         break;
-        case 400:
-          throw new Error(`Validation failed: ${errorData.details?.join(', ') || 'Invalid parameters'}`);
+      case 400:
+          alert(`Validation failed: ${errorData.details?.join(', ') || 'Invalid parameters'}`);
       case 409:
-          throw new Error(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
+          alert(`Resource conflict: ${errorData.message || 'Duplicate username/email'}`);
       default:
-          throw new Error(`Internal server error (${response.status})`);
+          alert(`Internal server error (${response.status})`);
     }
   }
 }
