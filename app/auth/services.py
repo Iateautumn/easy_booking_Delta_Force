@@ -1,3 +1,4 @@
+
 from werkzeug.security import generate_password_hash
 from app.auth.models import User, add_user, get_user_by_email
 from app.utils.exceptions import BusinessError
@@ -7,9 +8,9 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
 def generate_password_hash(password, salt=None):
-    """生成密码哈希"""
+    
     if salt is None:
-        salt = os.urandom(4)  # 生成16字节的随机盐值
+        salt = os.urandom(4)  
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
@@ -48,3 +49,4 @@ def my_login_user(username, password):
         return user
     else:
         raise BusinessError('Invalid username or password', 401)
+

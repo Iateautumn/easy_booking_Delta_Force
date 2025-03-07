@@ -1,3 +1,4 @@
+
 # models/user.py
 from app.extensions import db
 from datetime import datetime
@@ -84,6 +85,7 @@ def delete_user(user_id):
     user.isDeleted = True
     db.session.commit()
     return user
+
 
 
 
