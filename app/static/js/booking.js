@@ -53,12 +53,10 @@ function getAllClassrooms() {
     myHeaders.append("Content-Type", "application/json");
     const roomList = document.getElementById('room-list');
 
-    var raw = JSON.stringify({});
 
     var requestOptions = {
         method: 'GET',
         headers: myHeaders,
-        body: raw,
         redirect: 'follow'
     };
 
