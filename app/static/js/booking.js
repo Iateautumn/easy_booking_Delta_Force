@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function getAllClassrooms() {
 
-    const apiUrl = '/auth/register';
+    const apiUrl = '/api/classrooms';
     const userData = {};
 
     const response = await fetch(apiUrl, {
@@ -63,29 +63,19 @@ async function getAllClassrooms() {
 
     const Data = await response.json();
 
-    fetch("http://127.0.0.1:5000/classroom/filter", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if (result.code === 200) {
-                roomList.innerHTML = '';
-                result.data.forEach(classroom => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <div class="room-info">
-                            <h3>${classroom.classroomName}</h3>
-                            <p>Capacity: ${classroom.capacity}</p>
-                            <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                        </div>
-                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
-                    `;
-                    roomList.appendChild(li);
-                });
-            } else {
-                console.log(`Error: ${result.message}`);
-            }
-        })
-        .catch(error => console.log('error', error));
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return Array.isArray(Data.data) ? Data.data : [];
+            default:
+                alert(`Error, (${Data.message})`);
+                return [];
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return [];
+    }
 }
 
 function getFilteredClassrooms() {
