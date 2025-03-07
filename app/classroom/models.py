@@ -134,11 +134,11 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    # Users = db.relationship(
-    #     "User",
-    #     secondary="reservation",
-    #     back_populates="Classrooms"  # back_populates
-    # )
+    Users = db.relationship(
+        "User",
+        secondary="reservation",
+        back_populates="Classrooms"  # back_populates
+    )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",

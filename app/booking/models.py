@@ -3,7 +3,7 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from app.auth.models import User
-from app.classroom.models import Classroom
+from app.classroom.models import Classroom, ClassEquipment, Equipment
 
 
 class ReservationStatus(Enum):
@@ -25,6 +25,16 @@ class Reservation(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
+
+    def __init__(self, userId, classroomId, startTime, endTime):
+        self.userId = userId
+        self.classroomId = classroomId
+        self.startTime = startTime
+        self.endTime = endTime
+        self.status = ReservationStatus.Reserved
+        self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
+        self.isDeleted = False
 
     # user = db.relationship('User', back_populates='classrooms')
     # classroom = db.relationship('Classroom', back_populates='users')

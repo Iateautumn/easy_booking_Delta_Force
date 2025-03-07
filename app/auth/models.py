@@ -3,7 +3,7 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
-from app.classroom.models import Classroom
+from app.classroom.models import Classroom, ClassEquipment, Equipment
 from app.booking.models import Reservation
 
 class UserStatus(Enum):
