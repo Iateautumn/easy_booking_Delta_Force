@@ -6,6 +6,14 @@ from app.extensions import db, login_manager, init_db
 
 def create_app():
     app = Flask(__name__)
+    init_db(app)
+
+    app.config['SECRET_KEY'] = 'your-secret-key-here'
+
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+
+    app.register_blueprint(auth_bp)
 
     init_db(app)
 
