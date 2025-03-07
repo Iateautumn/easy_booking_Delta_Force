@@ -26,6 +26,16 @@ class Reservation(db.Model):
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
 
+    def __init__(self, userId, classroomId, startTime, endTime):
+        self.userId = userId
+        self.classroomId = classroomId
+        self.startTime = startTime
+        self.endTime = endTime
+        self.status = ReservationStatus.Reserved
+        self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
+        self.isDeleted = False
+
     # user = db.relationship('User', back_populates='classrooms')
     # classroom = db.relationship('Classroom', back_populates='users')
 

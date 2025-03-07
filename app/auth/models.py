@@ -95,6 +95,21 @@ def delete_user(user_id):
     db.session.commit()
     return user
 
+def filter_user(user_id, status = None, name = None, email = None):
+    user = get_user_by_id(user_id)
+    if user is None:
+        return None
+    quary = User.query
+    if status is not None:
+        quary = quary.filter(status=status)
+    if name is not None:
+        quary = quary.filter(name=name)
+    if email is not None:
+        quary = quary.filter(email=email)
+    return quary.all()
+
+    
+    
 
 
 
