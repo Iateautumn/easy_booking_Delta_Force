@@ -2,7 +2,7 @@
 from flask import Blueprint, request, jsonify
 from app.utils.response import success_response, error_response
 from app.classroom.services import (
-    get_all_equipments,
+    get_equipments,
     filter_classrooms
 )
 
@@ -12,7 +12,7 @@ classroom_bp = Blueprint('classroom', __name__, url_prefix='/classroom')
 def list_classrooms():
     if request.method == 'GET':
         classrooms = filter_classrooms()
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         return success_response(classrooms)
     elif request.method == 'POST':
         try:
@@ -23,18 +23,18 @@ def list_classrooms():
         capacity_min = data['capacity_min']
         capacity_max = data['capacity_max']
         equipments = data['equipment']
-        days = request.args.getlist('days')
+        days = data['date/time']
 
         classrooms = filter_classrooms(
-            capacity_range=(capacity_min, capacity_max),
-            equipment=equipments,
+            capacity_range=[capacity_min, capacity_max],
+            equipments=equipments,
             days=days
         )
 
     return success_response(classrooms)
 
 @classroom_bp.route('/equipment', methods=['GET'])
-def get_equipments():
+def get_all_equipments():
     if request.method == 'GET':
-        return success_response(get_all_equipments())
+        return success_response(get_equipments())
 
