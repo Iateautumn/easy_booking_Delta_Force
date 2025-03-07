@@ -2,8 +2,8 @@
 from app.extensions import db
 from datetime import datetime
 from enum import Enum
-from app.auth.models import User
-from app.classroom.models import Classroom, ClassEquipment, Equipment
+# from app.auth.models import User
+# from app.classroom.models import Classroom, ClassEquipment, Equipment
 
 
 class ReservationStatus(Enum):

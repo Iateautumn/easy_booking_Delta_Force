@@ -1,8 +1,9 @@
 # models/classroom.py
+from app.booking.models import Reservation
 from app.extensions import db
 from datetime import datetime
-from app.auth.models import User
-from app.booking.models import Reservation
+# from app.auth.models import User
+# from app.booking.models import Reservation
 
 """
 class ClassroomType(db.Model):
@@ -134,16 +135,20 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    Users = db.relationship(
-        "User",
-        secondary="reservation",
-        back_populates="Classrooms"  # back_populates
-    )
+    # Users = db.relationship(
+    #     "User",
+    #     secondary="reservation",
+    #     back_populates="Classrooms"  # back_populates
+    # )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",
         back_populates="Classrooms"  # back_populates
     )
+    @property
+    def users(self):
+        from app.auth.models import User
+        return User.query.join(Reservation).filter(Reservation.classroomId==self.classroomId).all()
 
     def __init__(self, classroomName, capacity):
         self.classroomName = classroomName

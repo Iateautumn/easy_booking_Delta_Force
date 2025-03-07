@@ -1,6 +1,6 @@
 
 from werkzeug.security import generate_password_hash
-from app.auth.models import User, add_user, get_user_by_email
+from app.auth.models import add_user, get_user_by_email
 from app.utils.exceptions import BusinessError
 import os
 from cryptography.hazmat.primitives import hashes
@@ -26,6 +26,7 @@ def register_user(status, username, email, password):
     password_hash, salt = generate_password_hash(password)
 
     try:
+        from app.auth.models import add_user
         user = add_user(status, username, email, password_hash, salt)
     except Exception as e:
         raise BusinessError('Failed to register user: ' + str(e), 409)
