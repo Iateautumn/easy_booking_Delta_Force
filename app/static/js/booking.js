@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     applyFilterBtn.addEventListener('click', function () {
-        getFilteredClassrooms();
+        handleFilters();
         filterModal.style.display = 'none';
     });
 
-    getAllClassrooms();
+    viewRooms();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -49,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function getAllClassrooms() {
-
-    const apiUrl = '/api/classrooms';
+    const apiUrl = '/classroom/filter';
     const userData = {};
 
     const response = await fetch(apiUrl, {
@@ -78,38 +77,115 @@ async function getAllClassrooms() {
     }
 }
 
-function getFilteredClassrooms() {
-    const capacityMin = document.getElementById('capacity-min').value;
-    const capacityMax = document.getElementById('capacity-max').value;
-    const daysOfWeek = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => parseInt(checkbox.value));
-    const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => parseInt(checkbox.value));
-    const roomList = document.getElementById('room-list');
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-        "capacity_min": capacityMin.parseInt(),
-        "capacity_max": capacityMax.parseInt(),
-        "date/time": daysOfWeek,
+async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {
+    const apiUrl = '/classroom/filter';
+    const userData = {
+        "capacity_min": capacity_min,
+        "capacity_max": capacity_max,
+        "date/time": date,
         "equipment": equipment
-    });
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
     };
 
-    fetch("http://127.0.0.1:5000/classroom/filter", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if (result.code === 200) {
-                roomList.innerHTML = '';
-                result.data.forEach(classroom => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return Array.isArray(Data.data) ? Data.data : [];
+            default:
+                alert(`Error, (${Data.message})`);
+                return [];
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return [];
+    }
+
+}
+
+async function bookClassroom(room_id, date, time_period) {
+    const apiUrl = '/booking/new';
+    const userData = {
+        room_id,
+        date,
+        time_period
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                alert('Booking successful');
+                break;
+            case 409:
+                alert('Booking failed, Room already booked');
+                break;
+            default:
+                alert(`Error, (${Data.message})`);
+        }
+    }
+    else {
+        alert('Error, Network Error');
+    }
+
+}
+
+async function getEquipmentType() {
+    const apiUrl = '/equipment';
+    const userData = {};
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return Array.isArray(Data.data) ? Data.data : [];
+            default:
+                alert(`Error, (${Data.message})`);
+                return [];
+        }
+    } else {
+        alert('Error, Network Error');
+        return [];
+    }
+}
+
+
+async function viewRooms() {
+    const rooms = await getAllClassrooms();
+    const roomList = document.getElementById('room-list');
+
+    if (rooms.length > 0) {
+        roomList.innerHTML = '';
+        rooms.forEach(classroom => {
+            const li = document.createElement('li');
+            li.innerHTML = `
                         <div class="room-info">
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
@@ -118,74 +194,43 @@ function getFilteredClassrooms() {
                         </div>
                         <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
                     `;
-                    roomList.appendChild(li);
-                });
-            } else {
-                console.log(`Error: ${result.message}`);
-            }
-        })
-        .catch(error => console.log('error', error));
+            roomList.appendChild(li);
+        });
+
+    }
 }
 
-function bookClassroom(roomId) {
-    const timePeriod = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
-    const date = document.getElementById('booking-date').value;
+async function handleFilters() {
+    const capacity_min = document.getElementById('capacity-min').value;
+    const capacity_max = document.getElementById('capacity-max').value;
+    const date = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => parseInt(checkbox.value));
+    const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
+    const roomList = document.getElementById('room-list');
 
-    var raw = JSON.stringify({
-        "room_id": parseInt(roomId),
-        "time_period": timePeriod,
-        "date": date
-    });
-
-    var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-    };
-
-    fetch("http://127.0.0.1:5000/booking/new", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if (result.code === 200) {
-                console.log('Booking successful');
-                alert("Booking successful");
-            } else {
-                console.log(`Error: ${result.message}`);  // TODO
-            }
-        })
-        .catch(error => console.log('error', error));
+    if (rooms.length > 0) {
+        roomList.innerHTML = '';
+        rooms.forEach(classroom => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                        <div class="room-info">
+                            <h3>${classroom.classroomName}</h3>
+                            <p>Capacity: ${classroom.capacity}</p>
+                            <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
+                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
+                        </div>
+                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                    `;
+            roomList.appendChild(li);
+        });
+    }
 }
 
-function getEquipmentType() {
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    fetch("http://127.0.0.1:5000/equipment", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if (result.code === 200) {
-                result.data.forEach(equipment => {
-                    console.log(`Equipment ID: ${equipment.equipmentId}`);
-                    console.log(`Equipment Name: ${equipment.equipmentName}`);
-                });
-                const equipmentContainer = document.getElementById('equipment');
-                equipmentContainer.innerHTML = '';
-
-                result.data.forEach(equipment => {
-                    const label = document.createElement('label');
-                    label.className = 'date_label';
-                    label.innerHTML = `<input type="checkbox" class="ui-checkbox" name="equipment" value="${equipment.equipmentId}"> ${equipment.equipmentName}`;
-                    equipmentContainer.appendChild(label);
-                });
-            } else {
-                console.log(`Error: ${result.message}`);
-            }
-        })
-        .catch(error => console.log('error', error));
+async function handleBookings(room_id) {
+    const date = document.getElementById('date').value;
+    const time_period = document.getElementById('time-period').value;
+    await bookClassroom(room_id, date, time_period);
 }
+
+
