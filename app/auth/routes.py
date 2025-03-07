@@ -66,7 +66,7 @@ def logout():
 #     Services.Model.update_user(3, "Teacher", "test", "test2@test.com", "test", "test")
     
 #     return "test"
-booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
-@booking_bp.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    return render_template('user/bookroom.html')
+# booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
+# @booking_bp.route('/dashboard', methods=['GET', 'POST'])
+# def dashboard():
+#     return render_template('user/bookroom.html')
