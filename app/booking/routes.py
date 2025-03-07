@@ -1,13 +1,12 @@
 # app/classrooms/routes.py
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from flask_login import current_user, login_user
-
 from app.auth.services import my_login_user
 from app.booking.booking_room import bookings
 from app.utils.response import error_response, success_response
 from app.utils.exceptions import BusinessError
 
-from app.booking.services import new_booking,filter_classrooms
+from app.booking.services import new_booking
 
 
 booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
@@ -30,7 +29,7 @@ def booking_room():
     except Exception as e:
         return error_response("bad request: " + str(e), 400)
 
-    user_id = current_user.id
+    user_id = current_user.userId
     room_id = data['room_id']
     time_period = data['time_period']
     date = data['date']
@@ -41,11 +40,5 @@ def booking_room():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
-@booking_bp.route('/test', methods=['get'])
-def test():
-    from app.auth.models import User
-    user = User.query.filter_by(userId=1).first()
-    login_user(user)
-    return success_response("success test")
 
 

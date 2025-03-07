@@ -40,8 +40,8 @@ def get_certain_reservation(classrooom_id, start_time, end_time):
     return False
 
 def new_booking(user_id, classroom_id, time_period, date):
-    start_time = add_time(date, time_slot_map[time_period]['start'])
-    end_time = add_time(date, time_slot_map[time_period]['end'])
+    start_time = add_time(date, time_slot_map[time_period[0]]['start'])
+    end_time = add_time(date, time_slot_map[time_period[0]]['end'])
 
     # conflict = Booking.query.filter(
     #     (Booking.classroom_id == classroom_id) &
@@ -51,10 +51,10 @@ def new_booking(user_id, classroom_id, time_period, date):
 
     # if conflict:
     #     raise ConflictError("该时间段已被预约")
-    if get_certain_reservation(classroom_id, start_time, end_time):
+    if get_certain_reservation(int(classroom_id), start_time, end_time):
         raise BusinessError("a reservation is already existed", 400)
     try:
-        reservation = add_reservation(user_id, classroom_id, start_time, end_time)
+        reservation = add_reservation(int(user_id), int(classroom_id), start_time, end_time)
     except Exception as e:
         raise BusinessError("failed to make a reservation " + str(e),400)
     # today = datetime.utcnow().date()
@@ -75,6 +75,3 @@ def new_booking(user_id, classroom_id, time_period, date):
     # db.session.add(booking)
     # db.session.commit()
     return reservation
-
-def filter_classrooms(capacity_range, equipments, days):
-    pass
