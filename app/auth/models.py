@@ -1,10 +1,10 @@
-
 # models/user.py
 from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
-
+# from app.classroom.models import Classroom, ClassEquipment, Equipment
+# from app.booking.models import Reservation
 
 class UserStatus(Enum):
     Student = 'Student'
@@ -13,7 +13,7 @@ class UserStatus(Enum):
 
 class User(UserMixin,db.Model):
     
-    __tablename__ = 'User'
+    __tablename__ = 'user'
     
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.Enum(UserStatus), nullable=False)
@@ -24,6 +24,18 @@ class User(UserMixin,db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
+    # Classrooms = db.relationship(
+    #     "Classroom",
+    #     secondary="reservation",
+    #     back_populates="Users"
+    # )
+    @property
+    def classrooms(self):
+        from app.classroom.models import Classroom
+        from app.booking.models import Reservation
+        return Classroom.query.join(Reservation).filter(Reservation.userId == self.userId).all()
+    def get_id(self):
+        return self.userId
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -34,9 +46,6 @@ class User(UserMixin,db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
-
-    def get_id(self):
-        return self.userId
 
 # add user
 def add_user(status, name, email, password_hash, salt):
@@ -86,6 +95,21 @@ def delete_user(user_id):
     db.session.commit()
     return user
 
+def filter_user(user_id, status = None, name = None, email = None):
+    user = get_user_by_id(user_id)
+    if user is None:
+        return None
+    quary = User.query
+    if status is not None:
+        quary = quary.filter(status=status)
+    if name is not None:
+        quary = quary.filter(name=name)
+    if email is not None:
+        quary = quary.filter(email=email)
+    return quary.all()
+
+    
+    
 
 
 
