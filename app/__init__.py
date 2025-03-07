@@ -15,6 +15,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
 
+
     @app.route('/')
     def root_redirect():
         if current_user.is_authenticated:
