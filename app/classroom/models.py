@@ -1,8 +1,8 @@
 # models/classroom.py
 from app.extensions import db
 from datetime import datetime
-from app.auth.models import User
-from app.booking.models import Reservation
+# from app.auth.models import User
+# from app.booking.models import Reservation
 
 
 class ClassroomType(db.Model):
@@ -94,8 +94,15 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+    
+    @property
+    def users(self):
+        from app.auth.models import User
+        from app.booking.models import Reservation
+        return User.query.join(Reservation).filter(Reservation.classroomId == self.classroomId).all()
 
-def get_all_classeooms():
+
+def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 

@@ -3,8 +3,8 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
-from app.classroom.models import Classroom, ClassroomType
-from app.booking.models import Reservation
+# from app.classroom.models import Classroom, ClassroomType
+# from app.booking.models import Reservation
 
 class UserStatus(Enum):
     Student = 'Student'
@@ -24,11 +24,11 @@ class User(UserMixin,db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
-    Classrooms = db.relationship(
-        "Classroom", 
-        secondary="reservation",
-        back_populates="Users"  # 使用back_populates代替backref
-    )
+    # Classrooms = db.relationship(
+    #     "Classroom", 
+    #     secondary="reservation",
+    #     back_populates="Users"  # 使用back_populates代替backref
+    # )
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -39,6 +39,13 @@ class User(UserMixin,db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+    
+    @property
+    def classrooms(self):
+        from app.classroom.models import Classroom
+        from app.booking.models import Reservation
+        return Classroom.query.join(Reservation).filter(Reservation.userId == self.userId).all()
+
 
 # add user
 def add_user(status, name, email, password_hash, salt):
