@@ -225,6 +225,10 @@ class ClassEquipment(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
+def get_all_equipments():
+    list_equipment = Equipment.query.all()
+    return list_equipment
+
 def add_classequipment(classroomId, equipmentId):
     new_classequipment = ClassEquipment(classroomId, equipmentId)
     db.session.add(new_classequipment)
