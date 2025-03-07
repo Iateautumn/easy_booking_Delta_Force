@@ -3,9 +3,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterModal = document.getElementById('filter-modal');
     const applyFilterBtn = document.getElementById('apply-filter');
 
-    filterBtn.addEventListener('click', function () {
+    filterBtn.addEventListener('click', async function () {
         filterModal.style.display = 'flex';
-        getEquipmentType();
+        const equipments = await getEquipmentType();
+        const equipments_container = document.getElementById('equipment')
+        equipments_container.innerHTML = '';
+
+        equipments.forEach(equipment => {
+            const label = document.createElement('label');
+            label.className = 'date_label';
+
+            label.innerHTML = `<input type="checkbox" class="ui-checkbox" name="equipment" value="${equipment.equipmentId}">${equipment.equipmentName}`
+            equipments_container.appendChild(label)
+        })
+
     });
 
     filterModal.addEventListener('click', function (event) {
@@ -24,19 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', () => {
     const bookingModal = document.getElementById('booking-modal');
-    const bookNowButtons = document.querySelectorAll('.action-btn');
     const confirmBookingButton = document.getElementById('confirm-booking');
-
-    bookNowButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            bookingModal.style.display = 'flex';
-            bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
-        });
-    });
 
     confirmBookingButton.addEventListener('click', () => {
         const roomId = bookingModal.getAttribute('data-room-id');
-        bookClassroom(roomId);
+        handleBookings(roomId);
         bookingModal.style.display = 'none';
     });
 
@@ -50,14 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function getAllClassrooms() {
     const apiUrl = '/classroom/filter';
-    const userData = {};
+    // const userData = {};
 
     const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        // body: JSON.stringify(userData),
     });
 
     const Data = await response.json();
@@ -115,9 +118,9 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
 async function bookClassroom(room_id, date, time_period) {
     const apiUrl = '/booking/new';
     const userData = {
-        room_id,
-        date,
-        time_period
+        'room_id': room_id,
+        'date':date,
+        'time_period': time_period
     };
 
     const response = await fetch(apiUrl, {
@@ -149,15 +152,15 @@ async function bookClassroom(room_id, date, time_period) {
 }
 
 async function getEquipmentType() {
-    const apiUrl = '/equipment';
-    const userData = {};
+    const apiUrl = '/classroom/equipment';
+    // const userData = {};
 
     const response = await fetch(apiUrl, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        // body: JSON.stringify(userData),
     });
 
     const Data = await response.json();
@@ -176,7 +179,6 @@ async function getEquipmentType() {
     }
 }
 
-
 async function viewRooms() {
     const rooms = await getAllClassrooms();
     const roomList = document.getElementById('room-list');
@@ -184,19 +186,27 @@ async function viewRooms() {
     if (rooms.length > 0) {
         roomList.innerHTML = '';
         rooms.forEach(classroom => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                        <div class="room-info">
+            const room = document.createElement('div')
+            room.className = 'room-card'
+            room.innerHTML = `
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
                             <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                        </div>
-                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}">Book Now</button>
                     `;
-            roomList.appendChild(li);
+            roomList.appendChild(room);
         });
 
+        // Add event listeners to the newly created buttons
+        const bookNowButtons = document.querySelectorAll('.book-now-btn');
+        bookNowButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const bookingModal = document.getElementById('booking-modal');
+                bookingModal.style.display = 'flex';
+                bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
+            });
+        });
     }
 }
 
@@ -205,32 +215,38 @@ async function handleFilters() {
     const capacity_max = document.getElementById('capacity-max').value;
     const date = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => parseInt(checkbox.value));
     const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
-
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
     const roomList = document.getElementById('room-list');
 
     if (rooms.length > 0) {
         roomList.innerHTML = '';
         rooms.forEach(classroom => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                        <div class="room-info">
+            const room = document.createElement('div')
+            room.className = 'room-card'
+            room.innerHTML = `
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
                             <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                        </div>
-                        <button class="action-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}">Book Now</button>
                     `;
-            roomList.appendChild(li);
+            roomList.appendChild(room);
+        });
+
+        // Add event listeners to the newly created buttons
+        const bookNowButtons = document.querySelectorAll('.book-now-btn');
+        bookNowButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const bookingModal = document.getElementById('booking-modal');
+                bookingModal.style.display = 'flex';
+                bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
+            });
         });
     }
 }
 
 async function handleBookings(room_id) {
-    const date = document.getElementById('date').value;
-    const time_period = document.getElementById('time-period').value;
+    const date = document.getElementById('booking-date').value;
+    const time_period = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
     await bookClassroom(room_id, date, time_period);
 }
-
-
