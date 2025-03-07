@@ -87,6 +87,15 @@ class Equipment(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
+    def to_dict(self):
+        return {
+            'equipmentId': self.equipmentId,
+            'equipmentName': self.equipmentName,
+            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
+            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
+            'isDeleted': self.isDeleted,
+        }
+
 def get_all_equipments():
     list_equipment = Equipment.query.all()
     return list_equipment
@@ -156,6 +165,19 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+
+    def to_dict(self):
+        return {
+            'classroomId': self.classroomId,
+            'classroomName': self.classroomName,
+            'capacity': self.capacity,
+            'constrain': self.constrain,
+            'isRestricted': self.isRestricted,
+            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
+            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
+            'isDeleted': self.isDeleted,
+            'equipments': [eq.to_dict() for eq in self.Equipments]
+        }
 
 # classrooms
 def get_all_classrooms():
