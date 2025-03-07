@@ -48,17 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function getAllClassrooms() {
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const roomList = document.getElementById('room-list');
+async function getAllClassrooms() {
 
+    const apiUrl = '/auth/register';
+    const userData = {};
 
-    var requestOptions = {
+    const response = await fetch(apiUrl, {
         method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
 
     fetch("http://127.0.0.1:5000/classroom/filter", requestOptions)
         .then(response => response.json())
@@ -172,7 +175,7 @@ function getEquipmentType() {
         method: 'GET',
         redirect: 'follow'
     };
-    
+
     fetch("http://127.0.0.1:5000/equipment", requestOptions)
         .then(response => response.json())
         .then(result => {
