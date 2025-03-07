@@ -15,13 +15,16 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], days = []):
         conditions = [ClassEquipment.equipmentId == eq_id for eq_id in equipments]
         query = query.join(ClassEquipment).filter(and_(*conditions))
 
-    if days:
-        query = query.filter(Classroom.opening_days.overlap(days))
+    # if days:
+    #     query = query.filter(Classroom.opening_days.overlap(days))
 
     classrooms = query.all()
     classrooms_dict = [classroom.to_dict() for classroom in classrooms]
 
     return classrooms_dict
 
-def get_all_equipments():
-    return get_all_equipments()
+def get_equipments():
+    equipments = get_all_equipments()
+    print(equipments)
+    equipments = [equipment.to_dict() for equipment in equipments]
+    return equipments

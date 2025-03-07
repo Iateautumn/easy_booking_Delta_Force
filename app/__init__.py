@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, request
 from flask_login import current_user
-from app.auth.routes import auth_bp
+from app.auth.routes import auth_bp,booking_bp
 from app.classroom.routes import classroom_bp
 from app.extensions import db, login_manager, init_db
 
@@ -16,6 +16,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(classroom_bp)
+    app.register_blueprint(booking_bp)
 
     @app.route('/')
     def root_redirect():

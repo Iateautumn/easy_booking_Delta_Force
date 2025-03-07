@@ -59,3 +59,8 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
+@booking_bp.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    return render_template('/user/bookroom.html')
+

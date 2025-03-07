@@ -2,7 +2,7 @@
 from flask import Blueprint, request, jsonify
 from app.utils.response import success_response, error_response
 from app.classroom.services import (
-    get_all_equipments,
+    get_equipments,
     filter_classrooms
 )
 
@@ -34,7 +34,7 @@ def list_classrooms():
     return success_response(classrooms)
 
 @classroom_bp.route('/equipment', methods=['GET'])
-def get_equipments():
+def get_all_equipments():
     if request.method == 'GET':
-        return success_response(get_all_equipments())
+        return success_response(get_equipments())
 
