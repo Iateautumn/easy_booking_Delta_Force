@@ -3,7 +3,7 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
-from app.classroom.models import Classroom, ClassroomType
+from app.classroom.models import Classroom
 from app.booking.models import Reservation
 
 class UserStatus(Enum):
@@ -27,7 +27,7 @@ class User(UserMixin,db.Model):
     Classrooms = db.relationship(
         "Classroom", 
         secondary="reservation",
-        back_populates="Users"  # 使用back_populates代替backref
+        back_populates="Users"  
     )
 
     def __init__(self, status, name, email, password_hash, salt):
@@ -88,6 +88,21 @@ def delete_user(user_id):
     db.session.commit()
     return user
 
+def filter_user(user_id, status = None, name = None, email = None):
+    user = get_user_by_id(user_id)
+    if user is None:
+        return None
+    quary = User.query
+    if status is not None:
+        quary = quary.filter(status=status)
+    if name is not None:
+        quary = quary.filter(name=name)
+    if email is not None:
+        quary = quary.filter(email=email)
+    return quary.all()
+
+    
+    
 
 
 
