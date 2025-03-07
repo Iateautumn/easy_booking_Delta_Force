@@ -43,6 +43,9 @@ async function registerUser(username, email, password, status) {
         alert(`Internal server error (${Data.message})`);
     }
   }
+  else{
+    alert('Network error'); 
+  }
 }
 
 async function loginUser(email, password) {
@@ -68,6 +71,9 @@ async function loginUser(email, password) {
     const Data = await response.json();
     if (Data) {
       alert(`Login unauthorized, (${Data.message})`);
+    }
+    else {
+      alert('Network error'); 
     }
   }
 }
