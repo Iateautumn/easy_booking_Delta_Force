@@ -1,5 +1,4 @@
 # models/classroom.py
-from app.booking.models import Reservation
 from app.extensions import db
 from datetime import datetime
 # from app.auth.models import User
@@ -87,15 +86,6 @@ class Equipment(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
-    def to_dict(self):
-        return {
-            'equipmentId': self.equipmentId,
-            'equipmentName': self.equipmentName,
-            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
-            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
-            'isDeleted': self.isDeleted,
-        }
-
 def get_all_equipments():
     list_equipment = Equipment.query.all()
     return list_equipment
@@ -144,20 +134,16 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    # Users = db.relationship(
-    #     "User",
-    #     secondary="reservation",
-    #     back_populates="Classrooms"  # back_populates
-    # )
+    Users = db.relationship(
+        "User",
+        secondary="reservation",
+        back_populates="Classrooms"  # back_populates
+    )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",
         back_populates="Classrooms"  # back_populates
     )
-    @property
-    def users(self):
-        from app.auth.models import User
-        return User.query.join(Reservation).filter(Reservation.classroomId==self.classroomId).all()
 
     def __init__(self, classroomName, capacity):
         self.classroomName = classroomName
@@ -165,21 +151,14 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+    
+    @property
+    def users(self):
+        from app.auth.models import User
+        from app.booking.models import Reservation
+        return User.query.join(Reservation).filter(Reservation.classroomId == self.classroomId).all()
 
-    def to_dict(self):
-        return {
-            'classroomId': self.classroomId,
-            'classroomName': self.classroomName,
-            'capacity': self.capacity,
-            'constrain': self.constrain,
-            'isRestricted': self.isRestricted,
-            'createdAt': self.createdAt.isoformat() if self.createdAt else None,
-            'updatedAt': self.updatedAt.isoformat() if self.updatedAt else None,
-            'isDeleted': self.isDeleted,
-            'equipments': [eq.to_dict() for eq in self.Equipments]
-        }
 
-# classrooms
 def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
@@ -230,6 +209,18 @@ def update_classroom(classroomId = None, classroomName = None, capacity = None):
     db.session.commit()
     return classroom
 
+def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None):
+    query = Classroom.query  
+    
+    if classroomName is not None:
+        query = query.filter_by(classroomName=classroomName)  
+    if capacity is not None:
+        query = query.filter_by(capacity=capacity)  
+    if isRestricted is not None:
+        query = query.filter_by(isRestricted=isRestricted)  
+    list_classroom = query.all()  
+    return list_classroom
+
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'
@@ -246,10 +237,6 @@ class ClassEquipment(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
-
-def get_all_equipments():
-    list_equipment = Equipment.query.all()
-    return list_equipment
 
 def add_classequipment(classroomId, equipmentId):
     new_classequipment = ClassEquipment(classroomId, equipmentId)
