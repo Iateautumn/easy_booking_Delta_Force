@@ -29,8 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
         handleFilters();
         filterModal.style.display = 'none';
     });
-
-    viewRooms();
+    // set default date to today
+    const date = new Date().toISOString().split('T')[0];
+    getFilteredClassrooms("", "", date, []);
+    document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,7 +87,7 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
     const userData = {
         "capacity_min": capacity_min,
         "capacity_max": capacity_max,
-        "date/time": date,
+        "date": date,
         "equipment": equipment
     };
 
@@ -213,8 +215,9 @@ async function viewRooms() {
 async function handleFilters() {
     const capacity_min = document.getElementById('capacity-min').value;
     const capacity_max = document.getElementById('capacity-max').value;
-    const date = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => parseInt(checkbox.value));
+    const date = document.getElementById('booking-date').value;
     const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
+    document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
     const roomList = document.getElementById('room-list');
 
@@ -228,7 +231,7 @@ async function handleFilters() {
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
                             <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
             roomList.appendChild(room);
         });
@@ -240,6 +243,11 @@ async function handleFilters() {
                 const bookingModal = document.getElementById('booking-modal');
                 bookingModal.style.display = 'flex';
                 bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
+                bookingModal.setAttribute('data-room-available-time', button.getAttribute('data-room-available-time'));
+                document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.disabled = !button.getAttribute('data-room-available-time').split(',').includes(checkbox.value);
+                });
             });
         });
     }

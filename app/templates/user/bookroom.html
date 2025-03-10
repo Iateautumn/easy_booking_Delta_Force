@@ -60,27 +60,10 @@
 
             <section id="book-room-section" class="content-section">
                 <div class="search-bar">
-<!--                    <input type="text" placeholder="Search for rooms...">-->
-<!--                    <button class="search-btn">Search</button>-->
                     <button class="filter-btn" id="filter-btn">Filter</button>
+                    <label id="filter-date" class="checking-date-label"></label>
                 </div>
                 <div class="room-list" id="room-list">
-<!--                    <div class="room-card">-->
-<!--                        <h3>Room ?</h3>-->
-<!--                        <p>Capacity: ?</p>-->
-<!--&lt;!&ndash;                        <p>Date/Time: Mon. Tue. Fri. Sat. Sun.</p>&ndash;&gt;-->
-<!--                        <p>Equipment: ?</p>-->
-<!--                        <p>Constrain: ?</p>-->
-<!--&lt;!&ndash;                        <button class="action-btn">Book Now</button>&ndash;&gt;-->
-<!--                    </div>-->
-<!--                    <div class="room-card">-->
-<!--                        <h3>Room ?</h3>-->
-<!--                        <p>Capacity: ?</p>-->
-<!--&lt;!&ndash;                        <p>Date/Time: Mon. Tue. Fri. Sat. Sun.</p>&ndash;&gt;-->
-<!--                        <p>Equipment: ?</p>-->
-<!--                        <p>Constrain: ?</p>-->
-<!--&lt;!&ndash;                        <button class="action-btn">Book Now</button>&ndash;&gt;-->
-<!--                    </div>-->
                 </div>
             </section>
         </main>
@@ -91,8 +74,6 @@
         <div class="booking-content">
             <h2>Book Room</h2>
             <div class="booking-group">
-                <label class="booking-label" for="booking-date">Date:</label>
-                <input type="date" id="booking-date" class="input">
             </div>
             <div class="booking-group">
                 <label class="booking-label">Time Slots:</label>
@@ -125,16 +106,8 @@
                 </div>
             </div>
             <div class="filter-group">
-                <label class="filter-label">Date/Time:</label>
-                <div class="days">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
-                </div>
+                <label class="filter-label" for="booking-date">Date:</label>
+                <input type="date" id="booking-date" class="input">
             </div>
             <div class="filter-group">
                 <label class="filter-label">Equipment:</label>
