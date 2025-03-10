@@ -209,6 +209,18 @@ def update_classroom(classroomId = None, classroomName = None, capacity = None):
     db.session.commit()
     return classroom
 
+def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None):
+    query = Classroom.query  
+    
+    if classroomName is not None:
+        query = query.filter_by(classroomName=classroomName)  
+    if capacity is not None:
+        query = query.filter_by(capacity=capacity)  
+    if isRestricted is not None:
+        query = query.filter_by(isRestricted=isRestricted)  
+    list_classroom = query.all()  
+    return list_classroom
+
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'

@@ -95,7 +95,7 @@ def delete_user(user_id):
     db.session.commit()
     return user
 
-def filter_user(user_id, status = None, name = None, email = None):
+def get_users_by_filter(user_id, status = None, name = None, email = None):
     user = get_user_by_id(user_id)
     if user is None:
         return None
