@@ -1,71 +1,16 @@
-# models/classroom.py
-from app.extensions import db
+# models/booking.py
+
 from datetime import datetime
-# from app.auth.models import User
-# from app.booking.models import Reservation
+from enum import Enum
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-"""
-class ClassroomType(db.Model):
-    __tablename__ = 'classroomType'
-    
-    typeId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    typeName = db.Column(db.String(50), unique=True, nullable=False)
-    capacity = db.Column(db.Integer, nullable=False)
-    equipment = db.Column(db.Text, nullable=False)
-    createdAt = db.Column(db.DateTime)
-    updatedAt = db.Column(db.DateTime)
-    isDeleted = db.Column(db.Boolean, default=False)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/bookingsystem?charset=utf8'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True # 这一行如果不添加，程序会报警告。
+db= SQLAlchemy(app)
 
-    def __init__(self, typeName, capacity, equipment):
-        self.typeName = typeName
-        self.capacity = capacity
-        self.equipment = equipment
-        self.createdAt = datetime.now()
-        self.updatedAt = datetime.now()
-        self.isDeleted = False
-
-def get_all_classroom_types():
-    list_classroom_type = ClassroomType.query.all()
-    return list_classroom_type
-
-def add_classroom_type(typeName, capacity, equipment):
-    new_classroom_type = ClassroomType(typeName, capacity, equipment)
-    db.session.add(new_classroom_type)
-    db.session.commit()
-    return new_classroom_type
-
-def get_classroom_type_by_id(typeId):
-    classroom_type = ClassroomType.query.filter_by(typeId=typeId).first()
-    return classroom_type
-
-def get_classroom_type_by_name(typeName):
-    classroom_type = ClassroomType.query.filter_by(typeName=typeName).first()
-    return classroom_type
-
-def delete_classroom_type(typeId):
-    classroom_type = ClassroomType.query.filter_by(typeId=typeId).first()
-    classroom_type.isDeleted = True
-    db.session.commit()
-    return classroom_type
-
-def get_classroom_type_by_capacity(capacity):
-    list_classroom_type = ClassroomType.query.filter(ClassroomType.capacity>=capacity).all()
-    return list_classroom_type
-
-def update_classroom_type(typeId, typeName, capacity, equipment):
-    classroom_type = ClassroomType.query.filter_by(typeId=typeId).first()
-    if classroom_type is None:
-        return False
-    if typeName is not None:
-        classroom_type.typeName = typeName
-    if capacity is not None:
-        classroom_type.capacity = capacity
-    if equipment is not None:
-        classroom_type.equipment = equipment
-    classroom_type.updatedAt = datetime.now()
-    db.session.commit()
-    return classroom_type
-"""
 
 class Equipment(db.Model):
     __tablename__ = 'equipment'
@@ -77,7 +22,7 @@ class Equipment(db.Model):
     Classrooms = db.relationship(
         "Classroom", 
         secondary="classequipment",
-        back_populates="Equipments"  # 
+        back_populates="Equipments"  # 使用back_populates代替backref
     )
 
     def __init__(self, equipmentName):
@@ -134,15 +79,15 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    Users = db.relationship(
-        "User",
-        secondary="reservation",
-        back_populates="Classrooms"  # back_populates
-    )
+    # Users = db.relationship(
+    #     "User",
+    #     secondary="reservation",
+    #     back_populates="Classrooms"  # 保持一致的back_populates
+    # )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",
-        back_populates="Classrooms"  # back_populates
+        back_populates="Classrooms"  # 保持一致的back_populates
     )
 
     def __init__(self, classroomName, capacity):
@@ -151,14 +96,8 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
-    
-    @property
-    def users(self):
-        from app.auth.models import User
-        from app.booking.models import Reservation
-        return User.query.join(Reservation).filter(Reservation.classroomId == self.classroomId).all()
 
-
+# classrooms
 def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
@@ -262,6 +201,17 @@ def get_classequipment_by_equipment_id(equipmentId):
     list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId).all()
     return list_classequipment
 
+
+@app.route('/')
+def index():
+    # print((str)(get_classequipment_by_classroom_id(1)))
+    # print((str)(add_classequipment(5,4)))
+    print((str)(add_equipment('test')))
+
+    return 'hello world' 
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
