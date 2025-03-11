@@ -12,6 +12,7 @@ class ReservationStatus(Enum):
     Cancelled = "Cancelled"     
     Finished = "Finished"       
     Rejected = "Rejected"  
+    Pending = "Pending"
 
  
 class Reservation(db.Model):
