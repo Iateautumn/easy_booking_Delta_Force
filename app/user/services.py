@@ -10,16 +10,17 @@ def own_reservations(user_id):
         raise BusinessError("error: " + str(e), 500)
 
     def reservation_to_dict(reservation):
+        classroom = get_classroom_by_id(reservation.classroomId)
         result = {
             "reservationId": reservation.reservationId,
             "status": str(reservation.status),
-            "roomName": get_classroom_by_id(reservation.classroomId).classroomName,
+            "roomName": classroom.classroomName,
             "date": get_date_time(str(reservation.startTime))[0],
             "timePeriod": get_time_slot(str(reservation.startTime)),
-            "capacity": get_classroom_by_id(reservation.classroomId).capacity,
-            "equipment": [equipment.equipmentName for equipment in get_classroom_by_id(reservation.classroomId).Equipments],
-            "isRestricted": get_classroom_by_id(reservation.classroomId).isRestricted,
-            "constrain": get_classroom_by_id(reservation.classroomId).constrain,
+            "capacity": classroom.capacity,
+            "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
+            "isRestricted": classroom.isRestricted,
+            "constrain": classroom.constrain,
         }
         return result
 

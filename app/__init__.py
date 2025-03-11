@@ -24,19 +24,19 @@ def create_app():
     @app.route('/')
     def root_redirect():
         if current_user.is_authenticated:
-            return redirect(url_for('booking.dashboard'))
+            return redirect(url_for('user.bookroom'))
         return redirect(url_for('auth.login'))
 
-    @app.before_request
-    def check_authentication():
-
-        if request.path.startswith('/static'):
-            return
-        if request.endpoint in ['auth.login', 'auth.register']:
-            return
-
-        if not current_user.is_authenticated:
-            return redirect(url_for('auth.login', next=request.full_path))
+    # @app.before_request
+    # def check_authentication():
+    #
+    #     if request.path.startswith('/static'):
+    #         return
+    #     if request.endpoint in ['auth.login', 'auth.register']:
+    #         return
+    #
+    #     if not current_user.is_authenticated:
+    #         return redirect(url_for('auth.login', next=request.full_path))
 
     return app
 

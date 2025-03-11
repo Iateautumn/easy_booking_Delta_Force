@@ -6,7 +6,7 @@ from app.utils.exceptions import BusinessError
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 @user_bp.route('/reservation', methods=['GET', 'POST'])
-def login():
+def reservations():
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
     if request.method == 'GET':
@@ -17,9 +17,16 @@ def login():
             return error_response(str(e), e.code)
         return success_response(users)
 
+@user_bp.route('/bookroom')
+def bookroom():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
 
-@user_bp.route('/my_bookings')
-def my_bookings():
+    return render_template('user/bookroom.html')
+
+@user_bp.route('/mybookings')
+def mybookings():
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
     return render_template("user/mybookings.html")
+
