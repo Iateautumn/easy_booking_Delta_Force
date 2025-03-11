@@ -53,14 +53,9 @@ def register():
             return error_response(str(e),e.code)
     return render_template('auth/login.html')
 
-
 @auth_bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
-booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
-@booking_bp.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    return render_template('/user/bookroom.html')
 

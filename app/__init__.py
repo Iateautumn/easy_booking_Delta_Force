@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, request
 from flask_login import current_user
-from app.auth.routes import auth_bp,booking_bp
+
+from app.auth.routes import auth_bp
+from app.booking.routes import booking_bp
 from app.classroom.routes import classroom_bp
 from app.extensions import db, login_manager, init_db
 
