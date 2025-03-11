@@ -1,7 +1,10 @@
+let rooms;
+
 document.addEventListener('DOMContentLoaded', async function () {
     const filterBtn = document.getElementById('filter-btn');
     const filterModal = document.getElementById('filter-modal');
     const applyFilterBtn = document.getElementById('apply-filter');
+    const dateInput = document.getElementById('booking-date');
 
     filterBtn.addEventListener('click', async function () {
         filterModal.style.display = 'flex';
@@ -30,41 +33,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         filterModal.style.display = 'none';
     });
     // set default date to today
-    const date = new Date().toISOString().split('T')[0];
-    document.getElementById('booking-date').value = date;
-    const rooms = await getFilteredClassrooms("", "", date, []);
-    document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
-    const roomList = document.getElementById('room-list');
-    if (rooms.length > 0) {
-        roomList.innerHTML = '';
-        rooms.forEach(classroom => {
-            const room = document.createElement('div')
-            room.className = 'room-card'
-            room.innerHTML = `
-                            <h3>${classroom.classroomName}</h3>
-                            <p>Capacity: ${classroom.capacity}</p>
-                            <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
-                    `;
-            roomList.appendChild(room);
-        });
+    getTodayClassrooms(dateInput);
 
-        // Add event listeners to the newly created buttons
-        const bookNowButtons = document.querySelectorAll('.book-now-btn');
-        bookNowButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const bookingModal = document.getElementById('booking-modal');
-                bookingModal.style.display = 'flex';
-                bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
-                bookingModal.setAttribute('data-room-available-time', button.getAttribute('data-room-available-time'));
-                document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.disabled = !button.getAttribute('data-room-available-time').split(',').includes(checkbox.value);
-                });
-            });
-        });
-    }
+    viewRooms();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,33 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-async function getAllClassrooms() {
-    const apiUrl = '/classroom/filter';
-    // const userData = {};
-
-    const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify(userData),
-    });
-
-    const Data = await response.json();
-
-    if (Data) {
-        switch (Data.code) {
-            case 200:
-                return Array.isArray(Data.data) ? Data.data : [];
-            default:
-                alert(`Error, (${Data.message})`);
-                return [];
-        }
-    }
-    else {
-        alert('Error, Network Error');
-        return [];
-    }
+async function getTodayClassrooms(dateInput) {
+    const date = new Date().toISOString().split('T')[0];
+    dateInput.value = date;
+    rooms = await getFilteredClassrooms("", "", date, []);
+    console.log(rooms);
 }
 
 async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {
@@ -214,7 +163,6 @@ async function getEquipmentType() {
 }
 
 async function viewRooms() {
-    const rooms = await getAllClassrooms();
     const roomList = document.getElementById('room-list');
 
     if (rooms.length > 0) {
@@ -227,7 +175,7 @@ async function viewRooms() {
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
                             <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}">Book Now</button>
+                            <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
             roomList.appendChild(room);
         });
@@ -239,6 +187,11 @@ async function viewRooms() {
                 const bookingModal = document.getElementById('booking-modal');
                 bookingModal.style.display = 'flex';
                 bookingModal.setAttribute('data-room-id', button.getAttribute('data-room-id'));
+                bookingModal.setAttribute('data-room-available-time', button.getAttribute('data-room-available-time'));
+                document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.disabled = !button.getAttribute('data-room-available-time').split(',').includes(checkbox.value);
+                });
             });
         });
     }
