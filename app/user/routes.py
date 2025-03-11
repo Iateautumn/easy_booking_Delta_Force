@@ -16,3 +16,10 @@ def login():
         except BusinessError as e:
             return error_response(str(e), e.code)
         return success_response(users)
+    
+    
+@user_bp.route('/my_bookings')
+def my_bookings():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return render_template("user/mybookings.html")
