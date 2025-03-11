@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     // set default date to today
     const date = new Date().toISOString().split('T')[0];
+    document.getElementById('booking-date').value = date;
     const rooms = await getFilteredClassrooms("", "", date, []);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
     const roomList = document.getElementById('room-list');

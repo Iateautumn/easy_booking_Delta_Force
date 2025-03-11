@@ -4,7 +4,7 @@ from app.utils.exceptions import BusinessError
 from sqlalchemy import and_
 from werkzeug.http import parse_age
 from app.booking.models import add_reservation, get_reservation_by_time
-from app.utils.datetime_utils import time_slot_map, add_time, slot_time_map
+from app.utils.datetime_utils import time_slot_map, add_time, slot_time_map, get_current_date
 from app.extensions import db
 
 def get_certain_reservation(classrooom_id, start_time, end_time):
@@ -15,6 +15,8 @@ def get_certain_reservation(classrooom_id, start_time, end_time):
     return False
 
 def new_booking(user_id, classroom_id, time_period, date):
+    if not date:
+        raise BusinessError("date is required", 400)
     for i in time_period:
         start_time = add_time(date, time_slot_map[i]['start'])
         end_time = add_time(date, time_slot_map[i]['end'])
