@@ -25,6 +25,7 @@ def list_classrooms():
         equipments = data['equipment']
         date = data['date']
 
+
         classrooms = filter_classrooms(
             capacity_range=[capacity_min, capacity_max],
             equipments=equipments,

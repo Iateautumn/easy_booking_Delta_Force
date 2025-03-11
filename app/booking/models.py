@@ -2,8 +2,7 @@
 from app.extensions import db
 from datetime import datetime
 from enum import Enum
-# from app.auth.models import User
-# from app.classroom.models import Classroom
+
 
 
 class ReservationStatus(Enum):
@@ -13,6 +12,7 @@ class ReservationStatus(Enum):
     Finished = "Finished"       
     Rejected = "Rejected"  
     Pending = "Pending"
+
 
  
 class Reservation(db.Model):

@@ -1,4 +1,3 @@
-# models/classroom.py
 from app.extensions import db
 from datetime import datetime
 # from app.auth.models import User
@@ -139,11 +138,13 @@ class Classroom(db.Model):
         secondary="reservation",
         back_populates="Classrooms"  # back_populates
     )
+
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",
         back_populates="Classrooms"  # back_populates
     )
+
 
     def __init__(self, classroomName, capacity):
         self.classroomName = classroomName
@@ -151,12 +152,13 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
-    
+
     @property
     def users(self):
         from app.auth.models import User
         from app.booking.models import Reservation
         return User.query.join(Reservation).filter(Reservation.classroomId == self.classroomId).all()
+
 
 
 def get_all_classrooms():
@@ -225,6 +227,7 @@ class ClassEquipment(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
+
 
 def add_classequipment(classroomId, equipmentId):
     new_classequipment = ClassEquipment(classroomId, equipmentId)

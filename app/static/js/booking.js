@@ -1,3 +1,4 @@
+
 var rooms;
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -5,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const filterModal = document.getElementById('filter-modal');
     const applyFilterBtn = document.getElementById('apply-filter');
     const dateInput = document.getElementById('booking-date');
+
 
     filterBtn.addEventListener('click', async function () {
         filterModal.style.display = 'flex';
@@ -35,16 +37,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     // set default date to today
     await getTodayClassrooms(dateInput);
 
+
     viewRooms();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const bookingModal = document.getElementById('booking-modal');
+
     const confirmBookingButton = document.getElementById('confirm-booking');
 
     confirmBookingButton.addEventListener('click', () => {
         const roomId = bookingModal.getAttribute('data-room-id');
         handleBookings(roomId);
+
         bookingModal.style.display = 'none';
     });
 
@@ -56,10 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
 async function getTodayClassrooms(dateInput) {
     const date = new Date().toISOString().split('T')[0];
     dateInput.value = date;
     rooms = await getFilteredClassrooms("", "", date, []);
+
 }
 
 async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {
@@ -68,6 +75,7 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
         "capacity_min": capacity_min,
         "capacity_max": capacity_max,
         "date": date,
+
         "equipment": equipment
     };
 
@@ -100,9 +108,11 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
 async function bookClassroom(room_id, date, time_period) {
     const apiUrl = '/booking/new';
     const userData = {
+
         'room_id': room_id,
         'date':date,
         'time_period': time_period
+
     };
 
     const response = await fetch(apiUrl, {
@@ -161,7 +171,9 @@ async function getEquipmentType() {
     }
 }
 
+
 async function viewRooms() {
+
     const roomList = document.getElementById('room-list');
 
     if (rooms.length > 0) {
@@ -170,6 +182,7 @@ async function viewRooms() {
             const room = document.createElement('div')
             room.className = 'room-card'
             room.innerHTML = `
+
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
@@ -193,6 +206,7 @@ async function viewRooms() {
                 });
             });
         });
+
     }
 }
 
@@ -202,6 +216,7 @@ async function handleFilters() {
     const date = document.getElementById('booking-date').value;
     const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
+
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
     const roomList = document.getElementById('room-list');
 
@@ -211,6 +226,7 @@ async function handleFilters() {
             const room = document.createElement('div')
             room.className = 'room-card'
             room.innerHTML = `
+
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
@@ -233,6 +249,7 @@ async function handleFilters() {
                     checkbox.disabled = !button.getAttribute('data-room-available-time').split(',').includes(checkbox.value);
                 });
             });
+
         });
     }
 }
@@ -242,3 +259,4 @@ async function handleBookings(room_id) {
     const time_period = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
     await bookClassroom(room_id, date, time_period);
 }
+

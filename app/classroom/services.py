@@ -1,4 +1,4 @@
-# app/classrooms/services.py
+
 from pycparser.ply.yacc import resultlimit
 
 from app.classroom.models import Classroom, get_all_equipments, ClassEquipment
@@ -7,6 +7,7 @@ from app.booking.models import get_reservation_by_classroom_id
 from app.utils.datetime_utils import time_slot_map, slot_time_map, is_same_date, get_time_slot, get_current_date
 
 def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date()):
+
     query = Classroom.query
 
     if capacity_range[0]:
