@@ -15,3 +15,4 @@ def login_user(email, password):
     if user and check_password_hash(user.password_hash, password):
         return user
     return None
+
