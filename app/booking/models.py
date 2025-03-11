@@ -6,11 +6,10 @@ from enum import Enum
 
 
 class ReservationStatus(Enum):
-    
-    Reserved = "Reserved"       
-    Cancelled = "Cancelled"     
-    Finished = "Finished"       
-    Rejected = "Rejected"  
+    Reserved = "Reserved"
+    Cancelled = "Cancelled"
+    Finished = "Finished"
+    Rejected = "Rejected"
     Pending = "Pending"
 
 
