@@ -1,4 +1,4 @@
-let rooms;
+var rooms;
 
 document.addEventListener('DOMContentLoaded', async function () {
     const filterBtn = document.getElementById('filter-btn');
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         filterModal.style.display = 'none';
     });
     // set default date to today
-    getTodayClassrooms(dateInput);
+    await getTodayClassrooms(dateInput);
 
     viewRooms();
 });
@@ -60,7 +60,6 @@ async function getTodayClassrooms(dateInput) {
     const date = new Date().toISOString().split('T')[0];
     dateInput.value = date;
     rooms = await getFilteredClassrooms("", "", date, []);
-    console.log(rooms);
 }
 
 async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {
