@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, request
 from flask_login import current_user
 from app.auth.routes import auth_bp
+from app.admin.routes import admin_bp
 from app.extensions import db, login_manager, init_db
 
 def create_app():
@@ -13,17 +14,9 @@ def create_app():
     login_manager.login_view = 'auth.login'
 
     app.register_blueprint(auth_bp)
-
-    init_db(app)
-
-    app.config['SECRET_KEY'] = 'your-secret-key-here'
-
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
-
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(classroom_bp)
-    app.register_blueprint(booking_bp)
+    app.register_blueprint(admin_bp)
+    # app.register_blueprint(classroom_bp)
+    # app.register_blueprint(booking_bp)
 
     @app.route('/')
     def root_redirect():
@@ -41,6 +34,7 @@ def create_app():
 
         # if not current_user.is_authenticated:
         #     return redirect(url_for('auth.login', next=request.full_path))
+
 
     return app
 
