@@ -254,7 +254,7 @@ def delete_classequipment(classEquipmentId):
     db.session.commit()
     return classequipment
 
-def update_classequipment(classEquipmentId, classroomId, equipmentId):
+def update_classequipment(classEquipmentId, classroomId = None, equipmentId = None):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
     if classequipment is None:
         return False

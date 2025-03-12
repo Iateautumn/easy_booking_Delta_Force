@@ -29,6 +29,8 @@ class User(UserMixin,db.Model):
     #     secondary="reservation",
     #     back_populates="Users"  # 使用back_populates代替backref
     # )
+    def get_id(self):
+        return self.userId
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
