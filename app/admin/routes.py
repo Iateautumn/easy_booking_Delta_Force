@@ -9,7 +9,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 def check_admin_permission():
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
-    if not current_user.status == "Admin":
+    if not current_user.status.value == "Admin":
         return error_response("permission denied", 403)
 @admin_bp.route('/reservation/request', methods=['GET'])
 def reservation_request():

@@ -6,7 +6,7 @@ get_reservation_by_status,
 get_reservation_by_id,
 update_reservation)
 from app.classroom.models import Classroom, get_classroom_by_id
-from app.utils.datetime_utils import slot_time_map
+from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
 ### 这里的user是一个管理员admin，the administrator can approve the booking request for restricted rooms 
@@ -24,11 +24,11 @@ def get_reservation_requests():
             reservation_data = {
                 "reservationId": reservation.reservationId,
                 "constrain": classroom.constrain,
-                "classroomName": classroom.name,
+                "classroomName": classroom.classroomName,
                 "username": user.name,
                 "userstatus": user.status.value,
-                "date": reservation.startTime,
-                "timePeriod": slot_time_map[reservation.startTime.isoformat().split("T")[1]],
+                "date": str(reservation.startTime),
+                "timePeriod": get_time_slot(str(reservation.startTime))
             }
             reservation_info_list.append(reservation_data)
     except Exception as e:
