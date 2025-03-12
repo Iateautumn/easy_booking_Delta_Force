@@ -125,6 +125,9 @@ header h1 {
 .search-bar {
     display: flex;
     margin-bottom: 20px;
+    align-items: center;
+    gap: 10px;
+
 }
 
 .search-bar input {
@@ -154,7 +157,8 @@ header h1 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    height: 60vh;
+    height: 70vh;
+
     overflow: auto;
 }
 
@@ -314,7 +318,7 @@ header h1 {
     font-size: 1rem;
     transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
 }
-  
+
 .filter-label {
     display: block;
     margin-bottom: .3rem;
@@ -344,6 +348,8 @@ header h1 {
     --primary-color: #13439b;
     --secondary-color: #fff;
     --primary-hover-color: #13439b;
+    --disabled-color: #ccc;
+
     /* checkbox */
     --checkbox-diameter: 1rem;
     --checkbox-border-radius: 5px;
@@ -361,7 +367,20 @@ header h1 {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
-  
+
+  /* 添加 :disabled 伪类 */
+.ui-checkbox:disabled {
+    background: var(--disabled-color);
+    border-color: var(--disabled-color);
+    cursor: not-allowed;
+}
+
+.ui-checkbox:disabled::before {
+    border-right-color: var(--disabled-color);
+    border-bottom-color: var(--disabled-color);
+}
+
+
   .ui-checkbox {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -422,7 +441,7 @@ header h1 {
     background: var(--primary-color);
     border-color: transparent;
   }
-  
+
   .ui-checkbox:checked::before {
     opacity: 1;
     -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
@@ -604,4 +623,13 @@ header h1 {
 
 .ui-checkbox {
     margin-right: 10px;
+}
+
+.checking-date-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #05060f99;
+    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+
 }
