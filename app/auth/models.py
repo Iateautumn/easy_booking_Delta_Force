@@ -46,6 +46,9 @@ class User(UserMixin,db.Model):
         from app.booking.models import Reservation
         return Classroom.query.join(Reservation).filter(Reservation.userId == self.userId).all()
 
+    def get_id(self):
+        return self.userId
+
 
 # add user
 def add_user(status, name, email, password_hash, salt):
