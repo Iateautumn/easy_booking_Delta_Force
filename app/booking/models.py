@@ -2,16 +2,17 @@
 from app.extensions import db
 from datetime import datetime
 from enum import Enum
-
+# from app.auth.models import User
+# from app.classroom.models import Classroom
 
 
 class ReservationStatus(Enum):
-    Reserved = "Reserved"
-    Cancelled = "Cancelled"
-    Finished = "Finished"
-    Rejected = "Rejected"
+    
+    Reserved = "Reserved"       
+    Cancelled = "Cancelled"     
+    Finished = "Finished"       
+    Rejected = "Rejected"  
     Pending = "Pending"
-
 
  
 class Reservation(db.Model):
@@ -51,6 +52,22 @@ def add_reservation(userId, classroomId, startTime, endTime):
     db.session.commit()
     return new_reservation
 
+def get_reservation_by_filter(userId=None, classroomId=None, startTime=None, endTime=None, status=None):
+    query = Reservation.query
+    if userId is not None:
+        query = query.filter_by(userId=userId)
+    if classroomId is not None:
+        query = query.filter_by(classroomId=classroomId)
+    if startTime is not None:
+        query = query.filter(Reservation.startTime>=startTime)
+    if endTime is not None:
+        query = query.filter(Reservation.endTime<=endTime)
+    if status is not None:
+        query = query.filter_by(status=status)
+    list_reservation = query.all()
+    return list_reservation
+
+
 def get_reservation_by_time(startTime, endTime):
     list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime).all()
     return list_reservation
@@ -77,7 +94,7 @@ def delete_reservation(reservationId):
     db.session.commit()
     return reservation
 
-def update_reservation(reservationId, userId, classroomId, startTime, endTime, status):
+def update_reservation(reservationId, userId = None, classroomId = None, startTime = None, endTime = None, status = None):
     reservation = Reservation.query.filter_by(reservationId=reservationId).first()
     if reservation is None:
         return False
