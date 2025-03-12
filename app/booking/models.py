@@ -5,13 +5,13 @@ from enum import Enum
 
 
 
+
 class ReservationStatus(Enum):
     Reserved = "Reserved"
     Cancelled = "Cancelled"
     Finished = "Finished"
     Rejected = "Rejected"
     Pending = "Pending"
-
 
  
 class Reservation(db.Model):
@@ -92,5 +92,11 @@ def update_reservation(reservationId, userId, classroomId, startTime, endTime, s
     if status is not None:
         reservation.status = status
     reservation.updatedAt = datetime.now()
+    db.session.commit()
+    return reservation
+
+def cancel_reservation(reservationId):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation.status = ReservationStatus.Cancelled
     db.session.commit()
     return reservation
