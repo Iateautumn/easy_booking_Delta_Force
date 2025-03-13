@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from app import db
 from app.auth.models import User, get_user_by_id, UserStatus
 from app.booking.models import (
 Reservation, 
