@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from typing import NewType
 
 from app.auth.models import User, get_user_by_id, UserStatus
 from app.booking.models import (
@@ -8,7 +8,7 @@ ReservationStatus,
 get_reservation_by_status,
 get_reservation_by_id,
 update_reservation)
-from app.classroom.models import Classroom, get_classroom_by_id, ClassEquipment
+from app.classroom.models import delete_classroom,add_classroom, get_classroom_by_id, add_classequipment, update_classroom,delete_classequipment, get_classequipment_by_classroom_id, add_equipment
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
 from app.utils.exceptions import BusinessError
 
@@ -65,54 +65,53 @@ def reject_reservation(reservationId):
          
 
 
-def add_room(classroom_name, capacity, equipments=[], new_equipment = []):
+def add_room(classroom_name, capacity, equipment=[], new_equipment = [], constrain = ''):
 
     try:
-        new_classroom = Classroom.add_classroom(
+        new_classroom = add_classroom(
             classroomName=classroom_name,
             capacity=capacity
         )
-
-        new_classroom.updatedAt = datetime.now()
-
-        for equip_id in equipments:
-            ClassEquipment.add_classequipment(
+        # new_classroom.updatedAt = datetime.now()
+        for new_equipment_name in new_equipment:
+            new_equipment_instance = add_equipment(new_equipment_name)
+            equipment.append(new_equipment_instance.equipmentId)
+        for equip_id in equipment:
+            add_classequipment(
                 classroomId=new_classroom.classroomId,
                 equipmentId=equip_id
+
             )
-
         return [str(classroom_name)]
-
     except Exception as e:
         raise BusinessError("Add room error: " + str(e), 500)
 
 
 def modify_room(classroom_id, classroom_name=None, capacity=None,
-                equipment_ids=None, new_equipment = []):
+                equipment=[], new_equipment = [], constrain=''):
 
     # if current_user.status != UserStatus.Admin.value:
     #     return {"status": "error", "message": "no admin power"}, 403
 
     try:
-        updated = Classroom.update_classroom(
+        update_classroom(
             classroomId=classroom_id,
             classroomName=classroom_name,
             capacity=capacity
         )
 
-        classroom = Classroom.get_classroom_by_id(classroom_id)
-        classroom.updatedAt = datetime.now()
+        my_equipments = get_classequipment_by_classroom_id(classroom_id)
+        for my_equipment in my_equipments:
+            delete_classequipment(my_equipment.classEquipmentId)
 
-        if equipment_ids is not None:
-            existing_equipments = ClassEquipment.get_classequipment_by_classroom_id(classroom_id)
-            for eq in existing_equipments:
-                ClassEquipment.delete_classequipment(eq.classEquipmentId)
-
-            for equip_id in equipment_ids:
-                ClassEquipment.add_classequipment(
-                    classroomId=classroom_id,
-                    equipmentId=equip_id
-                )
+        for new_equipment_name in new_equipment:
+            new_equipment_instance = add_equipment(new_equipment_name)
+            equipment.append(new_equipment_instance.equipmentId)
+        for equip_id in equipment:
+            add_classequipment(
+                classroomId=classroom_id,
+                equipmentId=equip_id
+            )
 
     except Exception as e:
         raise BusinessError("Add room error: " + str(e), 500)
@@ -120,42 +119,26 @@ def modify_room(classroom_id, classroom_name=None, capacity=None,
 
 
 def delete_room(classroom_id):
-    def delete_room(current_user, request_data):
-        # if current_user.status != UserStatus.Admin.value:
-        #     return {
-        #         "code": 403,
-        #         "message": "Permission denied",
-        #         "data": []
-        #     }
-
         try:
 
-            classroom_id = request_data["classroom_id"]
-            classroom = Classroom.get_classroom_by_id(classroom_id)
+            classroom = get_classroom_by_id(classroom_id)
 
+            delete_classroom(classroom_id)
 
-            Classroom.delete_classroom(classroom_id)
-
-
-            equipment_relations = ClassEquipment.get_classequipment_by_classroom_id(classroom_id)
+            equipment_relations = get_classequipment_by_classroom_id(classroom_id)
             for relation in equipment_relations:
-                ClassEquipment.delete_classequipment(relation.classEquipmentId)
-
-            return [str(classroom.classroomName)]
+                delete_classequipment(relation.classEquipmentId)
 
         except Exception as e:
             raise BusinessError("Server error: " + str(e), 500)
 
 
-# def get_all_rooms(current_user):
+# def get_all_rooms():
 #
-#     if current_user.status != UserStatus.Admin.value:
-#         return {"status": "error", "message": "no admin power"}, 403
+#     # if current_user.status != UserStatus.Admin.value:
+#     #     return {"status": "error", "message": "no admin power"}, 403
 #
 #     try:
-#         all_classrooms = Classroom.query.options(
-#             db.joinedload(Classroom.Equipments)
-#         ).order_by(Classroom.classroomId).all()
 #
 #         classroom_data = []
 #         for room in all_classrooms:
@@ -177,12 +160,8 @@ def delete_room(classroom_id):
 #             })
 #
 #         return {
-#             "status": "success",
-#             "data": {
-#                 "total": len(classroom_data),
-#                 "classrooms": classroom_data
-#             }
-#         }, 200
+#             "data": classroom_data
+#         }
 #
 #     except Exception as e:
 #         return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500

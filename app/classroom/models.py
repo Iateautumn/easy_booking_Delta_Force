@@ -165,8 +165,8 @@ def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 
-def add_classroom(classroomName, capactiy):
-    new_classroom = Classroom(classroomName, capactiy)
+def add_classroom(classroomName, capacity):
+    new_classroom = Classroom(classroomName, capacity)
     db.session.add(new_classroom)
     db.session.commit()
     return new_classroom
@@ -276,8 +276,20 @@ def get_classequipment_by_equipment_id(equipmentId):
     list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId).all()
     return list_classequipment
 
+def get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId):
+    classequipment = ClassEquipment.query.filter_by(classroomId=classroomId, equipmentId=equipmentId).first()
+    return classequipment
 
-
+def add_classequipment(classroomId, equipmentId):
+    result = get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId)
+    if result is not None:
+        result.isDeleted = False
+        db.session.commit()
+        return result
+    new_classequipment = ClassEquipment(classroomId, equipmentId)
+    db.session.add(new_classequipment)
+    db.session.commit()
+    return new_classequipment
 
 
 

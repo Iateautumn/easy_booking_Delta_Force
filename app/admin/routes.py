@@ -73,9 +73,10 @@ def add_classroom():
     except Exception as e:
         return error_response("bad request: " + str(e), 400)
 
-    user_id = current_user.userId
+    # user_id = current_user.userId
+    user_id = 1
     try:
-        add_room(current_user=user_id, **data)
+        add_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
         return error_response(str(e), e.code)
@@ -90,14 +91,15 @@ def modify_classroom():
     except Exception as e:
         return error_response("bad request: " + str(e), 400)
 
-    user_id = current_user.userId
+    # user_id = current_user.userId
+    user_id = 1
     try:
-        modify_room(current_user=user_id, **data)
+        modify_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
         return error_response(str(e), e.code)
 
-@admin_bp.route('/classroom/delete', methods=['POST'])
+@admin_bp.route('/classroom/remove', methods=['POST'])
 def delete_classroom():
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
@@ -109,7 +111,7 @@ def delete_classroom():
 
     user_id = current_user.userId
     try:
-        delete_room(current_user=user_id, **data)
+        delete_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
         return error_response(str(e), e.code)
