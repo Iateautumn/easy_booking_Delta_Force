@@ -111,3 +111,11 @@ def update_reservation(reservationId, userId = None, classroomId = None, startTi
     reservation.updatedAt = datetime.now()
     db.session.commit()
     return reservation
+
+
+def cancel_reservation(reservationId):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation.status = ReservationStatus.Cancelled
+    reservation.updatedAt = datetime.now()
+    db.session.commit()
+    return reservation

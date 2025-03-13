@@ -120,7 +120,14 @@ def update_equipment(equipmentId, equipmentName):
     db.session.commit()
     return equipment
 
-
+def get_equipment_by_classroom_id(classroomId):
+    from app.classroom.models import Classroom
+    from app.classroom.models import ClassEquipment
+    classroom = Classroom.query.filter_by(classroomId=classroomId).first()
+    if classroom is None:
+        return None
+    list_equipment = Equipment.query.join(ClassEquipment).filter(ClassEquipment.classroomId == classroomId, ClassEquipment.isDeleted == False).all()
+    return list_equipment
 
 class Classroom(db.Model):
 
@@ -221,6 +228,15 @@ def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None
     list_classroom = query.all()  
     return list_classroom
 
+# based on reservation table
+def get_classroom_by_user_id(userId):
+    from app.auth.models import User
+    from app.booking.models import Reservation
+    user = User.query.filter_by(userId=userId).first()
+    if user is None:
+        return None
+    list_classroom = Classroom.query.join(Reservation).filter(Reservation.userId == userId, Reservation.isDeleted == False).all()
+    return list_classroom
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'
