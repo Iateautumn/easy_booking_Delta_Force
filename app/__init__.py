@@ -1,6 +1,5 @@
 from flask import Flask, redirect, url_for, request
 from flask_login import current_user
-
 from app.user.routes import user_bp
 
 from app.admin.routes import admin_bp

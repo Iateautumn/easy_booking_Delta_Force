@@ -1,3 +1,4 @@
+
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
 from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
@@ -52,3 +53,11 @@ def reservation_reject():
 @admin_bp.route('/approval')
 def approval():
     return render_template('admin/approval.html')
+
+
+@admin_bp.route('/management')
+def management():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+
+    return render_template('admin/management.html')

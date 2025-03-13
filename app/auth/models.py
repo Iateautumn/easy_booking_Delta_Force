@@ -25,6 +25,7 @@ class User(UserMixin,db.Model):
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
 
+
     Classrooms = db.relationship(
         "Classroom",
         secondary="reservation",
@@ -49,6 +50,7 @@ class User(UserMixin,db.Model):
 
     def get_id(self):
         return self.userId
+
 
 
 # add user
