@@ -134,6 +134,7 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
+
     Users = db.relationship(
         "User",
         secondary="reservation",
@@ -254,7 +255,7 @@ def delete_classequipment(classEquipmentId):
     db.session.commit()
     return classequipment
 
-def update_classequipment(classEquipmentId, classroomId, equipmentId):
+def update_classequipment(classEquipmentId, classroomId = None, equipmentId = None):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
     if classequipment is None:
         return False

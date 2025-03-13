@@ -24,10 +24,11 @@ class User(UserMixin,db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
+
     Classrooms = db.relationship(
         "Classroom",
         secondary="reservation",
-        back_populates="Users"  # 使用back_populates代替backref
+        back_populates="Users"
     )
 
     def __init__(self, status, name, email, password_hash, salt):

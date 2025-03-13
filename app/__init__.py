@@ -1,6 +1,10 @@
 from flask import Flask, redirect, url_for, request
 from flask_login import current_user
+
+from app.user.routes import user_bp
+
 from app.admin.routes import admin_bp
+
 from app.auth.routes import auth_bp
 from app.booking.routes import booking_bp
 from app.classroom.routes import classroom_bp
@@ -19,23 +23,24 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(classroom_bp)
     app.register_blueprint(booking_bp)
+    app.register_blueprint(user_bp)
 
     @app.route('/')
     def root_redirect():
         if current_user.is_authenticated:
-            return redirect(url_for('booking.dashboard'))
+            return redirect(url_for('user.bookroom'))
         return redirect(url_for('auth.login'))
 
-    @app.before_request
-    def check_authentication():
-
-        if request.path.startswith('/static'):
-            return
-        if request.endpoint in ['auth.login', 'auth.register']:
-            return
-
-        if not current_user.is_authenticated:
-            return redirect(url_for('auth.login', next=request.full_path))
+    # @app.before_request
+    # def check_authentication():
+    #
+    #     if request.path.startswith('/static'):
+    #         return
+    #     if request.endpoint in ['auth.login', 'auth.register']:
+    #         return
+    #
+    #     if not current_user.is_authenticated:
+    #         return redirect(url_for('auth.login', next=request.full_path))
 
     return app
 

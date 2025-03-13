@@ -11,7 +11,7 @@ from app.booking.services import new_booking
 
 booking_bp = Blueprint('booking', __name__, url_prefix='/booking')
 
-@booking_bp.route('/dashboard', methods=['GET'])
+@booking_bp.route('/bookroom', methods=['GET'])
 def dashboard():
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))

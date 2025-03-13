@@ -10,9 +10,9 @@ class ReservationStatus(Enum):
     
     Reserved = "Reserved"       
     Cancelled = "Cancelled"     
-    Finished = "Finished"       
-    Rejected = "Rejected" 
-    Pending = "Pending" 
+    Finished = "Finished"
+    Rejected = "Rejected"  
+    Pending = "Pending"
 
  
 class Reservation(db.Model):
@@ -94,7 +94,7 @@ def delete_reservation(reservationId):
     db.session.commit()
     return reservation
 
-def update_reservation(reservationId, userId, classroomId, startTime, endTime, status):
+def update_reservation(reservationId, userId = None, classroomId = None, startTime = None, endTime = None, status = None):
     reservation = Reservation.query.filter_by(reservationId=reservationId).first()
     if reservation is None:
         return False
@@ -109,5 +109,11 @@ def update_reservation(reservationId, userId, classroomId, startTime, endTime, s
     if status is not None:
         reservation.status = status
     reservation.updatedAt = datetime.now()
+    db.session.commit()
+    return reservation
+
+def cancel_reservation(reservationId):
+    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation.status = ReservationStatus.Cancelled
     db.session.commit()
     return reservation
