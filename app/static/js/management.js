@@ -1,3 +1,44 @@
+document.addEventListener('DOMContentLoaded', async function() {
+    const addRoomModal = document.querySelector('#add-room-modal');
+    const modifyRoomModal = document.querySelector('#modify-room-modal');
+    const addRoomBtn = document.querySelector('#add-room-btn');
+    const applyAddRoomBtn = document.querySelector('#apply-add-room-btn');
+    const modifyBtn = document.querySelector('#modify-room-btn');
+    const applyModifyBtn = document.querySelector('#apply-modify-room-btn');
+
+    addRoomBtn.addEventListener('click', function() {
+        addRoomModal.style.display = 'flex';
+    });
+
+    applyAddRoomBtn.addEventListener('click', function() {
+        // TODO
+        addRoomModal.style.display = 'none';
+    });
+
+    modifyBtn.addEventListener('click', function() {
+        modifyRoomModal.style.display = 'flex';
+    });
+
+    applyModifyBtn.addEventListener('click', function() {
+        // TODO
+        modifyRoomModal.style.display = 'none';
+    });
+
+    addRoomModal.addEventListener('click', function(event) {
+        if (event.target === addRoomModal) {
+            addRoomModal.style.display = 'none';
+        }
+    });
+
+    modifyRoomModal.addEventListener('click', function(event) {
+        if (event.target === modifyRoomModal) {
+            modifyRoomModal.style.display = 'none';
+        }
+    });
+
+    viewBookings();
+});
+
 async function adminGetAllRoomsInfo() {
     const apiUrl = '/admin/classroom/all';
     const response = await fetch(apiUrl, {

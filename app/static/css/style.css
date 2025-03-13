@@ -569,7 +569,7 @@ header h1 {
     margin-bottom: 20px;
 }
 
-.booking-modal {
+.booking-modal, .modify-room-modal, .add-room-modal {
     display: none;
     justify-content: center;
     align-items: center;
@@ -582,7 +582,7 @@ header h1 {
     z-index: 1000;
 }
 
-.booking-content {
+.booking-content, .add-room-content, .modify-room-content {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -590,11 +590,11 @@ header h1 {
     width: 300px;
 }
 
-.booking-group {
+.booking-group, .add-room-group, .modify-room-group {
     margin-bottom: 15px;
 }
 
-.booking-label {
+.booking-label, .add-room-label, .modify-room-label {
     display: block;
     margin-bottom: 5px;
     color: #13439b;
