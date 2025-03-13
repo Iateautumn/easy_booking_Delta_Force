@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Booking</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h2>Easy Booking</h2>
+            <nav>
+                <ul>
+                    <li id="book-room-nav">
+                        <a href="#book-room">
+                            <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                            Book Room
+                        </a>
+                    </li>
+                    <li id="my-bookings-nav">
+                        <a href="#my-bookings">
+                            <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                            My Bookings
+                        </a>
+                    </li>
+                    <li id="room-management-nav">
+                        <a href="#room-management">
+                            <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                            Room Management
+                        </a>
+                    </li>
+                    <li id="approval-request-nav" class="active">
+                        <a href="#approval-request">
+                            <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                            Approval Request
+                        </a>
+                    </li>
+                    <li id="report-nav">
+                        <a href="#report">
+                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                            Report
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <a href="#report" class="logout">
+                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                Logout
+            </a>
+        </aside>
+
+        <main>
+            <header>
+                <button class="menu-btn" id="menu-btn">☰</button>
+                <h1 id="page-title">Approval Request</h1>
+            </header>
+
+            <section id="approval-request-section" class="content-section">
+                <div class="approval-list">
+                    <div class="approval-card">
+                        <h3>Room 101</h3>
+                        <p>Requested by: User A</p>
+                        <p>Time: 10:00 AM - 12:00 PM</p>
+                        <button class="action-btn" id="approve-request">Approve</button>
+                        <button class="action-btn" id="reject-request">Reject</button>
+                    </div>
+                    <!-- More requests can be added here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal hidden" id="booking-modal">
+        <div class="booking-content">
+            <h2>Book Room</h2>
+            <div class="booking-group">
+                <label class="booking-label" for="booking-date">Date:</label>
+                <input type="date" id="booking-date" class="input">
+            </div>
+            <div class="booking-group">
+                <label class="booking-label">Time Slots:</label>
+                <div class="time-slots">
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="0"> 8:00~8:45</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="1"> 8:55~9:40</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="2"> 9:50~10:35</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="3"> 10:45~11:30</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="4"> 11:40~12:25</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="5"> 12:35~13:20</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="6"> 13:30~14:15</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="7"> 14:25~15:10</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="8"> 15:20~16:05</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="9"> 16:15~17:00</label>
+                </div>
+            </div>
+            <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
+        </div>
+    </div>
+    <!-- Filter Modal -->
+    <div class="filter-modal" id="filter-modal">
+        <div class="filter-content">
+            <h2>Filter Rooms</h2>
+            <div class="filter-group">
+                <label class="filter-label" for="capacity">Capacity:</label>
+                <div class="capacity-inputs">
+                    <input type="number" id="capacity-min" placeholder="Min" min="1">
+                    <span>~</span>
+                    <input type="number" id="capacity-max" placeholder="Max" min="1">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Date/Time:</label>
+                <div class="days">
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Equipment:</label>
+                <div id="equipment"></div>
+            </div>
+            <button class="apply-btn" id="apply-filter">Apply Filters</button>
+        </div>
+    </div>
+    
+    <script src="../../static/js/booking.js"></script>
+</body>
+
+</html>
