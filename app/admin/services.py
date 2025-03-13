@@ -1,10 +1,11 @@
 from datetime import datetime
 
+
 from app.auth.models import User, get_user_by_id, UserStatus
 from app.booking.models import (
 Reservation, 
 ReservationStatus, 
-get_reservation_by_status, 
+get_reservation_by_status,
 get_reservation_by_id,
 update_reservation)
 from app.classroom.models import Classroom, get_classroom_by_id, ClassEquipment
@@ -53,7 +54,6 @@ def approve_reservation(reservationId):
         raise BusinessError("Reservation not found: " + str(e), 404)
     
 
-### 拒绝预约请求
 def reject_reservation(reservationId):
     try:
         reservation = get_reservation_by_id(reservationId)
@@ -249,7 +249,7 @@ def delete_room(current_user, classroom_id):
 
 
 def get_all_rooms(current_user):
-    # 权限验证
+
     if current_user.status != UserStatus.Admin.value:
         return {"status": "error", "message": "no admin power"}, 403
 
