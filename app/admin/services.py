@@ -10,9 +10,7 @@ from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
 from app.utils.exceptions import BusinessError
 
-### 这里的user是一个管理员admin，the administrator can approve the booking request for restricted rooms 
 
-### 获取所有未处理的预约请求
 def get_reservation_requests():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Pending)
@@ -40,7 +38,7 @@ def get_reservation_requests():
 
     return reservation_info_list
 
-### 同意预约请求
+
 def approve_reservation(reservationId):
     try:
         reservation = get_reservation_by_id(reservationId)
@@ -126,7 +124,6 @@ def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
         return {"status": "error", "message": "no admin power"}, 403
 
     try:
-        # 基础信息更新
         updated = Classroom.update_classroom(
             classroomId=classroom_id,
             classroomName=classroom_name,
@@ -256,15 +253,12 @@ def get_all_rooms(current_user):
         return {"status": "error", "message": "no admin power"}, 403
 
     try:
-        # 获取所有教室（包含软删除的）
         all_classrooms = Classroom.query.options(
             db.joinedload(Classroom.Equipments)
         ).order_by(Classroom.classroomId).all()
 
-        # 构建响应数据
         classroom_data = []
         for room in all_classrooms:
-            # 处理设备信息（过滤已删除设备）
             valid_equipments = [
                 {"id": eq.equipmentId, "name": eq.equipmentName}
                 for eq in room.Equipments if not eq.isDeleted
