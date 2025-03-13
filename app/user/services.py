@@ -14,7 +14,7 @@ def own_reservations(user_id):
         classroom = get_classroom_by_id(reservation.classroomId)
         result = {
             "reservationId": reservation.reservationId,
-            "status": str(reservation.status),
+            "status": str(reservation.status.value),
             "roomName": classroom.classroomName,
             "date": get_date_time(str(reservation.startTime))[0],
             "timePeriod": get_time_slot(str(reservation.startTime)),

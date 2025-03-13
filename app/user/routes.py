@@ -50,7 +50,7 @@ def reservation_modify():
 
     try:
         modify_reservation(
-            reservation_id=reservation_id,
+            reservationId=reservation_id,
             userId=user_id,
             date=date,
             timePeriod=time_period
@@ -75,7 +75,7 @@ def reservation_cancel():
 
     try:
         cancel_my_reservation(
-            reservation_id=reservation_id,
+            reservationId=reservation_id,
             userId=user_id
         )
         return success_response("success cancel")
