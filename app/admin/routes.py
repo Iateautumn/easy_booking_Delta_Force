@@ -1,16 +1,16 @@
-from flask import Blueprint, request, jsonify, redirect, url_for
+from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
 from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-@admin_bp.before_request
-def check_admin_permission():
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
-    if not current_user.status.value == "Admin":
-        return error_response("permission denied", 403)
+# @admin_bp.before_request
+# def check_admin_permission():
+#     if not current_user.is_authenticated:
+#         return redirect(url_for('auth.login'))
+#     if not current_user.status.value == "Admin":
+#         return error_response("permission denied", 403)
 @admin_bp.route('/reservation/request', methods=['GET'])
 def reservation_request():
     try:
@@ -53,4 +53,6 @@ def reservation_reject():
 def approval():
     return render_template('admin/approval.html')
 
-
+@admin_bp.route('/approval')
+def approval():
+    return render_template('admin/approval.html')
