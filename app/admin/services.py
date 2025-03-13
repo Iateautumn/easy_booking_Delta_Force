@@ -8,8 +8,10 @@ ReservationStatus,
 get_reservation_by_status,
 get_reservation_by_id,
 update_reservation)
-from app.classroom.models import delete_classroom,add_classroom, get_classroom_by_id, add_classequipment, update_classroom,delete_classequipment, get_classequipment_by_classroom_id, add_equipment
+from app.classroom.models import delete_classroom, add_classroom, get_classroom_by_id, add_classequipment, \
+    update_classroom, delete_classequipment, get_classequipment_by_classroom_id, add_equipment, get_all_classrooms
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
+# from app.classroom.services import get_equipment_dict
 from app.utils.exceptions import BusinessError
 
 
@@ -133,36 +135,40 @@ def delete_room(classroom_id):
             raise BusinessError("Server error: " + str(e), 500)
 
 
-# def get_all_rooms():
-#
-#     # if current_user.status != UserStatus.Admin.value:
-#     #     return {"status": "error", "message": "no admin power"}, 403
-#
-#     try:
-#
-#         classroom_data = []
-#         for room in all_classrooms:
-#             valid_equipments = [
-#                 {"id": eq.equipmentId, "name": eq.equipmentName}
-#                 for eq in room.Equipments if not eq.isDeleted
-#             ]
-#
-#             classroom_data.append({
-#                 "id": room.classroomId,
-#                 "name": room.classroomName,
-#                 "capacity": room.capacity,
-#                 "constrain": room.constrain,
-#                 "is_restricted": room.isRestricted,
-#                 "status": "active" if not room.isDeleted else "deleted",
-#                 "equipments": valid_equipments,
-#                 "created_at": room.createdAt.isoformat() if room.createdAt else None,
-#                 "updated_at": room.updatedAt.isoformat() if room.updatedAt else None
-#             })
-#
-#         return {
-#             "data": classroom_data
-#         }
-#
-#     except Exception as e:
-#         return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500
+
+def get_equipment_dict(equipment):
+    result = {
+        "equipmentId": equipment.equipmentId,
+        "equipmentName": equipment.equipmentName,
+        "createdAt": equipment.createdAt,
+        "updatedAt": equipment.updatedAt,
+        "isDeleted": equipment.isDeleted
+    }
+    return result
+
+
+def get_all_rooms():
+
+    # if current_user.status != UserStatus.Admin.value:
+    #     return {"status": "error", "message": "no admin power"}, 403
+
+    try:
+        all_classrooms = get_all_classrooms()
+        classroom_data = []
+        for room in all_classrooms:
+         classroom_data.append({
+            "capacity": room.capacity,
+            "isDeleted": room.isDeleted,
+            "equipments": [get_equipment_dict(equipment) for equipment in room.Equipments],
+            "createdAt": room.createdAt,
+            "updatedAt": room.updatedAt,
+            "classroomName": room.classroomName,
+            "classroomId": room.classroomId,
+            "constrain": room.constrain,
+            "isRestricted": room.isRestricted,
+            })
+        return classroom_data
+
+    except Exception as e:
+        return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500
 
