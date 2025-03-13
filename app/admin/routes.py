@@ -2,6 +2,7 @@
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
 from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
+from app.admin.services import add_room, modify_room, delete_room
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -61,3 +62,54 @@ def management():
         return redirect(url_for('auth.login'))
 
     return render_template('admin/management.html')
+
+@admin_bp.route('/classroom/add', methods=['POST'])
+def add_classroom():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+
+    user_id = current_user.userId
+    try:
+        add_room(current_user=user_id, **data)
+        return success_response("success reservation")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+    
+@admin_bp.route('/classroom/modify', methods=['POST'])
+def modify_classroom():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+
+    user_id = current_user.userId
+    try:
+        modify_room(current_user=user_id, **data)
+        return success_response("success reservation")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/classroom/delete', methods=['POST'])
+def delete_classroom():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+
+    user_id = current_user.userId
+    try:
+        delete_room(current_user=user_id, **data)
+        return success_response("success reservation")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
