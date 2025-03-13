@@ -145,31 +145,9 @@ def delete_room(current_user, classroom_id):
             }
 
         try:
-            if "classroom_id" not in request_data:
-                return {
-                    "code": 400,
-                    "message": "Missing classroom_id parameter",
-                    "data": []
-                }
 
             classroom_id = request_data["classroom_id"]
             classroom = Classroom.get_classroom_by_id(classroom_id)
-
-
-            if not classroom:
-                return {
-                    "code": 404,
-                    "message": "Classroom not found",
-                    "data": []
-                }
-
-
-            if classroom.isDeleted:
-                return {
-                    "code": 200,
-                    "message": "Classroom already deleted",
-                    "data": [str(classroom_id)]
-                }
 
 
             Classroom.delete_classroom(classroom_id)
@@ -179,11 +157,7 @@ def delete_room(current_user, classroom_id):
             for relation in equipment_relations:
                 ClassEquipment.delete_classequipment(relation.classEquipmentId)
 
-            return {
-                "code": 200,
-                "message": "deleted successfully",
-                "data": [str(classroom.classroomName)]
-            }
+            return [str(classroom.classroomName)]
 
         except Exception as e:
             raise BusinessError("Server error: " + str(e), 500)
