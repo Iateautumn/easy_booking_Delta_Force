@@ -5,12 +5,12 @@ from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# @admin_bp.before_request
-# def check_admin_permission():
-#     if not current_user.is_authenticated:
-#         return redirect(url_for('auth.login'))
-#     if not current_user.status.value == "Admin":
-#         return error_response("permission denied", 403)
+@admin_bp.before_request
+def check_admin_permission():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    if not current_user.status.value == "Admin":
+        return error_response("permission denied", 403)
 @admin_bp.route('/reservation/request', methods=['GET'])
 def reservation_request():
     try:

@@ -16,7 +16,7 @@ def get_reservation_requests():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Pending)
         reservation_info_list = []
-        for reservation in reservations:
+        def get_dict(reservation):
             userId = reservation.userId
             classroomId = reservation.classroomId
             user = get_user_by_id(userId)
@@ -31,6 +31,8 @@ def get_reservation_requests():
                 "timePeriod": get_time_slot(str(reservation.startTime))
             }
             reservation_info_list.append(reservation_data)
+        for reservation in reservations:
+            get_dict(reservation)
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)
 
