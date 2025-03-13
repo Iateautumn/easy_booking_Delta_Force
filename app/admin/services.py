@@ -1,12 +1,14 @@
+from datetime import datetime
 
-from app.auth.models import User, get_user_by_id
+from app import db
+from app.auth.models import User, get_user_by_id, UserStatus
 from app.booking.models import (
 Reservation, 
 ReservationStatus, 
 get_reservation_by_status, 
 get_reservation_by_id,
 update_reservation)
-from app.classroom.models import Classroom, get_classroom_by_id
+from app.classroom.models import Classroom, get_classroom_by_id, ClassEquipment
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
 from app.utils.exceptions import BusinessError
 
