@@ -24,13 +24,13 @@ class User(UserMixin,db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)  # in db is 0 or 1, 0 represents exist
-    # Classrooms = db.relationship(
-    #     "Classroom", 
-    #     secondary="reservation",
-    #     back_populates="Users"  # 使用back_populates代替backref
-    # )
-    def get_id(self):
-        return self.userId
+
+
+    Classrooms = db.relationship(
+        "Classroom",
+        secondary="reservation",
+        back_populates="Users"
+    )
 
     def __init__(self, status, name, email, password_hash, salt):
         self.status = status
@@ -47,6 +47,10 @@ class User(UserMixin,db.Model):
         from app.classroom.models import Classroom
         from app.booking.models import Reservation
         return Classroom.query.join(Reservation).filter(Reservation.userId == self.userId).all()
+
+    def get_id(self):
+        return self.userId
+
 
 
 # add user

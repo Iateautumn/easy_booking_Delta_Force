@@ -162,7 +162,11 @@ header h1 {
     overflow: auto;
 }
 
-.booking-list {
+.booking-list, .approval-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+.booking-list, .approval-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
