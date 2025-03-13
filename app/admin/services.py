@@ -87,35 +87,14 @@ def add_room(current_user, classroom_name, capacity, equipment_ids=[], constrain
                 equipmentId=equip_id
             )
 
-        db.session.commit()
-
         return {
             "code": 200,
-            "message": "Classroom created successfully",
-            "data": [str(new_classroom.classroomId)]
+            "message": "Classroom updated successfully",
+            "data": [str(classroom_name)]
         }
 
-    except db.IntegrityError:
-        db.session.rollback()
-        return {
-            "code": 409,
-            "message": "Classroom name already exists",
-            "data": []
-        }
-    except ValueError as ve:
-        db.session.rollback()
-        return {
-            "code": 400,
-            "message": str(ve),
-            "data": []
-        }
     except Exception as e:
-        db.session.rollback()
-        return {
-            "code": 500,
-            "message": f"Server error: {str(e)}",
-            "data": []
-        }
+        raise BusinessError("Add room error: " + str(e), 500)
 
 
 def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
@@ -150,34 +129,10 @@ def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
                     equipmentId=equip_id
                 )
 
-        db.session.commit()
-        return {
-            "code": 200,
-            "message": "Classroom updated successfully",
-            "data": [str(classroom_id)]
-        }
 
-    except db.IntegrityError:
-        db.session.rollback()
-        return {
-            "code": 409,
-            "message": "Classroom name already exists",
-            "data": []
-        }
-    except ValueError as ve:
-        db.session.rollback()
-        return {
-            "code": 400,
-            "message": str(ve),
-            "data": []
-        }
     except Exception as e:
-        db.session.rollback()
-        return {
-            "code": 500,
-            "message": f"Server error: {str(e)}",
-            "data": []
-        }
+        raise BusinessError("Add room error: " + str(e), 500)
+
 
 
 def delete_room(current_user, classroom_id):
@@ -224,67 +179,53 @@ def delete_room(current_user, classroom_id):
             for relation in equipment_relations:
                 ClassEquipment.delete_classequipment(relation.classEquipmentId)
 
-            db.session.commit()
-
             return {
                 "code": 200,
-                "message": "Classroom deleted successfully",
-                "data": [str(classroom_id)]
+                "message": "deleted successfully",
+                "data": [str(classroom.classroomName)]
             }
 
-        except ValueError as ve:
-            db.session.rollback()
-            return {
-                "code": 400,
-                "message": str(ve),
-                "data": []
-            }
         except Exception as e:
-            db.session.rollback()
-            return {
-                "code": 500,
-                "message": f"Server error: {str(e)}",
-                "data": []
-            }
+            raise BusinessError("Server error: " + str(e), 500)
 
 
-def get_all_rooms(current_user):
-
-    if current_user.status != UserStatus.Admin.value:
-        return {"status": "error", "message": "no admin power"}, 403
-
-    try:
-        all_classrooms = Classroom.query.options(
-            db.joinedload(Classroom.Equipments)
-        ).order_by(Classroom.classroomId).all()
-
-        classroom_data = []
-        for room in all_classrooms:
-            valid_equipments = [
-                {"id": eq.equipmentId, "name": eq.equipmentName}
-                for eq in room.Equipments if not eq.isDeleted
-            ]
-
-            classroom_data.append({
-                "id": room.classroomId,
-                "name": room.classroomName,
-                "capacity": room.capacity,
-                "constrain": room.constrain,
-                "is_restricted": room.isRestricted,
-                "status": "active" if not room.isDeleted else "deleted",
-                "equipments": valid_equipments,
-                "created_at": room.createdAt.isoformat() if room.createdAt else None,
-                "updated_at": room.updatedAt.isoformat() if room.updatedAt else None
-            })
-
-        return {
-            "status": "success",
-            "data": {
-                "total": len(classroom_data),
-                "classrooms": classroom_data
-            }
-        }, 200
-
-    except Exception as e:
-        return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500
+# def get_all_rooms(current_user):
+#
+#     if current_user.status != UserStatus.Admin.value:
+#         return {"status": "error", "message": "no admin power"}, 403
+#
+#     try:
+#         all_classrooms = Classroom.query.options(
+#             db.joinedload(Classroom.Equipments)
+#         ).order_by(Classroom.classroomId).all()
+#
+#         classroom_data = []
+#         for room in all_classrooms:
+#             valid_equipments = [
+#                 {"id": eq.equipmentId, "name": eq.equipmentName}
+#                 for eq in room.Equipments if not eq.isDeleted
+#             ]
+#
+#             classroom_data.append({
+#                 "id": room.classroomId,
+#                 "name": room.classroomName,
+#                 "capacity": room.capacity,
+#                 "constrain": room.constrain,
+#                 "is_restricted": room.isRestricted,
+#                 "status": "active" if not room.isDeleted else "deleted",
+#                 "equipments": valid_equipments,
+#                 "created_at": room.createdAt.isoformat() if room.createdAt else None,
+#                 "updated_at": room.updatedAt.isoformat() if room.updatedAt else None
+#             })
+#
+#         return {
+#             "status": "success",
+#             "data": {
+#                 "total": len(classroom_data),
+#                 "classrooms": classroom_data
+#             }
+#         }, 200
+#
+#     except Exception as e:
+#         return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500
 
