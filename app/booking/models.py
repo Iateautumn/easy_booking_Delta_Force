@@ -10,7 +10,7 @@ class ReservationStatus(Enum):
     
     Reserved = "Reserved"       
     Cancelled = "Cancelled"     
-    Finished = "Finished"       
+    Finished = "Finished"
     Rejected = "Rejected"  
     Pending = "Pending"
 
