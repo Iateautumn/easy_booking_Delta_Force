@@ -65,10 +65,7 @@ def reject_reservation(reservationId):
          
 
 
-def add_room(current_user, classroom_name, capacity, equipment_ids=[], constrain=None, is_restricted=False):
-
-    if current_user.status != UserStatus.Admin.value:
-        return {"status": "error", "message": "no admin power"}, 403
+def add_room(classroom_name, capacity, equipments=[], new_equipment = []):
 
     try:
         new_classroom = Classroom.add_classroom(
@@ -76,32 +73,25 @@ def add_room(current_user, classroom_name, capacity, equipment_ids=[], constrain
             capacity=capacity
         )
 
-        if constrain:
-            new_classroom.constrain = constrain
-        new_classroom.isRestricted = is_restricted
         new_classroom.updatedAt = datetime.now()
 
-        for equip_id in equipment_ids:
+        for equip_id in equipments:
             ClassEquipment.add_classequipment(
                 classroomId=new_classroom.classroomId,
                 equipmentId=equip_id
             )
 
-        return {
-            "code": 200,
-            "message": "Classroom updated successfully",
-            "data": [str(classroom_name)]
-        }
+        return [str(classroom_name)]
 
     except Exception as e:
         raise BusinessError("Add room error: " + str(e), 500)
 
 
-def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
-                equipment_ids=None, constrain=None, is_restricted=None):
+def modify_room(classroom_id, classroom_name=None, capacity=None,
+                equipment_ids=None, new_equipment = []):
 
-    if current_user.status != UserStatus.Admin.value:
-        return {"status": "error", "message": "no admin power"}, 403
+    # if current_user.status != UserStatus.Admin.value:
+    #     return {"status": "error", "message": "no admin power"}, 403
 
     try:
         updated = Classroom.update_classroom(
@@ -111,11 +101,6 @@ def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
         )
 
         classroom = Classroom.get_classroom_by_id(classroom_id)
-
-        if constrain is not None:
-            classroom.constrain = constrain
-        if is_restricted is not None:
-            classroom.isRestricted = is_restricted
         classroom.updatedAt = datetime.now()
 
         if equipment_ids is not None:
@@ -135,14 +120,14 @@ def modify_room(current_user, classroom_id, classroom_name=None, capacity=None,
 
 
 
-def delete_room(current_user, classroom_id):
+def delete_room(classroom_id):
     def delete_room(current_user, request_data):
-        if current_user.status != UserStatus.Admin.value:
-            return {
-                "code": 403,
-                "message": "Permission denied",
-                "data": []
-            }
+        # if current_user.status != UserStatus.Admin.value:
+        #     return {
+        #         "code": 403,
+        #         "message": "Permission denied",
+        #         "data": []
+        #     }
 
         try:
 
