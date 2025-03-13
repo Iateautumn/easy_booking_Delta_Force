@@ -63,7 +63,7 @@ async function approveBookingRequest(reservation_id) {
 }
 
 async function rejectBookingRequest(reservation_id) {
-    const apiUrl = '/admin/reservation/deny';
+    const apiUrl = '/admin/reservation/reject';
     const userData = {
         "reservation_id": reservation_id
     };
