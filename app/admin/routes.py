@@ -52,7 +52,3 @@ def reservation_reject():
 @admin_bp.route('/approval')
 def approval():
     return render_template('admin/approval.html')
-
-@admin_bp.route('/approval')
-def approval():
-    return render_template('admin/approval.html')
