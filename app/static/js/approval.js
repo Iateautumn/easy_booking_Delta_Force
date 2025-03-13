@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     viewApprovals();
 });
 
+viewApprovals();
+
 
 async function getAllBookingRequests() {
     const apiUrl = '/admin/reservation/request';
@@ -108,7 +110,7 @@ async function viewApprovals() {
       ];
 
 
-    if (approvals > 0) {
+    if (approvals.length > 0) {
         approvalList.innerHTML = '';
         approvals.forEach(approval => {
             const approvalCard = document.createElement('div');
@@ -117,8 +119,8 @@ async function viewApprovals() {
                 <h1>Reservation ID: ${approval.reservationId}</h1>
                 <h3>Room ${approval.classroomName}</h3>
                 <p>Constrain: ${approval.constrain}</p>
-                <h4>User: ${approval.status}</h4>
-                <p>User Status: ${approval.date}</p>
+                <h4>User: ${approval.username}</h4>
+                <p>User Status: ${approval.userstatus}</p>
                 <p>Date: ${approval.date}</p>
                 <p>Time: ${timeTable[approval.timePeriod]}</p>
                 
