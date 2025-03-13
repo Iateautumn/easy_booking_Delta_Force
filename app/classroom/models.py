@@ -209,7 +209,7 @@ def delete_classroom(classroomId):
     db.session.commit()
     return classroom
 
-def update_classroom(classroomId = None, classroomName = None, capacity = None):
+def update_classroom(classroomId = None, classroomName = None, capacity = None, constrain = None):
     classroom = Classroom.query.filter_by(classroomId=classroomId).first()
     if classroom is None:
         return False
@@ -217,6 +217,11 @@ def update_classroom(classroomId = None, classroomName = None, capacity = None):
         classroom.classroomNumber = classroomName
     if capacity is not None:
         classroom.capacity = capacity
+    if constrain is not None:
+        classroom.constrain = constrain
+        classroom.isRestricted = True
+    else:
+        classroom.isRestricted = False
 
     classroom.updatedAt = datetime.now()
     db.session.commit()
@@ -260,11 +265,7 @@ class ClassEquipment(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
-def add_classequipment(classroomId, equipmentId):
-    new_classequipment = ClassEquipment(classroomId, equipmentId)
-    db.session.add(new_classequipment)
-    db.session.commit()
-    return new_classequipment
+
 
 def get_classequipment_by_id(classEquipmentId):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
@@ -296,8 +297,19 @@ def get_classequipment_by_equipment_id(equipmentId):
     list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId).all()
     return list_classequipment
 
+def get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId):
+    classequipment = ClassEquipment.query.filter_by(classroomId=classroomId, equipmentId=equipmentId).first()
+    return classequipment
 
-
-
+def add_classequipment(classroomId, equipmentId):
+    result = get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId)
+    if result is not None:
+        result.isDeleted = False
+        db.session.commit()
+        return result
+    new_classequipment = ClassEquipment(classroomId, equipmentId)
+    db.session.add(new_classequipment)
+    db.session.commit()
+    return new_classequipment
 
 
