@@ -114,7 +114,6 @@ def modify_room(classroom_id, classroom_name=None, capacity=None,
                     equipmentId=equip_id
                 )
 
-
     except Exception as e:
         raise BusinessError("Add room error: " + str(e), 500)
 
