@@ -49,7 +49,6 @@ def reservation_reject():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
-
-@admin_bp.route('/management')
-def management():
+@admin_bp.route('/approval')
+def approval():
     return render_template('admin/approval.html')
