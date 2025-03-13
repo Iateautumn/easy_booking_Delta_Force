@@ -152,9 +152,11 @@ class Classroom(db.Model):
         back_populates="Classrooms"  # back_populates
     )
 
-    def __init__(self, classroomName, capacity):
+    def __init__(self, classroomName, capacity, constrain=None, isRestricted=False):
         self.classroomName = classroomName
         self.capacity = capacity
+        self.constrain = constrain
+        self.isRestricted = isRestricted
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
@@ -170,8 +172,12 @@ def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 
-def add_classroom(classroomName, capactiy):
-    new_classroom = Classroom(classroomName, capactiy)
+def add_classroom(classroomName, capactiy, constrain=None, isRestricted=False):
+    
+    if constrain is not None:
+        isRestricted = True
+    new_classroom = Classroom(classroomName, capactiy, constrain, isRestricted)
+    # new_classroom = Classroom(classroomName, capactiy)
     db.session.add(new_classroom)
     db.session.commit()
     return new_classroom
