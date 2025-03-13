@@ -15,6 +15,7 @@ from app.utils.exceptions import BusinessError
 def get_reservation_requests():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Pending)
+        print(reservations)
         reservation_info_list = []
         def get_dict(reservation):
             userId = reservation.userId
