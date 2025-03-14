@@ -93,16 +93,19 @@ async function viewReservations() {
                 <p>Equipment: ${reservation.constrain}</p>
                 <p>Constrain: ${reservation.constrain}</p>
 
-                <button class="action-btn" id="cacnel-reservation">Cancel</button>
+                <button class="action-btn" id="cancel-reservation">Cancel</button>
             `;
             reservationList.appendChild(reservationCard);
         });
     }
 
     const cancelBtns = document.querySelectorAll('#cancel-reservation');
+    console.log(cancelBtns);
+    
 
     cancelBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
+            console.log("111");
             const reservation_id = reservations[index].reservationId;
             const result = await cancelReservation(reservation_id);
             if (result) {
