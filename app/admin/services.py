@@ -9,9 +9,9 @@ get_reservation_by_status,
 get_reservation_by_id,
 update_reservation)
 from app.classroom.models import delete_classroom, add_classroom, get_classroom_by_id, add_classequipment, \
-    update_classroom, delete_classequipment, get_classequipment_by_classroom_id, add_equipment, get_all_classrooms
+    update_classroom, delete_classequipment, get_classequipment_by_classroom_id, add_equipment, get_all_classrooms, \
+    get_classequipment_by_classroom_id_and_equipment_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
-# from app.classroom.services import get_equipment_dict
 from app.utils.exceptions import BusinessError
 
 
@@ -99,16 +99,17 @@ def modify_room(classroom_id, classroom_name=None, capacity=None,
         update_classroom(
             classroomId=classroom_id,
             classroomName=classroom_name,
-            capacity=capacity
+            capacity=capacity,
+            constrain = constrain
         )
 
         my_equipments = get_classequipment_by_classroom_id(classroom_id)
         for my_equipment in my_equipments:
             delete_classequipment(my_equipment.classEquipmentId)
-
         for new_equipment_name in new_equipment:
-            new_equipment_instance = add_equipment(new_equipment_name)
-            equipment.append(new_equipment_instance.equipmentId)
+            if new_equipment_name:
+                new_equipment_instance = add_equipment(new_equipment_name)
+                equipment.append(new_equipment_instance.equipmentId)
         for equip_id in equipment:
             add_classequipment(
                 classroomId=classroom_id,
@@ -159,7 +160,7 @@ def get_all_rooms():
          classroom_data.append({
             "capacity": room.capacity,
             "isDeleted": room.isDeleted,
-            "equipments": [get_equipment_dict(equipment) for equipment in room.Equipments],
+            "equipments": [get_equipment_dict(equipment) for equipment in room.Equipments if get_classequipment_by_classroom_id_and_equipment_id(room.classroomId, equipment.equipmentId).isDeleted == False],
             "createdAt": room.createdAt,
             "updatedAt": room.updatedAt,
             "classroomName": room.classroomName,

@@ -62,13 +62,6 @@
                 <div class="room-management">
                     <button class="action-btn" id="add-room-btn">Add Room</button>
                     <div class="room-list">
-<!--                        <div class="room-card">-->
-<!--                            <h3>Room 101</h3>-->
-<!--                            <p>Attributes: Projector, Whiteboard</p>-->
-<!--                            <button class="action-btn" id="modify-room-btn">Modify</button>-->
-<!--                            <button class="action-btn" id="delete-room-btn">Delete</button>-->
-<!--                        </div>-->
-                        <!-- More rooms can be added here -->
                     </div>
                 </div>
             </section>
@@ -90,18 +83,14 @@
             </div>
             <div class="add-room-group">
                 <label class="add-room-label">Equipment:</label>
-                <div class="equipment">
-                    <label><input type="checkbox" name="equipment" value="projector"> Projector</label>
-                    <label><input type="checkbox" name="equipment" value="whiteboard"> Whiteboard</label>
-                    <label><input type="checkbox" name="equipment" value="microphone"> Microphone</label>
-                    <label><input type="checkbox" name="equipment" value="speaker"> Speaker</label>
+                <div id="add-room-equipment">
                 </div>
                 <label class="add-room-label">New Equipment:</label>
                 <input type="text" id="add-room-new-equipment" class="input">
             </div>
             <div>
                 <label class="add-room-label">Constrain:</label>
-                <input type="text" id="input-add-room-room-constrain" class="input">
+                <input type="text" id="input-add-room-constrain" class="input">
             </div>
             <button class="apply-btn" id="apply-add-room-btn">Add</button>
         </div>
@@ -121,11 +110,7 @@
             </div>
             <div class="modify-room-group">
                 <label class="modify-room-label">Equipment:</label>
-                <div class="equipment">
-                    <label><input type="checkbox" name="equipment" value="projector"> Projector</label>
-                    <label><input type="checkbox" name="equipment" value="whiteboard"> Whiteboard</label>
-                    <label><input type="checkbox" name="equipment" value="microphone"> Microphone</label>
-                    <label><input type="checkbox" name="equipment" value="speaker"> Speaker</label>
+                <div id="modify-room-equipment">
                 </div>
                 <p>New Equipment:</p>
                 <input type="text" id="modify-room-new-equipment" class="input">
