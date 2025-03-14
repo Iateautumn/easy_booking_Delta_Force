@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const modifyModal = document.querySelector('#modify-modal');
     const applyModifyBtn = document.querySelector('#apply-modify');
+    const exportAllBtn = document.querySelector('#export-all-btn');
+    const exportSelectedBtn = document.querySelector('#export-selected-btn');
 
     modifyModal.addEventListener('click', function(event) {
         if (event.target === modifyModal) {
@@ -11,6 +13,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     applyModifyBtn.addEventListener('click', async function() {
         handleModify();
         modifyModal.style.display = 'none';
+    });
+
+    exportAllBtn.addEventListener('click', async function() {
+        await getAllReservationAsCalendar();
+    });
+
+    exportSelectedBtn.addEventListener('click', async function() {
+        await getSelectedReservationAsCalendar();
     });
 
     viewBookings();
@@ -61,6 +71,8 @@ async function viewBookings() {
             const bookingCard = document.createElement('div')
             bookingCard.className = 'booking-card'
             bookingCard.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
                             <h1>Reservation ID: ${booking.reservationId}</h1>
                             <h3>Room ${booking.roomName}</h3>
                             <h4>Status: ${booking.status}</h4>
@@ -71,6 +83,11 @@ async function viewBookings() {
                             <p>Constrain: ${booking.constrain}</p>
                             <button class="action-btn" id="modify-booking">Modify</button>
                             <button class="action-btn" id="cancel-booking">Cancel</button>
+                        </div>
+                        <div>
+                            <input type="checkbox" class="ui-checkbox" value="${booking.reservationId}">
+                        </div>
+                    </div>
                     `;
             bookingList.appendChild(bookingCard);
         });
@@ -110,4 +127,51 @@ async function handleModify() {
 
 async function handleCancel(reservationId) {
 
+}
+
+async function getAllReservationAsCalendar() {
+    const apiUrl = '/user/calendar';
+    await fetch(apiUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'all_reservation.ics';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+async function getSelectedReservationAsCalendar() {
+    const selectedReservations = document.querySelectorAll('.ui-checkbox:checked');
+    const reservationIds = Array.from(selectedReservations).map(checkbox => checkbox.value);
+    if (reservationIds.length === 0) {
+        alert('Please select at least one reservation');
+        return;
+    }
+    alert(reservationIds)
+    const apiUrl = '/user/calendar';
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "reservation_id": reservationIds
+        }),
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'selected_reservation.ics';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
 }
