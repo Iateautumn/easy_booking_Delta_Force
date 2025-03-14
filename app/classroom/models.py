@@ -156,6 +156,12 @@ class Classroom(db.Model):
         secondary="reservation",
         back_populates="Classrooms"  # back_populates
     )
+
+    Users = db.relationship(
+        "User",
+        secondary="reservation",
+        back_populates="Classrooms"  # back_populates
+    )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",

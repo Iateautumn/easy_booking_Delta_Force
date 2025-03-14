@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import NewType
 
 from app.auth.models import User, get_user_by_id, UserStatus
+from app.auth.models import User, get_user_by_id
 from app.booking.models import (
 Reservation, 
 ReservationStatus, 
@@ -12,13 +13,14 @@ from app.classroom.models import delete_classroom, add_classroom, get_classroom_
     update_classroom, delete_classequipment, get_classequipment_by_classroom_id, add_equipment, get_all_classrooms, \
     get_classequipment_by_classroom_id_and_equipment_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
+from app.classroom.models import Classroom, get_classroom_by_id
+from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
 
 def get_reservation_requests():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Pending)
-        print(reservations)
         reservation_info_list = []
         def get_dict(reservation):
             userId = reservation.userId

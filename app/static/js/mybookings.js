@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
     applyModifyBtn.addEventListener('click', async function() {
-        handleModify();
+        handleModify(modifyModal.getAttribute('data-reservation-id'),);
         modifyModal.style.display = 'none';
     });
 
@@ -46,6 +46,68 @@ async function getAllMyBookings() {
                 alert(`Error, (${data.message})`);
                 return [];
         }
+    }
+}
+
+async function modifyBooking(reservationId,date,time_period) {
+    const apiUrl = '/user/reservation/modify';
+    const userData = {
+        'reservation_id': reservationId,
+        'date': date,
+        'time_period': time_period
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                alert('Booking modification successful');
+                break;
+            default:
+                alert(`Error, (${Data.message})`);
+        }
+    }
+    else {
+        alert('Error, Network Error');
+    }
+}
+
+async function cancelBooking(reservationId) {
+    const apiUrl = '/user/reservation/cancel';
+    const userData = {
+        'reservation_id': reservationId
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                alert('Booking cancellation successful');
+                break;
+            default:
+                alert(`Error, (${Data.message})`);
+        }
+    }
+    else {
+        alert('Error, Network Error');
     }
 }
 
@@ -102,15 +164,14 @@ async function viewBookings() {
         btn.addEventListener('click', () => {
             modifyModal.style.display = 'flex';
             checkModifyDate.innerHTML = `${bookings[index].date}`;
-            const booking = bookings[index];
-            const form = document.querySelector('#modify-form');
-            form.elements['reservationId'].value = booking.reservationId;
-            form.elements['roomName'].value = booking.roomName;
-            form.elements['date'].value = booking.date;
-            form.elements['timePeriod'].value = booking.timePeriod;
-            form.elements['capacity'].value = booking.capacity;
-            form.elements['equipment'].value = booking.equipment;
-            form.elements['constrain'].value = booking.constrain;
+            modifyModal.setAttribute('data-reservation-id', bookings[index].reservationId);
+            modifyModal.setAttribute('data-room-available-time', bookings[index].timePeriod);
+            document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
+                checkbox.checked = false;
+                if (checkbox.value == bookings[index].timePeriod) {
+                    checkbox.checked = true;
+                }
+            });
         });
     });
 
@@ -121,12 +182,14 @@ async function viewBookings() {
     });
 }
 
-async function handleModify() {
-
+async function handleModify(reservationId) {
+    const date = document.querySelector('#check-modify-date').textContent;
+    const time_period = document.querySelector('input[name="time-period"]:checked').value;
+    modifyBooking(reservationId,date,time_period);
 }
 
 async function handleCancel(reservationId) {
-
+    cancelBooking(reservationId);
 }
 
 async function getAllReservationAsCalendar() {
