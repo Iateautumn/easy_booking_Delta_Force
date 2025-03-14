@@ -137,6 +137,18 @@ def admin_get_all_reservations():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
+@admin_bp.route('/mybookings')
+def mybookings():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return render_template("admin/mybookings.html")
+
+@admin_bp.route('/bookroom')
+def bookroom():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+
+    return render_template('admin/bookroom.html')
 
 
 @admin_bp.route('/reservation/cancel', methods=['POST'])

@@ -14,8 +14,8 @@
             <h2>Easy Booking</h2>
             <nav>
                 <ul>
-                    <li id="book-room-nav">
-                        <a href="./bookroom">
+                    <li id="book-room-nav" class="active">
+                        <a href="#">
                             <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
                             Book Room
                         </a>
@@ -38,8 +38,8 @@
                             Room Management
                         </a>
                     </li>
-                    <li id="approval-request-nav" class="active">
-                        <a href="#">
+                    <li id="approval-request-nav">
+                        <a href="./approval">
                             <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
                             Approval Request
                         </a>
@@ -61,12 +61,16 @@
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1 id="page-title">Approval Request</h1>
+                <h1 id="page-title">Book Room</h1>
             </header>
 
-            <section id="approval-request-section" class="content-section">
-                <div class="approval-list">
-                    
+            <section id="book-room-section" class="content-section">
+                <div class="search-bar">
+                    <button class="filter-btn" id="filter-btn">Filter</button>
+                    <label id="filter-date" class="checking-date-label"></label>
+                </div>
+                <div class="room-list" id="room-list">
+
                 </div>
             </section>
         </main>
@@ -77,8 +81,7 @@
         <div class="booking-content">
             <h2>Book Room</h2>
             <div class="booking-group">
-                <label class="booking-label" for="booking-date">Date:</label>
-                <input type="date" id="booking-date" class="input">
+
             </div>
             <div class="booking-group">
                 <label class="booking-label">Time Slots:</label>
@@ -111,16 +114,9 @@
                 </div>
             </div>
             <div class="filter-group">
-                <label class="filter-label">Date/Time:</label>
-                <div class="days">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
-                </div>
+                <label class="filter-label" for="booking-date">Date:</label>
+                <input type="date" id="booking-date" class="input">
+
             </div>
             <div class="filter-group">
                 <label class="filter-label">Equipment:</label>
@@ -130,7 +126,7 @@
         </div>
     </div>
     
-    <script src="../../static/js/approval.js"></script>
+    <script src="../../static/js/booking.js"></script>
 </body>
 
 </html>
