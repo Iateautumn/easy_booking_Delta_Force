@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     viewApprovals();
 });
 
+<<<<<<< HEAD
 viewApprovals();
 
+=======
+>>>>>>> origin/cancel
 
 async function getAllBookingRequests() {
     const apiUrl = '/admin/reservation/request';
