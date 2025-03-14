@@ -3,7 +3,7 @@ from pycparser.ply.yacc import resultlimit
 
 from app.classroom.models import Classroom, get_all_equipments, ClassEquipment
 from sqlalchemy import and_
-from app.booking.models import get_reservation_by_classroom_id
+from app.booking.models import get_reservation_by_classroom_id, ReservationStatus
 from app.utils.datetime_utils import time_slot_map, slot_time_map, is_same_date, get_time_slot, get_current_date
 
 def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date()):
@@ -67,9 +67,12 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
         for reservation in reservations:
             if not is_same_date(date, str(reservation.startTime)):
                 continue
-            b.append(get_time_slot(str(reservation.startTime)))
+            if reservation.status.value == ReservationStatus.Reserved.value or reservation.status.value == ReservationStatus.Pending.value:
+                print(reservation.status)
+                b.append(get_time_slot(str(reservation.startTime)))
         if len(b) == len(slot_time_map.keys()):
             continue
+
         result_classrooms.append(get_classroom_dict(classroom, [i for i in range(len(time_slot_map.keys())) if i not in b]))
 
     return result_classrooms

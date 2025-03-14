@@ -11,7 +11,7 @@ from app.classroom.models import get_classroom_by_id
 def get_certain_reservation(classrooom_id, start_time, end_time):
     reservations = get_reservation_by_time(start_time, end_time)
     for i in reservations:
-        if i.classroomId == classrooom_id:
+        if i.classroomId == classrooom_id and i.status == ReservationStatus.Reserved or i.status == ReservationStatus.Pending:
             return True
     return False
 
@@ -21,8 +21,8 @@ def new_booking(user_id, classroom_id, time_period, date):
     for i in time_period:
         start_time = add_time(date, time_slot_map[i]['start'])
         end_time = add_time(date, time_slot_map[i]['end'])
-
-        if get_certain_reservation(int(classroom_id), start_time, end_time):
+        reservation = get_certain_reservation(int(classroom_id), start_time, end_time)
+        if reservation and (reservation.status == ReservationStatus.Reserved or reservation.status == ReservationStatus.Pending):
             raise BusinessError("a reservation is already existed", 400)
         try:
             classroom = get_classroom_by_id(classroom_id)

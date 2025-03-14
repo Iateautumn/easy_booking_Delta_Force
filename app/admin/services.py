@@ -72,6 +72,7 @@ def reject_reservation(reservationId):
 def add_room(classroom_name, capacity, equipment=[], new_equipment = [], constrain = ''):
 
     try:
+        constrain = None if not constrain else constrain
         new_classroom = add_classroom(
             classroomName=classroom_name,
             capacity=capacity,

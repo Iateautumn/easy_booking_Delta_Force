@@ -21,6 +21,7 @@ def to_calendar(user_id, reservation_ids=[]):
         result = {
             "classroomName": classroom.classroomName,
             "date": get_date_time(str(reservation.startTime))[0],
+
             "startTime": get_date_time(str(reservation.startTime))[1],
             "endTime": get_date_time(str(reservation.endTime))[1],
             "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
