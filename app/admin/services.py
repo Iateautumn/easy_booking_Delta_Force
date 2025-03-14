@@ -173,7 +173,6 @@ def get_all_rooms():
     except Exception as e:
         return {"status": "error", "message": f" no found in database asset: {str(e)}"}, 500
 
-<<<<<<< HEAD
 ### Admin can cancel reservations via classromm_id
 def admin_cancel_reservation(classroom_id):
     try:
@@ -183,5 +182,3 @@ def admin_cancel_reservation(classroom_id):
                 update_reservation(reservation.reservationId, reservation.userId, reservation.classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Cancelled)
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
-=======
->>>>>>> origin/cancel
