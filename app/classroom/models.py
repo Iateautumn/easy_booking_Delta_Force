@@ -172,11 +172,11 @@ def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 
-def add_classroom(classroomName, capactiy, constrain=None, isRestricted=False):
+def add_classroom(classroomName, capacity, constrain=None, isRestricted=False):
     
     if constrain is not None:
         isRestricted = True
-    new_classroom = Classroom(classroomName, capactiy, constrain, isRestricted)
+    new_classroom = Classroom(classroomName, capacity, constrain, isRestricted)
     # new_classroom = Classroom(classroomName, capactiy)
     db.session.add(new_classroom)
     db.session.commit()
@@ -214,7 +214,7 @@ def update_classroom(classroomId = None, classroomName = None, capacity = None, 
     if classroom is None:
         return False
     if classroomName is not None:
-        classroom.classroomNumber = classroomName
+        classroom.classroomName = classroomName
     if capacity is not None:
         classroom.capacity = capacity
     if constrain is not None:
