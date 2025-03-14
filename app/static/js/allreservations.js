@@ -90,7 +90,7 @@ async function viewReservations() {
                 <p>Date: ${reservation.date}</p>
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
-                <p>Equipment: ${reservation.constrain}</p>
+                <p>Equipment: ${reservation.equipment}</p>
                 <p>Constrain: ${reservation.constrain}</p>
 
                 <button class="action-btn" id="cancel-reservation">Cancel</button>

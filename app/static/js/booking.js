@@ -1,5 +1,9 @@
 
 var rooms;
+var capacity_min = "";
+var capacity_max = "";
+var date;
+var equipment = [];
 
 document.addEventListener('DOMContentLoaded', async function () {
     const filterBtn = document.getElementById('filter-btn');
@@ -75,7 +79,6 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
         "capacity_min": capacity_min,
         "capacity_max": capacity_max,
         "date": date,
-
         "equipment": equipment
     };
 
@@ -211,11 +214,12 @@ async function viewRooms() {
     }
 }
 
+
 async function handleFilters() {
-    const capacity_min = document.getElementById('capacity-min').value;
-    const capacity_max = document.getElementById('capacity-max').value;
-    const date = document.getElementById('booking-date').value;
-    const equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
+    capacity_min = document.getElementById('capacity-min').value;
+    capacity_max = document.getElementById('capacity-max').value;
+    date = document.getElementById('booking-date').value;
+    equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
@@ -261,6 +265,7 @@ async function handleBookings(room_id) {
     const result = await bookClassroom(room_id, date, time_period);
     if (result) {
         alert('Booked');
+        rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
         viewRooms();
     } else {
         alert('Booking failed');

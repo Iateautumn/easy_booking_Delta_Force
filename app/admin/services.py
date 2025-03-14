@@ -74,7 +74,8 @@ def add_room(classroom_name, capacity, equipment=[], new_equipment = [], constra
     try:
         new_classroom = add_classroom(
             classroomName=classroom_name,
-            capacity=capacity
+            capacity=capacity,
+            constrain = constrain
         )
         # new_classroom.updatedAt = datetime.now()
 
