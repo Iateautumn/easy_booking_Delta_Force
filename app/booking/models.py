@@ -10,7 +10,7 @@ class ReservationStatus(Enum):
     
     Reserved = "Reserved"       
     Cancelled = "Cancelled"     
-    Finished = "Finished"
+    Finished = "Finished"       
     Rejected = "Rejected"  
     Pending = "Pending"
 
@@ -112,8 +112,10 @@ def update_reservation(reservationId, userId = None, classroomId = None, startTi
     db.session.commit()
     return reservation
 
+
 def cancel_reservation(reservationId):
     reservation = Reservation.query.filter_by(reservationId=reservationId).first()
     reservation.status = ReservationStatus.Cancelled
+    reservation.updatedAt = datetime.now()
     db.session.commit()
     return reservation
