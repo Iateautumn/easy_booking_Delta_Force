@@ -122,3 +122,10 @@ def all_classroom():
         return success_response(get_all_rooms())
     except BusinessError as e:
         return error_response(str(e), e.code)
+    
+
+# ------- cancel ------
+    
+@admin_bp.route('/reservation/allreservations')
+def approval():
+    return render_template('/admin/allreservations.html')
