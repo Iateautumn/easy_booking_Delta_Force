@@ -4,7 +4,7 @@ from app.classroom.models import get_classroom_by_id
 from app.utils.datetime_utils import get_date_time, get_time_slot, add_time, time_slot_map
 from ics import Calendar, Event
 import tempfile
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.booking.models import ReservationStatus
 
 def to_calendar(user_id, reservation_ids=[]):
@@ -29,12 +29,14 @@ def to_calendar(user_id, reservation_ids=[]):
         return result
     meta_data = [reservation_to_dict(reservation) for reservation in reservations]
     calendar = Calendar()
-    
+
     for reservation in meta_data:
         event = Event()
         event.name = f"Reservation: {reservation['classroomName']}"
-        event.begin = datetime.strptime(f"{reservation['date']} {reservation['startTime']}", "%Y-%m-%d %H:%M:%S")
-        event.end = datetime.strptime(f"{reservation['date']} {reservation['endTime']}", "%Y-%m-%d %H:%M:%S")
+        event.begin = datetime.strptime(f"{reservation['date']} {reservation['startTime']}",
+                                        "%Y-%m-%d %H:%M:%S") - timedelta(hours=10, minutes=30)
+        event.end = datetime.strptime(f"{reservation['date']} {reservation['endTime']}",
+                                      "%Y-%m-%d %H:%M:%S") - timedelta(hours=10, minutes=30)
         event.description = (
             f"Classroom: {reservation['classroomName']}\n"
             f"Equipment: {', '.join(reservation['equipment'])}\n"
