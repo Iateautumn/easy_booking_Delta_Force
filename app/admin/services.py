@@ -77,9 +77,11 @@ def add_room(classroom_name, capacity, equipment=[], new_equipment = [], constra
             capacity=capacity
         )
         # new_classroom.updatedAt = datetime.now()
+
         for new_equipment_name in new_equipment:
-            new_equipment_instance = add_equipment(new_equipment_name)
-            equipment.append(new_equipment_instance.equipmentId)
+            if new_equipment_name:
+                new_equipment_instance = add_equipment(new_equipment_name)
+                equipment.append(new_equipment_instance.equipmentId)
         for equip_id in equipment:
             add_classequipment(
                 classroomId=new_classroom.classroomId,
