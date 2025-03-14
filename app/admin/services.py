@@ -182,3 +182,35 @@ def admin_cancel_reservation(classroom_id):
                 update_reservation(reservation.reservationId, reservation.userId, reservation.classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Cancelled)
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
+
+def admin_reservation_all():
+    try:
+        reservations = get_reservation_by_status(ReservationStatus.Reserved)
+
+        reservation_info_list = []
+        def get_dict(reservation):
+            userId = reservation.userId
+            classroomId = reservation.classroomId
+            user = get_user_by_id(userId)
+            classroom = get_classroom_by_id(classroomId)
+            reservation_data = {
+                "reservationId": reservation.reservationId,
+                "constrain": classroom.constrain,
+                "roomName": classroom.classroomName,
+                "userName": user.name,
+                "isRestricted": classroom.isRestricted,
+                "capacity": classroom.capacity,
+                "status": reservation.status.value,
+                "date": get_date_time(str(reservation.startTime))[0],
+                "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
+                "timePeriod": get_time_slot(str(reservation.startTime))
+            }
+            reservation_info_list.append(reservation_data)
+        for reservation in reservations:
+            get_dict(reservation)
+    except Exception as e:
+        raise BusinessError("Service error: " + str(e), 500)
+
+    return reservation_info_list
+
+

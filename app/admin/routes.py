@@ -2,7 +2,7 @@
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
 from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
-from app.admin.services import add_room, modify_room, delete_room, get_all_rooms
+from app.admin.services import add_room, modify_room, delete_room, get_all_rooms, admin_reservation_all
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -128,7 +128,14 @@ def all_classroom():
 
 # ------- cancel ------
     
-@admin_bp.route('/reservation/allreservations')
+@admin_bp.route('/allreservations')
 def allreservations():
     return render_template('admin/allreservations.html')
+
+@admin_bp.route('/reservation/all')
+def admin_get_all_reservations():
+    try:
+        return success_response(admin_reservation_all())
+    except BusinessError as e:
+        return error_response(str(e), e.code)
 
