@@ -155,6 +155,7 @@ def get_all_rooms():
 
     try:
         all_classrooms = get_all_classrooms()
+        all_classrooms = [room for room in all_classrooms if room.isDeleted == False]
         classroom_data = []
         for room in all_classrooms:
          classroom_data.append({
