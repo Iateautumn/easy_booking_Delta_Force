@@ -123,11 +123,8 @@ def all_classroom():
     except BusinessError as e:
 
         return error_response(str(e), e.code)
-
-    
-
 # ------- cancel ------
-    
+
 @admin_bp.route('/allreservations')
 def allreservations():
     return render_template('admin/allreservations.html')
@@ -138,4 +135,6 @@ def admin_get_all_reservations():
         return success_response(admin_reservation_all())
     except BusinessError as e:
         return error_response(str(e), e.code)
+    
 
+# ------- cancel ------
