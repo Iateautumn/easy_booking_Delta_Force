@@ -62,7 +62,7 @@ async function cancelReservation(reservation_id) {
 
 async function viewReservations() {
     const reservations = await getAllReservations();
-    const reservationList = document.querySelector('.room-list');
+    const reservationList = document.querySelector('.reservation-list');
     const timeTable = [
         '8:00~8:45',
         '8:55~9:40',

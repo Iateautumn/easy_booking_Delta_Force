@@ -179,7 +179,7 @@ def admin_cancel_reservation(reservation_id):
     try:
         reservations = get_reservation_by_status(ReservationStatus.Reserved)
         for reservation in reservations:
-            if reservation.reservation == reservation_id:
+            if reservation.reservationId == reservation_id:
                 update_reservation(reservation.reservationId, reservation.userId, reservation.classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Cancelled)
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
