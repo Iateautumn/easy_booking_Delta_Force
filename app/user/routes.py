@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, send_file
 from flask_login import current_user
 from app.user.services import own_reservations
-from .services import own_reservations, modify_reservation, cancel_my_reservation
+from .services import own_reservations, modify_reservation, cancel_my_reservation, to_calendar
 from app.utils.response import success_response, error_response
 from app.utils.exceptions import BusinessError
+import os
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 @user_bp.route('/reservation', methods=['GET', 'POST'])
@@ -81,3 +82,26 @@ def reservation_cancel():
         return success_response("success cancel")
     except BusinessError as e:
         return error_response(str(e), e.code)
+
+@user_bp.route('/calendar', methods=['GET', 'POST'])
+def output_all_calendar():
+    
+    user_id = current_user.userId
+    if request.method == 'GET':
+        reservation_ids = None
+    elif request.method == 'POST':
+        try:
+            data = request.get_json()
+            reservation_ids = data.get('reservation_id')
+        except Exception as e:
+            return error_response("bad request: " + str(e), 400)
+    
+    try:
+        ics_file_path = to_calendar(user_id, reservation_ids=reservation_ids)
+        response = send_file(ics_file_path, as_attachment=True, download_name="reservations.ics")
+        # TODO: elegantly delete the temp file after sending finished
+        # os.remove(ics_file_path)
+        return response
+    except Exception as e:
+        print(e)
+        raise NotImplementedError
