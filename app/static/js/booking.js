@@ -128,17 +128,18 @@ async function bookClassroom(room_id, date, time_period) {
     if (Data) {
         switch (Data.code) {
             case 200:
-                alert('Booking successful');
-                break;
+                return true;
             case 409:
                 alert('Booking failed, Room already booked');
-                break;
+                return false;
             default:
                 alert(`Error, (${Data.message})`);
+                return false;
         }
     }
     else {
         alert('Error, Network Error');
+        return false;
     }
 
 }
@@ -257,6 +258,12 @@ async function handleFilters() {
 async function handleBookings(room_id) {
     const date = document.getElementById('booking-date').value;
     const time_period = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
-    await bookClassroom(room_id, date, time_period);
+    const result = await bookClassroom(room_id, date, time_period);
+    if (result) {
+        alert('Booked');
+        viewRooms();
+    } else {
+        alert('Booking failed');
+    }
 }
 

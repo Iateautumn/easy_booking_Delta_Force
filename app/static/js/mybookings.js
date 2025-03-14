@@ -35,7 +35,7 @@ async function getAllMyBookings() {
             'Content-Type': 'application/json',
         },
     });
-    
+
     const data = await response.json();
 
     if (data) {
@@ -70,14 +70,15 @@ async function modifyBooking(reservationId,date,time_period) {
     if (Data) {
         switch (Data.code) {
             case 200:
-                alert('Booking modification successful');
-                break;
+                return true;
             default:
                 alert(`Error, (${Data.message})`);
+                return false;
         }
     }
     else {
         alert('Error, Network Error');
+        return false;
     }
 }
 
@@ -100,14 +101,15 @@ async function cancelBooking(reservationId) {
     if (Data) {
         switch (Data.code) {
             case 200:
-                alert('Booking cancellation successful');
-                break;
+                return true;
             default:
                 alert(`Error, (${Data.message})`);
+                return false;
         }
     }
     else {
         alert('Error, Network Error');
+        return false;
     }
 }
 
@@ -131,6 +133,9 @@ async function viewBookings() {
         bookingList.innerHTML = '';
         bookings.forEach(booking => {
             const bookingCard = document.createElement('div')
+            if (booking.status === 'Cancelled') {
+                bookingCard.style.display = 'none';
+            }
             bookingCard.className = 'booking-card'
             bookingCard.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -185,11 +190,23 @@ async function viewBookings() {
 async function handleModify(reservationId) {
     const date = document.querySelector('#check-modify-date').textContent;
     const time_period = document.querySelector('input[name="time-period"]:checked').value;
-    modifyBooking(reservationId,date,time_period);
+    const result = await modifyBooking(reservationId,date,time_period);
+    if (result) {
+        alert('Booking modification successful');
+        await viewBookings();
+    } else {
+        alert('Booking modification failed');
+    }
 }
 
 async function handleCancel(reservationId) {
-    cancelBooking(reservationId);
+    const result = await cancelBooking(reservationId);
+    if (result) {
+        alert('Booking cancellation successful');
+        viewBookings();
+    } else {
+        alert('Booking cancellation failed');
+    }
 }
 
 async function getAllReservationAsCalendar() {
@@ -216,7 +233,6 @@ async function getSelectedReservationAsCalendar() {
         alert('Please select at least one reservation');
         return;
     }
-    alert(reservationIds)
     const apiUrl = '/user/calendar';
     const response = await fetch(apiUrl, {
         method: 'POST',
