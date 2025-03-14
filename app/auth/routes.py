@@ -30,7 +30,7 @@ def login():
         next_page = request.args.get('next')
         return redirect(next_page or url_for('user.bookroom'))
 
-    return render_template('auth/login.html')
+    return redirect(next_page or url_for('user.bookroom')) if user.status.value != "Admin" else redirect(url_for('admin.bookroom'))
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
