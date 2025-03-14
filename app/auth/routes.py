@@ -12,7 +12,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('booking.dashboard'))
+        return redirect(url_for('user.bookroom'))
 
     try:
         data = request.get_json()
@@ -28,7 +28,7 @@ def login():
 
         login_user(user)
         next_page = request.args.get('next')
-        return redirect(next_page or url_for('booking.dashboard'))
+        return redirect(next_page or url_for('user.bookroom'))
 
     return render_template('auth/login.html')
 

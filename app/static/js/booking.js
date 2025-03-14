@@ -66,7 +66,7 @@ async function getTodayClassrooms(dateInput) {
     const date = new Date().toISOString().split('T')[0];
     dateInput.value = date;
     rooms = await getFilteredClassrooms("", "", date, []);
-
+    document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 }
 
 async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {

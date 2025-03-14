@@ -52,3 +52,9 @@ def get_time_slot(time_str, format_str='%Y-%m-%d %H:%M:%S'):
 
 def get_current_date(format_str='%Y-%m-%d'):
     return str(datetime.today().strftime(format_str))
+
+def get_date_time(time_str, origin_format = "%Y-%m-%d %H:%M:%S",date_format='%Y-%m-%d',time_format='%H:%M:%S'):
+    time_obj = datetime.strptime(time_str, origin_format)
+    date_obj = time_obj.strftime(date_format)
+    time_obj = time_obj.strftime(time_format)
+    return str(date_obj), str(time_obj)
