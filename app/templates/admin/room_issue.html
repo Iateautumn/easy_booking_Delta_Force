@@ -20,19 +20,19 @@
                             Book Room
                         </a>
                     </li>
-                    <li id="my-bookings-nav">
-                        <a href="./mybookings">
+                    <li id="my-bookings-nav" class="active">
+                        <a href="#">
                             <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
                             My Bookings
                         </a>
                     </li>
-                    <li id="all-reservations-nav" class="active">
-                        <a href="#">
+                    <li id="all-reservations-nav">
+                        <a href="./allreservations">
                             <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
                             All Reservations
                         </a>
                     </li>
-                    <li id="room-management-nav" class="">
+                    <li id="room-management-nav">
                         <a href="./management">
                             <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
                             Room Management
@@ -45,17 +45,17 @@
                         </a>
                     </li>
                     <li id="room-issue-nav">
-                        <a href="./room_issue">
+                        <a href="#">
                             <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
                             Room Issue
                         </a>
                     </li>
-                    <li id="report-nav">
-                        <a href="#report">
-                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
-                            Report
-                        </a>
-                    </li>
+                   <li id="report-nav">
+                       <a href="#report">
+                           <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                           Report
+                       </a>
+                   </li>
                 </ul>
             </nav>
             <a href="/auth/logout" class="logout">
@@ -67,21 +67,31 @@
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1 id="page-title">All Reservations</h1>
+                <h1 id="page-title">Room Issue</h1>
             </header>
-
-            <section id="all-reservations-section" class="content-section">
-                <div class="all-reservarions">
-                    <div class="reservation-list">
-                        
-                    </div>
+            <section id="my-bookings-section" class="content-section">
+                <div class="booking-list">
+                   
                 </div>
             </section>
 
         </main>
     </div>
 
-    <script src="../../static/js/allreservations.js"></script>
+    <!-- Issue Modal -->
+    <div class="issue-modal hidden" id="issue-modal">
+        <div class="issue-content">
+            <h2>Update Classroom Issue</h2>
+            <div class="issue-group">
+            </div>
+            <div class="issue-group">
+            </div>
+            <button class="apply-btn" id="apply-issue">Update Issue</button>
+        </div>
+    </div>
+   
+    
+    <script src="../../static/js/room_issue.js"></script>
 </body>
 
 </html>
