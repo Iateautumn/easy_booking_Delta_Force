@@ -2,9 +2,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     viewApprovals();
 });
 
-viewApprovals();
-
-
 async function getAllBookingRequests() {
     const apiUrl = '/admin/reservation/request';
     const response = await fetch(apiUrl, {

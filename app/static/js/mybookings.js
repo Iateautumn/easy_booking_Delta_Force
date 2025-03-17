@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const modifyModal = document.querySelector('#modify-modal');
     const applyModifyBtn = document.querySelector('#apply-modify');
+    const exportAllBtn = document.querySelector('#export-all-btn');
+    const exportSelectedBtn = document.querySelector('#export-selected-btn');
 
     modifyModal.addEventListener('click', function(event) {
         if (event.target === modifyModal) {
@@ -9,8 +11,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
     applyModifyBtn.addEventListener('click', async function() {
-        handleModify();
+        handleModify(modifyModal.getAttribute('data-reservation-id'),);
         modifyModal.style.display = 'none';
+    });
+
+    exportAllBtn.addEventListener('click', async function() {
+        await getAllReservationAsCalendar();
+    });
+
+    exportSelectedBtn.addEventListener('click', async function() {
+        await getSelectedReservationAsCalendar();
     });
 
     viewBookings();
@@ -25,7 +35,7 @@ async function getAllMyBookings() {
             'Content-Type': 'application/json',
         },
     });
-    
+
     const data = await response.json();
 
     if (data) {
@@ -36,6 +46,70 @@ async function getAllMyBookings() {
                 alert(`Error, (${data.message})`);
                 return [];
         }
+    }
+}
+
+async function modifyBooking(reservationId,date,time_period) {
+    const apiUrl = '/user/reservation/modify';
+    const userData = {
+        'reservation_id': reservationId,
+        'date': date,
+        'time_period': time_period
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return true;
+            default:
+                alert(`Error, (${Data.message})`);
+                return false;
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return false;
+    }
+}
+
+async function cancelBooking(reservationId) {
+    const apiUrl = '/user/reservation/cancel';
+    const userData = {
+        'reservation_id': reservationId
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return true;
+            default:
+                alert(`Error, (${Data.message})`);
+                return false;
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return false;
     }
 }
 
@@ -59,8 +133,13 @@ async function viewBookings() {
         bookingList.innerHTML = '';
         bookings.forEach(booking => {
             const bookingCard = document.createElement('div')
+            if (booking.status === 'Cancelled') {
+                bookingCard.style.display = 'none';
+            }
             bookingCard.className = 'booking-card'
             bookingCard.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
                             <h1>Reservation ID: ${booking.reservationId}</h1>
                             <h3>Room ${booking.roomName}</h3>
                             <h4>Status: ${booking.status}</h4>
@@ -71,6 +150,11 @@ async function viewBookings() {
                             <p>Constrain: ${booking.constrain}</p>
                             <button class="action-btn" id="modify-booking">Modify</button>
                             <button class="action-btn" id="cancel-booking">Cancel</button>
+                        </div>
+                        <div>
+                            <input type="checkbox" class="ui-checkbox" value="${booking.reservationId}">
+                        </div>
+                    </div>
                     `;
             bookingList.appendChild(bookingCard);
         });
@@ -85,15 +169,14 @@ async function viewBookings() {
         btn.addEventListener('click', () => {
             modifyModal.style.display = 'flex';
             checkModifyDate.innerHTML = `${bookings[index].date}`;
-            const booking = bookings[index];
-            const form = document.querySelector('#modify-form');
-            form.elements['reservationId'].value = booking.reservationId;
-            form.elements['roomName'].value = booking.roomName;
-            form.elements['date'].value = booking.date;
-            form.elements['timePeriod'].value = booking.timePeriod;
-            form.elements['capacity'].value = booking.capacity;
-            form.elements['equipment'].value = booking.equipment;
-            form.elements['constrain'].value = booking.constrain;
+            modifyModal.setAttribute('data-reservation-id', bookings[index].reservationId);
+            modifyModal.setAttribute('data-room-available-time', bookings[index].timePeriod);
+            document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
+                checkbox.checked = false;
+                if (checkbox.value == bookings[index].timePeriod) {
+                    checkbox.checked = true;
+                }
+            });
         });
     });
 
@@ -104,10 +187,70 @@ async function viewBookings() {
     });
 }
 
-async function handleModify() {
-
+async function handleModify(reservationId) {
+    const date = document.querySelector('#check-modify-date').textContent;
+    const time_period = document.querySelector('input[name="time-period"]:checked').value;
+    const result = await modifyBooking(reservationId,date,time_period);
+    if (result) {
+        alert('Booking modification successful');
+        await viewBookings();
+    } else {
+        alert('Booking modification failed');
+    }
 }
 
 async function handleCancel(reservationId) {
+    const result = await cancelBooking(reservationId);
+    if (result) {
+        alert('Booking cancellation successful');
+        viewBookings();
+    } else {
+        alert('Booking cancellation failed');
+    }
+}
 
+async function getAllReservationAsCalendar() {
+    const apiUrl = '/user/calendar';
+    await fetch(apiUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'all_reservation.ics';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+async function getSelectedReservationAsCalendar() {
+    const selectedReservations = document.querySelectorAll('.ui-checkbox:checked');
+    const reservationIds = Array.from(selectedReservations).map(checkbox => checkbox.value);
+    if (reservationIds.length === 0) {
+        alert('Please select at least one reservation');
+        return;
+    }
+    const apiUrl = '/user/calendar';
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "reservation_id": reservationIds
+        }),
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'selected_reservation.ics';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
 }

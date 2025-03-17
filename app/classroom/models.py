@@ -1,14 +1,13 @@
 # models/classroom.py
 from app.extensions import db
 from datetime import datetime
-
 # from app.auth.models import User
 # from app.booking.models import Reservation
 
 """
 class ClassroomType(db.Model):
     __tablename__ = 'classroomType'
-
+    
     typeId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     typeName = db.Column(db.String(50), unique=True, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
@@ -68,7 +67,6 @@ def update_classroom_type(typeId, typeName, capacity, equipment):
     return classroom_type
 """
 
-
 class Equipment(db.Model):
     __tablename__ = 'equipment'
     equipmentId = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -77,9 +75,9 @@ class Equipment(db.Model):
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
     Classrooms = db.relationship(
-        "Classroom",
+        "Classroom", 
         secondary="classequipment",
-        back_populates="Equipments"  #
+        back_populates="Equipments"  # 
     )
 
     def __init__(self, equipmentName):
@@ -88,11 +86,9 @@ class Equipment(db.Model):
         self.updatedAt = datetime.now()
         self.isDeleted = False
 
-
 def get_all_equipments():
     list_equipment = Equipment.query.all()
     return list_equipment
-
 
 def add_equipment(equipmentName):
     new_equipment = Equipment(equipmentName)
@@ -100,23 +96,19 @@ def add_equipment(equipmentName):
     db.session.commit()
     return new_equipment
 
-
 def get_equipment_by_id(equipmentId):
     equipment = Equipment.query.filter_by(equipmentId=equipmentId).first()
     return equipment
 
-
 def get_equipment_by_name(equipmentName):
     equipment = Equipment.query.filter_by(equipmentName=equipmentName).first()
     return equipment
-
 
 def delete_equipment(equipmentId):
     equipment = Equipment.query.filter_by(equipmentId=equipmentId).first()
     equipment.isDeleted = True
     db.session.commit()
     return equipment
-
 
 def update_equipment(equipmentId, equipmentName):
     equipment = Equipment.query.filter_by(equipmentId=equipmentId).first()
@@ -128,34 +120,32 @@ def update_equipment(equipmentId, equipmentName):
     db.session.commit()
     return equipment
 
-
 def get_equipment_by_classroom_id(classroomId):
     from app.classroom.models import Classroom
     from app.classroom.models import ClassEquipment
     classroom = Classroom.query.filter_by(classroomId=classroomId).first()
     if classroom is None:
         return None
-    list_equipment = Equipment.query.join(ClassEquipment).filter(ClassEquipment.classroomId == classroomId,
-                                                                 ClassEquipment.isDeleted == False).all()
+    list_equipment = Equipment.query.join(ClassEquipment).filter(ClassEquipment.classroomId == classroomId, ClassEquipment.isDeleted == False).all()
     return list_equipment
 
-
 class Classroom(db.Model):
-    __tablename__ = 'classroom'
 
+    __tablename__ = 'classroom'
+    
     classroomId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     classroomName = db.Column(db.String(20), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
-    constrain = db.Column(db.String(50))
+    constrain= db.Column(db.String(50))
     isRestricted = db.Column(db.Boolean, default=False)
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    Users = db.relationship(
-        "User",
-        secondary="reservation",
-        back_populates="Classrooms"  # back_populates
-    )
+    # Users = db.relationship(
+    #     "User",
+    #     secondary="reservation",
+    #     back_populates="Classrooms"  # back_populates
+    # )
     Equipments = db.relationship(
         "Equipment",
         secondary="classequipment",
@@ -170,7 +160,7 @@ class Classroom(db.Model):
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
-
+    
     @property
     def users(self):
         from app.auth.models import User
@@ -182,29 +172,26 @@ def get_all_classrooms():
     list_classroom = Classroom.query.all()
     return list_classroom
 
-
 def add_classroom(classroomName, capacity, constrain=None, isRestricted=False):
+    
     if constrain is not None:
         isRestricted = True
     new_classroom = Classroom(classroomName, capacity, constrain, isRestricted)
-    # new_classroom = Classroom(classroomName, capacity)
+    # new_classroom = Classroom(classroomName, capactiy)
     db.session.add(new_classroom)
     db.session.commit()
     return new_classroom
-
 
 def get_classroom_by_id(classroomId):
     classroom = Classroom.query.filter_by(classroomId=classroomId).first()
     return classroom
 
-
 def get_classroom_by_name(classroomName):
     classroom = Classroom.query.filter_by(classroomName=classroomName).first()
     return classroom
 
-
 def get_classroom_by_capacity(capacity):
-    list_classroom = Classroom.query.filter_by(capacity > capacity).all()
+    list_classroom = Classroom.query.filter_by(capacity>capacity).all()
     return list_classroom
 
 
@@ -222,8 +209,7 @@ def delete_classroom(classroomId):
     db.session.commit()
     return classroom
 
-
-def update_classroom(classroomId=None, classroomName=None, capacity=None, constrain=None):
+def update_classroom(classroomId = None, classroomName = None, capacity = None, constrain = None):
     classroom = Classroom.query.filter_by(classroomId=classroomId).first()
     if classroom is None:
         return False
@@ -241,19 +227,17 @@ def update_classroom(classroomId=None, classroomName=None, capacity=None, constr
     db.session.commit()
     return classroom
 
-
 def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None):
-    query = Classroom.query
-
+    query = Classroom.query  
+    
     if classroomName is not None:
-        query = query.filter_by(classroomName=classroomName)
+        query = query.filter_by(classroomName=classroomName)  
     if capacity is not None:
-        query = query.filter_by(capacity=capacity)
+        query = query.filter_by(capacity=capacity)  
     if isRestricted is not None:
-        query = query.filter_by(isRestricted=isRestricted)
-    list_classroom = query.all()
+        query = query.filter_by(isRestricted=isRestricted)  
+    list_classroom = query.all()  
     return list_classroom
-
 
 # based on reservation table
 def get_classroom_by_user_id(userId):
@@ -262,10 +246,8 @@ def get_classroom_by_user_id(userId):
     user = User.query.filter_by(userId=userId).first()
     if user is None:
         return None
-    list_classroom = Classroom.query.join(Reservation).filter(Reservation.userId == userId,
-                                                              Reservation.isDeleted == False).all()
+    list_classroom = Classroom.query.join(Reservation).filter(Reservation.userId == userId, Reservation.isDeleted == False).all()
     return list_classroom
-
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'
@@ -284,10 +266,10 @@ class ClassEquipment(db.Model):
         self.isDeleted = False
 
 
+
 def get_classequipment_by_id(classEquipmentId):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
     return classequipment
-
 
 def delete_classequipment(classEquipmentId):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
@@ -295,8 +277,7 @@ def delete_classequipment(classEquipmentId):
     db.session.commit()
     return classequipment
 
-
-def update_classequipment(classEquipmentId, classroomId=None, equipmentId=None):
+def update_classequipment(classEquipmentId, classroomId = None, equipmentId = None):
     classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
     if classequipment is None:
         return False
@@ -308,21 +289,17 @@ def update_classequipment(classEquipmentId, classroomId=None, equipmentId=None):
     db.session.commit()
     return classequipment
 
-
 def get_classequipment_by_classroom_id(classroomId):
     list_classequipment = ClassEquipment.query.filter_by(classroomId=classroomId).all()
     return list_classequipment
-
 
 def get_classequipment_by_equipment_id(equipmentId):
     list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId).all()
     return list_classequipment
 
-
 def get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId):
     classequipment = ClassEquipment.query.filter_by(classroomId=classroomId, equipmentId=equipmentId).first()
     return classequipment
-
 
 def add_classequipment(classroomId, equipmentId):
     result = get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId)

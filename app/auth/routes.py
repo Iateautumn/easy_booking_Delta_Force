@@ -28,10 +28,8 @@ def login():
 
         login_user(user)
         next_page = request.args.get('next')
-        return redirect(next_page or url_for('user.bookroom'))
-
+        return redirect(url_for('user.bookroom')) if user.status.value != "Admin" else redirect(url_for('admin.bookroom'))
     return render_template('auth/login.html')
-
 @auth_bp.route('/register', methods=['POST'])
 def register():
     if current_user.is_authenticated:

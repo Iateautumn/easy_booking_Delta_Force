@@ -29,8 +29,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const constrain = document.querySelector('#input-add-room-constrain').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
-        await adminAddRoom(classroom_name, capacity, equipment, new_equipment, constrain);
+        const result = await adminAddRoom(classroom_name, capacity, equipment, new_equipment, constrain);
 
+        if (result) {
+            alert('Add successful');
+            viewAllRooms();
+        } else {
+            alert('Add failed');
+        }
         addRoomModal.style.display = 'none';
     });
 
@@ -43,8 +49,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const constrain = document.querySelector('#input-modify-room-constrain').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
-        await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain);
+        const result = await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain);
 
+        if (result) {
+            alert('Modify successful');
+            viewAllRooms();
+        } else {
+            alert('Modify failed');
+        }
         modifyRoomModal.style.display = 'none';
     });
 
@@ -127,7 +139,14 @@ async function viewAllRooms() {
         deleteRoomBtns.forEach((btn, index) => {
             btn.addEventListener('click', async () => {
                 const room = rooms[index];
-                await adminDeleteRoom(room.classroomId);
+                const result = await adminDeleteRoom(room.classroomId);
+
+                if (result) {
+                    alert('Delete successful');
+                    viewAllRooms();
+                } else {
+                    alert('Delete failed');
+                }
             });
         });
     }
@@ -178,13 +197,14 @@ async function adminAddRoom(classroom_name, capacity, equipment, new_equipment, 
     if (data) {
         switch (data.code) {
             case 200:
-                alert('Add successful');
-                break;
+                return true;
             default:
                 alert(`Error, (${data.message})`);
+                return false;
         }
     } else {
         alert('Error, Network Error');
+        return false;
     }
 }
 
@@ -207,13 +227,14 @@ async function adminDeleteRoom(classroom_id) {
     if (data) {
         switch (data.code) {
             case 200:
-                alert('Delete successful');
-                break;
+                return true;
             default:
                 alert(`Error, (${data.message})`);
+                return false;
         }
     } else {
         alert('Error, Network Error');
+        return false;
     }
 
 }
@@ -242,13 +263,14 @@ async function adminModifyRoomInfo(classroom_id, classroom_name, capacity, equip
     if (data) {
         switch (data.code) {
             case 200:
-                alert('Modify successful');
-                break;
+                return true;
             default:
                 alert(`Error, (${data.message})`);
+                return false;
         }
     } else {
         alert('Error, Network Error');
+        return false;
     }
 
 }

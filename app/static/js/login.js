@@ -31,7 +31,7 @@ async function registerUser(username, email, password, status) {
     switch (Data.code) {
       case 200:
         alert('Register Success! Please login now!');
-        window.location.href = '/login';
+        window.location.href = '/';
         break;
       case 400:
         alert(`Validation failed: ${Data.details?.join(', ') || 'Invalid parameters'}`);
