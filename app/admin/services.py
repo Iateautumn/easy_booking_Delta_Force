@@ -13,10 +13,10 @@ from app.classroom.models import delete_classroom, add_classroom, get_classroom_
     update_classroom, delete_classequipment, get_classequipment_by_classroom_id, add_equipment, get_all_classrooms, \
     get_classequipment_by_classroom_id_and_equipment_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
-from app.classroom.models import Classroom, get_classroom_by_id
+from app.classroom.models import Classroom, get_classroom_by_id, add_issue
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
-from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, delete_issue_report
+from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, delete_issue_report, add_issue_report
 
 
 def get_reservation_requests():
@@ -108,8 +108,9 @@ def modify_room(classroom_id, classroom_name=None, capacity=None,
             classroomName=classroom_name,
             capacity=capacity,
             constrain = constrain,
-            issue = issue
         )
+
+        add_issue(classroom_id, issue)
 
         my_equipments = get_classequipment_by_classroom_id(classroom_id)
         for my_equipment in my_equipments:
