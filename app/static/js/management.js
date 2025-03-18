@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const equipment = Array.from(document.querySelectorAll('input[name="modify-room-equipment"]:checked')).map(checkbox => checkbox.value);
         const new_equipment_str = document.querySelector('#modify-room-new-equipment').value;
         const constrain = document.querySelector('#input-modify-room-constrain').value;
+        const issue = document.querySelector('#input-modify-room-issue').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
         const result = await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain);
@@ -239,7 +240,7 @@ async function adminDeleteRoom(classroom_id) {
 
 }
 
-async function adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain) {
+async function adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain, issue) {
     const apiUrl = '/admin/classroom/modify';
     const userData = {
         "classroom_id": classroom_id,
@@ -247,7 +248,8 @@ async function adminModifyRoomInfo(classroom_id, classroom_name, capacity, equip
         "capacity": capacity,
         "equipment": equipment,
         "new_equipment": new_equipment,
-        "constrain": constrain
+        "constrain": constrain,
+        "issue": issue
     }
 
     const response = await fetch(apiUrl, {

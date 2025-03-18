@@ -191,6 +191,7 @@ async function viewRooms() {
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
                             <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
+                            <p style="color: #d20000">${classroom.issue}</p>
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
             roomList.appendChild(room);

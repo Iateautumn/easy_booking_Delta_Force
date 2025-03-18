@@ -20,7 +20,7 @@
                             Book Room
                         </a>
                     </li>
-                    <li id="my-bookings-nav" class="active">
+                    <li id="my-bookings-nav">
                         <a href="#">
                             <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
                             My Bookings
@@ -44,7 +44,7 @@
                             Approval Request
                         </a>
                     </li>
-                    <li id="room-issue-nav">
+                    <li id="room-issue-nav" class="active">
                         <a href="#">
                             <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
                             Room Issue
@@ -67,27 +67,21 @@
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1 id="page-title">Room Issue</h1>
+                <h1 id="page-title">Reported Room Issues</h1>
             </header>
-            <section id="my-bookings-section" class="content-section">
-                <div class="booking-list">
-                   
+            <section id="issue-section" class="content-section">
+                <div class="issue-list">
+                   <div class="issue-card">
+                       <h3>Issue ID: 1</h3>
+                       <p>Issue: Room 101 is destroyed by a fell helicopter</p>
+                       <p>Reported by: Kobe</p>
+                       <p>Date Reported: 2025-3-12</p>
+                       <button class="action-btn">Remove</button>
+                   </div>
                 </div>
             </section>
 
         </main>
-    </div>
-
-    <!-- Issue Modal -->
-    <div class="issue-modal hidden" id="issue-modal">
-        <div class="issue-content">
-            <h2>Update Classroom Issue</h2>
-            <div class="issue-group">
-            </div>
-            <div class="issue-group">
-            </div>
-            <button class="apply-btn" id="apply-issue">Update Issue</button>
-        </div>
     </div>
    
     

@@ -180,7 +180,7 @@ header h1 {
 }
 
 .room-card p {
-    margin: 0 0 15px;
+    margin: 0 0 12px;
     color: #666;
 }
 
@@ -552,17 +552,21 @@ header h1 {
     background-color: #112d6f;
 }
 
-.booking-card, .room-card, .approval-card {
+.booking-card, .room-card, .approval-card, .issue-card {
     background-color: white;
     padding: 15px;
-    /* margin-bottom: 20px; */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.booking-card h3, .room-card h3, .approval-card h3 {
+.booking-card h3, .room-card h3, .approval-card h3, .issue-card h3 {
     margin: 0 0 10px;
     color: #13439b;
+}
+
+.booking-card p, .room-card p, .approval-card p, .issue-card p {
+    margin: 0 0 12px;
+    color: #666;
 }
 
 .export-buttons {

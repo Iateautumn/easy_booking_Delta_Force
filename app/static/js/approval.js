@@ -116,6 +116,7 @@ async function viewApprovals() {
                 <h1>Reservation ID: ${approval.reservationId}</h1>
                 <h3>Room ${approval.classroomName}</h3>
                 <p>Constrain: ${approval.constrain}</p>
+                <p style="color: #d20000">${approval.issue}</p>
                 <h4>User: ${approval.username}</h4>
                 <p>User Status: ${approval.userstatus}</p>
                 <p>Date: ${approval.date}</p>
