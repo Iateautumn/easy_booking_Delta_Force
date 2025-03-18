@@ -16,6 +16,7 @@ from app.utils.datetime_utils import slot_time_map, get_time_slot, get_date_time
 from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
+from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, delete_issue_report
 
 
 def get_reservation_requests():
@@ -96,7 +97,7 @@ def add_room(classroom_name, capacity, equipment=[], new_equipment = [], constra
 
 
 def modify_room(classroom_id, classroom_name=None, capacity=None,
-                equipment=[], new_equipment = [], constrain=''):
+                equipment=[], new_equipment = [], constrain='', issue=''):
 
     # if current_user.status != UserStatus.Admin.value:
     #     return {"status": "error", "message": "no admin power"}, 403
@@ -106,7 +107,8 @@ def modify_room(classroom_id, classroom_name=None, capacity=None,
             classroomId=classroom_id,
             classroomName=classroom_name,
             capacity=capacity,
-            constrain = constrain
+            constrain = constrain,
+            issue = issue
         )
 
         my_equipments = get_classequipment_by_classroom_id(classroom_id)
@@ -246,3 +248,31 @@ def admin_reservation_requests():
         raise BusinessError("Service error: " + str(e), 500)
 
     return reservation_info_list
+
+def get_reported_issue():
+    try:
+        issue_reports = get_issue_report_by_filter()
+        issue_report_list = []
+        def get_dict(issue_report):
+            userId = issue_report.userId
+            reservationId = issue_report.reservationId
+            user = get_user_by_id(userId)
+            reservation = get_reservation_by_id(reservationId)
+            issue_report_data = {
+                "issueId": issue_report.reportId,
+                "userName": user.name,
+                "issue": issue_report.issue
+            }
+            issue_report_list.append(issue_report_data)
+        for issue_report in issue_reports:
+            get_dict(issue_report)
+    except Exception as e:
+        raise BusinessError("Service error: " + str(e), 500)
+
+    return issue_report_list
+
+def delete_reported_issue(issue_id):
+    try:
+        delete_issue_report(issue_id)
+    except Exception as e:
+        raise BusinessError("Service error: " + str(e), 500)

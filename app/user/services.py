@@ -6,6 +6,7 @@ from ics import Calendar, Event
 import tempfile
 from datetime import datetime, timedelta
 from app.booking.models import ReservationStatus
+from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, update_issue_report, add_issue_report
 
 def to_calendar(user_id, reservation_ids=[]):
     try:
@@ -103,6 +104,25 @@ def cancel_my_reservation(userId, reservationId):
 
     try:
         cancel_reservation(reservationId)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+    
+def report_issue(userId, reservationId, issue):
+    try:
+        reservation = get_reservation_by_id(reservationId)
+        if userId != reservation.userId:
+            raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
+    except BusinessError as e:
+        raise BusinessError(str(e), e.code)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+
+    try:
+        issue_report = get_issue_report_by_filter(reservationId=reservationId)
+        if issue_report:
+            update_issue_report(issue_report[0].issueReportId, issue)
+        else:
+            add_issue_report(reservationId, issue)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
