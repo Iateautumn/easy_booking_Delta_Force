@@ -263,7 +263,8 @@ def get_reported_issue():
             }
             issue_report_list.append(issue_report_data)
         for issue_report in issue_reports:
-            get_dict(issue_report)
+            if issue_report.isDeleted == False:
+                get_dict(issue_report)
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)
 
