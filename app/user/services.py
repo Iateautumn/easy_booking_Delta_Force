@@ -107,22 +107,9 @@ def cancel_my_reservation(userId, reservationId):
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     
-def report_issue(userId, reservationId, issue):
+def report_issue(userId, issue):
     try:
-        reservation = get_reservation_by_id(reservationId)
-        if userId != reservation.userId:
-            raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
-    except BusinessError as e:
-        raise BusinessError(str(e), e.code)
-    except Exception as e:
-        raise BusinessError("error: " + str(e), 500)
-
-    try:
-        issue_report = get_issue_report_by_filter(reservationId=reservationId)
-        if issue_report:
-            update_issue_report(issue_report[0].issueReportId, issue)
-        else:
-            add_issue_report(reservationId, issue)
+        add_issue_report(userId, issue)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
