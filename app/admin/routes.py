@@ -1,8 +1,7 @@
 
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
-from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
-from app.admin.services import add_room, modify_room, delete_room, get_all_rooms, admin_reservation_all, admin_cancel_reservation
+from app.admin.services import *
 
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
@@ -167,3 +166,33 @@ def reservation_cancel():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
+
+@admin_bp.route('/issue/all', methods=['GET'])
+def allissue_request():
+    try:
+        issue_reports = get_reported_issue()
+        return success_response(issue_reports)
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+    
+@admin_bp.route('/issue/report/delete', methods=['POST'])
+def delete_issue():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("can not resolve json: " + str(e), 400)
+    
+    issue_id = data['issue_id']
+
+    try:
+        delete_issue_report(issue_id)
+        return success_response("success delete")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/issue', methods=['GET'])
+def issue():
+    try:
+        return render_template('admin/issue.html')
+    except BusinessError as e:
+        return error_response(str(e), e.code)
