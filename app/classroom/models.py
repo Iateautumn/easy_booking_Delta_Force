@@ -141,6 +141,7 @@ class Classroom(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
+    issue= db.Column(db.String(255))
     # Users = db.relationship(
     #     "User",
     #     secondary="reservation",
@@ -248,6 +249,22 @@ def get_classroom_by_user_id(userId):
         return None
     list_classroom = Classroom.query.join(Reservation).filter(Reservation.userId == userId, Reservation.isDeleted == False).all()
     return list_classroom
+
+def add_issue(classroomId, issue):
+    classroom = Classroom.query.filter_by(classroomId=classroomId).first()
+    if classroom is None:
+        return False
+    classroom.issue = issue
+    classroom.updatedAt = datetime.now()
+    db.session.commit()
+    return classroom
+
+def delete_issue(classroomId):
+    classroom = Classroom.query.filter_by(classroomId=classroomId).first()
+    classroom.issue = None
+    classroom.updatedAt = datetime.now()
+    db.session.commit()
+    return classroom
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'

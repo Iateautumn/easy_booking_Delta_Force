@@ -110,7 +110,86 @@ def get_users_by_filter(user_id, status = None, name = None, email = None):
         quary = quary.filter(email=email)
     return quary.all()
 
+class IssueReport(db.Model):
+    __tablename__ = 'issuereport'
+    reportId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    userId = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
     
+    description = db.Column(db.String(255), nullable=False)
+    # startTime = db.Column(db.DateTime)
+    # endTime = db.Column(db.DateTime)
+    isBanned = db.Column(db.Boolean, default=False)
+    createdAt = db.Column(db.DateTime)
+    updatedAt = db.Column(db.DateTime)
+    isDeleted = db.Column(db.Boolean, default=False)
+    User = db.relationship('User', backref=db.backref('issue_reports', lazy=True))
+
+    def __init__(self, userId, description):
+        self.userId = userId
+        
+        # self.startTime = startTime
+        # self.endTime = endTime
+        self.description = description
+        self.isBanned = False
+        self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
+        self.isDeleted = False
+
+
+
+def get_issue_report_by_filter(userId=None,  isBanned=None):
+    query = IssueReport.query
+    if userId is not None:
+        query = query.filter_by(userId=userId)
+    
+    # if startTime is not None:
+    #     query = query.filter(IssueReport.startTime>=startTime)
+    # if endTime is not None:
+    #     query = query.filter(IssueReport.endTime<=endTime)
+    if isBanned is not None:
+        query = query.filter_by(isBanned=isBanned)
+    list_issue_report = query.all()
+    return list_issue_report
+
+def get_issue_report_by_id(reportId):
+    issue_report = IssueReport.query.filter_by(reportId=reportId).first()
+    return issue_report
+
+def get_issue_report_by_user_id(userId):
+    list_issue_report = IssueReport.query.filter_by(userId=userId).all()
+    return list_issue_report
+
+
+def delete_issue_report(reportId):
+    issue_report = IssueReport.query.filter_by(reportId=reportId).first()
+    issue_report.isDeleted = True
+    db.session.commit()
+    return issue_report
+
+def update_issue_report(reportId, userId = None,decription = None, isBanned = None):
+    issue_report = IssueReport.query.filter_by(reportId=reportId).first()
+    if issue_report is None:
+        return False
+    if userId is not None:
+        issue_report.userId = userId
+    
+    if decription is not None:
+        issue_report.decription = decription
+    # if startTime is not None:
+    #     issue_report.startTime = startTime
+    # if endTime is not None:
+    #     issue_report.endTime = endTime
+    if isBanned is not None:
+        issue_report.isBanned = isBanned
+    issue_report.updatedAt = datetime.now()
+    db.session.commit()
+    return issue_report 
+
+def add_issue_report(userId, description):
+    issue_report = IssueReport(userId, description)
+    db.session.add(issue_report)
+    db.session.commit()
+    return issue_report   
     
 
 
