@@ -255,9 +255,7 @@ def get_reported_issue():
         issue_report_list = []
         def get_dict(issue_report):
             userId = issue_report.userId
-            reservationId = issue_report.reservationId
             user = get_user_by_id(userId)
-            reservation = get_reservation_by_id(reservationId)
             issue_report_data = {
                 "issueId": issue_report.reportId,
                 "userName": user.name,
