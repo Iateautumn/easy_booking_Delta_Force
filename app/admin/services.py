@@ -177,6 +177,7 @@ def get_all_rooms():
             "classroomId": room.classroomId,
             "constrain": room.constrain,
             "isRestricted": room.isRestricted,
+            "issue": room.issue
             })
         return classroom_data
 
@@ -213,32 +214,6 @@ def admin_reservation_all():
                 "status": reservation.status.value,
                 "date": get_date_time(str(reservation.startTime))[0],
                 "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
-                "timePeriod": get_time_slot(str(reservation.startTime))
-            }
-            reservation_info_list.append(reservation_data)
-        for reservation in reservations:
-            get_dict(reservation)
-    except Exception as e:
-        raise BusinessError("Service error: " + str(e), 500)
-
-    return reservation_info_list
-
-def admin_reservation_requests():
-    try:
-        reservations = get_reservation_by_status(ReservationStatus.Pending)
-        reservation_info_list = []
-        def get_dict(reservation):
-            userId = reservation.userId
-            classroomId = reservation.classroomId
-            user = get_user_by_id(userId)
-            classroom = get_classroom_by_id(classroomId)
-            reservation_data = {
-                "reservationId": reservation.reservationId,
-                "constrain": classroom.constrain,
-                "classroomName": classroom.classroomName,
-                "userName": user.name,
-                "userstatus": user.status,
-                "date": get_date_time(str(reservation.startTime))[0],
                 "timePeriod": get_time_slot(str(reservation.startTime)),
                 "issue": classroom.issue
             }
@@ -249,6 +224,33 @@ def admin_reservation_requests():
         raise BusinessError("Service error: " + str(e), 500)
 
     return reservation_info_list
+
+# def admin_reservation_requests():
+#     try:
+#         reservations = get_reservation_by_status(ReservationStatus.Pending)
+#         reservation_info_list = []
+#         def get_dict(reservation):
+#             userId = reservation.userId
+#             classroomId = reservation.classroomId
+#             user = get_user_by_id(userId)
+#             classroom = get_classroom_by_id(classroomId)
+#             reservation_data = {
+#                 "reservationId": reservation.reservationId,
+#                 "constrain": classroom.constrain,
+#                 "classroomName": classroom.classroomName,
+#                 "userName": user.name,
+#                 "userstatus": user.status,
+#                 "date": get_date_time(str(reservation.startTime))[0],
+#                 "timePeriod": get_time_slot(str(reservation.startTime)),
+#                 "issue": classroom.issue
+#             }
+#             reservation_info_list.append(reservation_data)
+#         for reservation in reservations:
+#             get_dict(reservation)
+#     except Exception as e:
+#         raise BusinessError("Service error: " + str(e), 500)
+
+#     return reservation_info_list
 
 def get_reported_issue():
     try:
