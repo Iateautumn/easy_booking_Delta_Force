@@ -1,7 +1,6 @@
-
-
-
-
+document.addEventListener('DOMContentLoaded', async function () {
+    viewIssues();
+});
 
 async function getRoomIssue() {
     const apiUrl = '/admin/issue/all';
@@ -30,7 +29,7 @@ async function getRoomIssue() {
 }
 
 async function removeRoomIssue(issue_id) {
-    const apiUrl = '/admin/issue/remove';
+    const apiUrl = '/admin/issue/report/delete';
     const userData = {
         "issue_id": issue_id
     };
@@ -63,7 +62,7 @@ async function removeRoomIssue(issue_id) {
 async function viewIssues() {
     const issues = await getRoomIssue();
 
-    const issueList = document.getElementById('issue-list');
+    const issueList = document.querySelector('.issue-list');
 
     if(issues.length > 0) {
         issueList.innerHTML = '';

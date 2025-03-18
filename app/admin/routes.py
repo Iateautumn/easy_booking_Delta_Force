@@ -149,11 +149,6 @@ def bookroom():
 
     return render_template('admin/bookroom.html')
 
-@admin_bp.route('/issue')
-def issue():
-    return render_template('admin/issue.html')
-
-
 @admin_bp.route('/reservation/cancel', methods=['POST'])
 def reservation_cancel():
     

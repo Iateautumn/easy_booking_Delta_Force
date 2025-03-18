@@ -147,8 +147,8 @@ async function viewBookings() {
                             <p>Time: ${timeTable[booking.timePeriod]}</p>
                             <p>Capacity: ${booking.capacity}</p>
                             <p>Equipment: ${booking.equipment}</p>
-                            <p>Constrain: ${booking.constrain}</p>
-                            <p style="color: #d20000">${booking.issue}</p>
+                            <p>Constrain: ${!booking.constrain || booking.constrain == '' ? 'None': booking.constrain}</p>
+                            ${booking.issue ? '<p style="color: #d20000">Issue: ' + booking.issue + '</p>' : ''}
                             <button class="action-btn" id="modify-booking">Modify</button>
                             <button class="action-btn" id="cancel-booking">Cancel</button>
                         </div>
