@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,10 +11,11 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="form-box login">
-            <form action="">
-                <h1>Login</h1>
+<div class="container">
+    <div class="form-box login">
+        <form action="">
+            <h1>Login</h1>
+            <div id="password-login">
                 <div class="input-box">
                     <input id="email" type="email" placeholder="Email">
                     <i class="bx bxs-envelope"></i>
@@ -24,66 +24,89 @@
                     <input id="password" type="password" placeholder="Password">
                     <i class="bx bxs-lock-alt"></i>
                 </div>
-                <div class="forgot-link">
-                    <a href="#">Forgot Password?</a>
-                </div>
+                <!--                <div class="forgot-link">-->
+                <!--                    <a href="#">Forgot Password?</a>-->
+                <!--                </div>-->
                 <button type="button" class="btn" onclick="handleLogin()">Login</button>
-                <p>or login with social platforms</p>
+                <p>or login with email verification</p>
                 <div class="social-icons">
                     <a href="#"><i class="bx bxl-microsoft"></i></a>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <div class="form-box register">
-            <form action="">
-                <h1>Registration</h1>
-                <div class="input-box">
-                    <input id="registration-username" type="text" placeholder="Username">
-                    <i class="bx bxs-user"></i>
-                </div>
-                <div class="input-box">
-                    <input id="registration-email" type="email" placeholder="Email">
+            <div id="email-login" style="display: none;">
+                <div class="input-box" id="email-verification-box" style="display: none;">
+                    <input id="verification-email" type="email" placeholder="Email">
                     <i class="bx bxs-envelope"></i>
                 </div>
-                <div class="input-box">
-                    <input id="registration-password" type="password" placeholder="Password">
-                    <i class="bx bxs-lock-alt"></i>
+                <div class="input-box" id="verification-code-box" style="display: none;">
+                    <input id="verification-code" type="text" placeholder="Verification Code">
+                    <i class="bx bxs-key"></i>
                 </div>
-                <div class="input-box">
-                    <select id="status">
-                        <option value="" disabled selected>Select Role</option>
-                        <option value="Teacher">Teacher</option>
-                        <option value="Student">Student</option>
-                    </select>
-                    <i class="bx bxs-user-detail"></i>
-                </div>
-                <!-- <div class="forgot-link">
-                    <a href="#">Forgot Password?</a>
-                </div> -->
-                <button type="button" class="btn" onclick="handleRegister()">Register</button>
-                <p>or register with social platforms</p>
+                <button type="button" class="btn" id="send-code-btn" style="display: none;"
+                        onclick="sendVerificationCode()">Send Code
+                </button>
+                <button type="button" class="btn" id="verify-code-btn" style="display: none;" onclick="verifyCode()">
+                    Verify
+                    Code
+                </button>
+                <p>or back with password</p>
                 <div class="social-icons">
-                    <a href="#"><i class="bx bxl-microsoft"></i></a>
+                    <a href="#"><i class="bx bx-left-arrow-alt"></i></a>
                 </div>
-            </form>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-box register">
+        <form action="">
+            <h1>Registration</h1>
+            <div class="input-box">
+                <input id="registration-username" type="text" placeholder="Username">
+                <i class="bx bxs-user"></i>
+            </div>
+            <div class="input-box">
+                <input id="registration-email" type="email" placeholder="Email">
+                <i class="bx bxs-envelope"></i>
+            </div>
+            <div class="input-box">
+                <input id="registration-password" type="password" placeholder="Password">
+                <i class="bx bxs-lock-alt"></i>
+            </div>
+            <div class="input-box">
+                <select id="status">
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
+                </select>
+                <i class="bx bxs-user-detail"></i>
+            </div>
+            <!-- <div class="forgot-link">
+                <a href="#">Forgot Password?</a>
+            </div> -->
+            <button type="button" class="btn" onclick="handleRegister()">Register</button>
+            <!--                <p>or register with social platforms</p>-->
+            <!--                <div class="social-icons">-->
+            <!--                    <a href="#"><i class="bx bxl-microsoft"></i></a>-->
+            <!--                </div>-->
+        </form>
+    </div>
+
+    <div class="toggle-box">
+        <div class="toggle-panel toggle-left">
+            <h1>Hello, Welcome!</h1>
+            <p>Don's have an account?</p>
+            <button class="btn register-btn">Register</button>
         </div>
 
-        <div class="toggle-box">
-            <div class="toggle-panel toggle-left">
-                <h1>Hello, Welcome!</h1>
-                <p>Don's have an account?</p>
-                <button class="btn register-btn">Register</button>
-            </div>
-
-            <div class="toggle-panel toggle-right">
-                <h1>Welcome Back!</h1>
-                <p>Already have an account?</p>
-                <button class="btn login-btn">Login</button>
-            </div>
+        <div class="toggle-panel toggle-right">
+            <h1>Welcome Back!</h1>
+            <p>Already have an account?</p>
+            <button class="btn login-btn">Login</button>
         </div>
     </div>
-    <script src="../../static/js/login.js"></script>
+</div>
+<script src="../../static/js/login.js"></script>
 </body>
 
 </html>
