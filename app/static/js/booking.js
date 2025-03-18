@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         handleFilters();
         filterModal.style.display = 'none';
     });
+    
     // set default date to today
     await getTodayClassrooms(dateInput);
 
@@ -64,6 +65,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const reportBtn = document.getElementById('report-btn');
+    const reportModal = document.getElementById('report-modal');
+    const applyReportBtn = document.getElementById('apply-report');
+
+
+    reportBtn.addEventListener('click', function () {
+        reportModal.style.display = 'flex';
+    });
+
+    reportModal.addEventListener('click', function (event) {
+        if (event.target === reportModal) {
+            reportModal.style.display = 'none';
+        }
+    });
+
+    applyReportBtn.addEventListener('click', async function () {
+       handleReport();
+       reportModal.style.display = 'none';
+    });
+
+})
+
 
 
 async function getTodayClassrooms(dateInput) {
@@ -175,6 +201,36 @@ async function getEquipmentType() {
     }
 }
 
+async function userReportIssue(issue){
+    const apiUrl = '/user/classroom/issue/report';
+    const userData = {
+        "issue": issue
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return true;
+            default:
+                alert(`Error, (${Data.message})`);
+                return false;
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return false;
+    }
+}
 
 async function viewRooms() {
 
@@ -272,4 +328,16 @@ async function handleBookings(room_id) {
         alert('Booking failed');
     }
 }
+
+async function handleReport(){
+    const issue = document.getElementById('issue').value;
+    const result = await userReportIssue(issue);
+    if (result) {
+        alert('Reported');
+        issue = "";
+    } else {
+        alert('Error, Network Error');
+    }
+}
+
 
