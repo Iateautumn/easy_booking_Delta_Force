@@ -105,4 +105,26 @@ def cancel_my_reservation(userId, reservationId):
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
-# (reservationId, userId, classroomId, startTime, endTime, status):
+def get_my_reservation(userId):
+    try:
+        reservations = get_reservation_by_user_id(userId)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+
+    def reservation_to_dict(reservation):
+        classroom = get_classroom_by_id(reservation.classroomId)
+        result = {
+            "reservationId": reservation.reservationId,
+            "status": str(reservation.status.value),
+            "roomName": classroom.classroomName,
+            "date": get_date_time(str(reservation.startTime))[0],
+            "timePeriod": get_time_slot(str(reservation.startTime)),
+            "capacity": classroom.capacity,
+            "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
+            "isRestricted": classroom.isRestricted,
+            "constrain": classroom.constrain,
+            "issue": classroom.issue
+        }
+        return result
+    result = [reservation_to_dict(reservation) for reservation in reservations]
+    return result   
