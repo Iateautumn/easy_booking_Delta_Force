@@ -44,14 +44,14 @@
                             Approval Request
                         </a>
                     </li>
-                    <li id="room-issue-nav" class="active">
-                        <a href="#">
+                    <li id="room-issue-nav">
+                        <a href="./room_issue">
                             <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
                             Room Issue
                         </a>
                     </li>
-                   <li id="report-nav">
-                       <a href="./report">
+                   <li id="report-nav" class="active">
+                       <a href="#">
                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
                            Report
                        </a>
@@ -67,16 +67,21 @@
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1 id="page-title">Reported Room Issues</h1>
+                <h1 id="page-title">Report</h1>
             </header>
-            <section id="issue-section" class="content-section">
-                <div class="issue-list">
-                   <div class="issue-card">
-                       <h3>Issue ID: 1</h3>
-                       <p>Issue: Room 101 is destroyed by a fell helicopter</p>
-                       <p>Reported by: Kobe</p>
-                       <p>Date Reported: 2025-3-12</p>
-                       <button class="action-btn">Remove</button>
+            <section id="report-section" class="content-section">
+                <div class="function-bar">
+                    <button class="action-btn" id="export-report-btn">Export as PDF</button>
+                </div>
+                <div class="report-list">
+                   <div class="report-card">
+                       <div class="report-text">
+                            <h3>DIICSU 635</h3>
+                            <p>Weekly Usage: 75%</p>
+                       </div>
+                       <div class="report-img">
+                           <img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.Sc9fLZMG-SBsvJMmdarxAwHaG9?rs=1&pid=ImgDetMain">
+                       </div>
                    </div>
                 </div>
             </section>
