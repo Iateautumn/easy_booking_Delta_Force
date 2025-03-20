@@ -365,7 +365,7 @@ def admin_report_analysis():
             elements.append(Paragraph("Separate Data", styles["Heading2"]))
             separate_table_data = [["Room Name", "Usage"]]
             for data in separate_data:
-                separate_table_data.append([data["roomName"], data["usage"]])
+                separate_table_data.append([data["roomName"], data["usage"] + "%"])
 
             separate_table = Table(separate_table_data)
             separate_table.setStyle(TableStyle([
@@ -399,7 +399,7 @@ def admin_report_analysis():
             pdf.build(elements)
 
         # Save the PDF
-        pdf_filename = "admin_report_analysis.pdf"
+        pdf_filename = "report.pdf"
         generate_pdf(joint_data, separate_data, pdf_filename)
 
         return {

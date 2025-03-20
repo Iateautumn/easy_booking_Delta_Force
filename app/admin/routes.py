@@ -1,5 +1,5 @@
 
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template
+from flask import Blueprint, request, jsonify, redirect, url_for, render_template, send_file
 from app.utils.response import success_response, error_response
 from app.admin.services import *
 
@@ -211,10 +211,10 @@ def report_analysis():
 @admin_bp.route('/report/analysis/export')
 def output_all_calendar():
     try:
-        report_file_path = admin_report_export()
+        report_file_path = r'..\report.pdf'
         response = send_file(report_file_path, as_attachment=True, download_name="report.pdf")
         # TODO: elegantly delete the temp file after sending finished
-        # os.remove(ics_file_path)
+        # os.remove(report_file_path)
         return response
     except Exception as e:
-        return error_response(str(e), e.code)
+        return error_response(str(e), 500)
