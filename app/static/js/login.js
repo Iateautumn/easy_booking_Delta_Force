@@ -126,13 +126,80 @@ document.querySelector('.bx-left-arrow-alt').addEventListener('click', function 
     document.getElementById('email-login').style.display = 'none';
 });
 
+async function sendCode(email){
+    const apiUrl = '/email/code/send';
+
+    const userData = {
+        email
+    };
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return true;
+            default:
+                alert(`Error, (${Data.message})`);
+                return false;
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return false;
+    }
+}
+
+async function authenticateCode(email, verification_code){
+    const apiUrl = '/email/code/login';
+
+    const userData = {
+        email,
+        verification_code
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    if (response.redirected) {
+        window.location.href = response.url; // Redirect to the home page
+    } else {
+        const Data = await response.json();
+        if (Data) {
+            alert(`Login unauthorized, (${Data.message})`);
+        }
+    }
+}
+
+
 function sendVerificationCode() {
     const email = document.getElementById('verification-email').value;
     if (!email.match(/^\w+@\w+\.\w+$/i)) {
         alert('Invalid email address');
         return;
     }
+
+    console.log(sendCode(email));
+    
+
+    if(!sendCode(email)){
+        alert('Verification code sent failed, please try again');
+        return;
+    }
+
     alert('Verification code sent to ' + email);
+    
     document.getElementById('send-code-btn').style.display = 'none';
     document.getElementById('verification-code-box').style.display = 'block';
     document.getElementById('verification-code').style.display = 'block';
@@ -141,4 +208,7 @@ function sendVerificationCode() {
 
 function verifyCode() {
     const code = document.getElementById('verification-code').value;
+    const email = document.getElementById('verification-email').value;
+
+    authenticateCode(email, code);
 }
