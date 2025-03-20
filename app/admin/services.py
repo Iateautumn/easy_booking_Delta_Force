@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import NewType
 
 from app.auth.models import User, get_user_by_id, UserStatus
@@ -197,126 +197,104 @@ def admin_cancel_reservation(reservation_id):
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
 
-def admin_reservation_all():
-    try:
-        reservations = get_reservation_by_status(ReservationStatus.Reserved)
-
-        reservation_info_list = []
-        def get_dict(reservation):
-            userId = reservation.userId
-            classroomId = reservation.classroomId
-            user = get_user_by_id(userId)
-            classroom = get_classroom_by_id(classroomId)
-            reservation_data = {
-                "reservationId": reservation.reservationId,
-                "constrain": classroom.constrain,
-                "roomName": classroom.classroomName,
-                "userName": user.name,
-                "isRestricted": classroom.isRestricted,
-                "capacity": classroom.capacity,
-                "status": reservation.status.value,
-                "date": get_date_time(str(reservation.startTime))[0],
-                "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
-                "timePeriod": get_time_slot(str(reservation.startTime))
-            }
-            reservation_info_list.append(reservation_data)
-        for reservation in reservations:
-            get_dict(reservation)
-    except Exception as e:
-        raise BusinessError("Service error: " + str(e), 500)
-
-    return reservation_info_list
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 def admin_report_analysis():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Reserved)
-        classroom_data = get_all_classrooms()
-        classroom_data = [room for room in classroom_data if not room.isDeleted]
-        classroom_data = sorted(classroom_data, key=lambda x: x.classroomId)
-        classroom_data = {room.classroomId: room for room in classroom_data}
-        time_map = slot_time_map()
-        report = {room_id: {time: 0 for time in time_map} for room_id in classroom_data}
+        classroom_data = get_all_classrooms()  # list of all classroom objects
+        classroom_data = [room for room in classroom_data if not room.isDeleted]  # filter out deleted classrooms
+        classroom_data = sorted(classroom_data, key=lambda x: x.classroomId)  # sort by classroomId
+        classroom_data = {room.classroomId: room for room in classroom_data}  # convert to dictionary for easy access
+        time_map = list(slot_time_map.keys())  # Get time slots as a list
+        today = datetime.now().date()
+        seven_days_ago = today - timedelta(days=7)
+
+        # Initialize report: a dictionary for each classroom with 7 days and time slots
+        report = {
+            room_id: [[0] * len(time_map) for _ in range(7)]  # 7 days x time slots
+            for room_id in classroom_data
+        }
 
         # Populate the report with reservation data
         for reservation in reservations:
             classroom_id = reservation.classroomId
             start_time = reservation.startTime
-            end_time = reservation.endTime
-            time_slot = get_time_slot(str(start_time))
+            # end_time = reservation.endTime
+            time_slot_start = get_time_slot(str(start_time))
+            # time_slot_end = get_time_slot(str(end_time))
             date = get_date_time(str(start_time))[0]
-            if date < datetime.now().date():
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+
+            if date < seven_days_ago or date > today:
                 continue
-            start_time = time_map[time_slot]
-            end_time = time_map[get_time_slot(str(end_time))]
-            for i in range(start_time, end_time):
-                report[classroom_id][i] += 1
 
-        # Helper function to generate heatmap image and save it as a file
-        def generate_heatmap_image(data, filename):
-            plt.figure(figsize=(10, 1))
-            plt.imshow([data], cmap="hot", aspect="auto")
-            plt.axis("off")
-            plt.savefig(filename, format="png", bbox_inches="tight", pad_inches=0)
-            plt.close()
+            # Calculate the day index (0 = seven_days_ago, 6 = today)
+            day_index = (date - seven_days_ago).days
 
-        # Prepare separateData and save heatmap images
+            report[classroom_id][day_index][time_slot_start] += 1
+
+        # Prepare separateData
         separate_data = []
+        joint_matrix = [[0] * len(time_map) for _ in range(7)]  # Initialize joint matrix
+
         for room_id, usage_data in report.items():
-            room_name = classroom_data[room_id]["classroomName"]
-            heat_graph = list(usage_data.values())
-            usage = sum(heat_graph)
-            heatmap_filename = f"{room_name}_heatmap.png"
-            generate_heatmap_image(heat_graph, heatmap_filename)
+            room_name = classroom_data[room_id].classroomName
+            total_usage = round(sum(sum(day) for day in usage_data) / 0.7, 2)
+
+            # Add to separate data
             separate_data.append({
                 "roomName": room_name,
-                "usage": usage,
-                "heatGraph": heatmap_filename
+                "usage": str(total_usage)  # Convert usage to string as per the requirement
             })
 
-        # Prepare jointData and save the joint heatmap image
-        joint_heat_graph = [0] * len(time_map)
-        for usage_data in report.values():
-            for i, usage in enumerate(usage_data.values()):
-                joint_heat_graph[i] += usage
+            # Update joint matrix
+            for day in range(7):
+                for time_slot in range(len(time_map)):
+                    joint_matrix[day][time_slot] += round(usage_data[day][time_slot] / 0.7, 2)
 
-        joint_heatmap_filename = "joint_heatmap.png"
-        generate_heatmap_image(joint_heat_graph, joint_heatmap_filename)
-
+        # Prepare jointData
         joint_data = {
-            "heatGraph": joint_heatmap_filename
+            "dates": [(seven_days_ago + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)],
+            "matrix": joint_matrix
         }
 
-        # Export data to a PDF
-        pdf_filename = "admin_report_analysis.pdf"
-        pdf_path = os.path.join(os.getcwd(), pdf_filename)
-        c = canvas.Canvas(pdf_path, pagesize=letter)
-        c.setFont("Helvetica", 12)
-        c.drawString(50, 750, "Admin Report Analysis")
-        c.drawString(50, 730, "Separate Data:")
+        # Generate PDF with the matrix table
+        def generate_matrix_pdf(joint_data, filename):
+            pdf = SimpleDocTemplate(filename, pagesize=letter)
+            elements = []
 
-        y_position = 710
-        for room in separate_data:
-            c.drawString(50, y_position, f"Room Name: {room['roomName']}, Usage: {room['usage']}")
-            y_position -= 20
-            c.drawImage(room["heatGraph"], 50, y_position - 50, width=400, height=50)
-            y_position -= 70
-            if y_position < 100:  # Add a new page if space is insufficient
-                c.showPage()
-                c.setFont("Helvetica", 12)
-                y_position = 750
+            # Prepare table data
+            table_data = [["Date/Time"] + time_map]  # Header row
+            for i, date in enumerate(joint_data["dates"]):
+                table_data.append([date] + joint_data["matrix"][i])  # Add each row
 
-        c.drawString(50, y_position, "Joint Data:")
-        y_position -= 20
-        c.drawImage(joint_data["heatGraph"], 50, y_position - 50, width=400, height=50)
+            # Create table
+            table = Table(table_data)
+            table.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),  # Header background
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),  # Header font
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),  # Header padding
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),  # Body background
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grid lines
+            ]))
 
-        c.save()
+            elements.append(table)
+            pdf.build(elements)
+
+        # Save the matrix table as a PDF
+        matrix_pdf_filename = "joint_matrix_table.pdf"
+        generate_matrix_pdf(joint_data, matrix_pdf_filename)
 
         return {
             "separateData": separate_data,
             "jointData": joint_data,
-            "pdfReportPath": pdf_path
+            "matrixPdfPath": matrix_pdf_filename
         }
 
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)
-    
