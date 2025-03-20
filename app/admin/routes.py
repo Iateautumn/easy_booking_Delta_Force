@@ -1,9 +1,7 @@
 
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template
+from flask import Blueprint, request, jsonify, redirect, url_for, render_template, send_file
 from app.utils.response import success_response, error_response
-from app.admin.services import get_reservation_requests, approve_reservation, reject_reservation
-from app.admin.services import add_room, modify_room, delete_room, get_all_rooms, admin_reservation_all, admin_cancel_reservation
-
+from .services import *
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -171,3 +169,22 @@ def reservation_cancel():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
+
+# ------ formatted reprot ------
+@admin_bp.route('/report/analysis')
+def report_analysis():
+    try:
+        return success_response(admin_report_analysis())
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/report/analysis/export')
+def output_all_calendar():
+    try:
+        report_file_path = admin_report_export()
+        response = send_file(report_file_path, as_attachment=True, download_name="report.pdf")
+        # TODO: elegantly delete the temp file after sending finished
+        # os.remove(ics_file_path)
+        return response
+    except Exception as e:
+        return error_response(str(e), e.code)
