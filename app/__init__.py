@@ -5,7 +5,7 @@ from app.user.routes import user_bp
 
 from app.admin.routes import admin_bp
 
-from app.auth.routes import auth_bp
+from app.auth.routes import auth_bp, email_auth_bp
 from app.booking.routes import booking_bp
 from app.classroom.routes import classroom_bp
 from app.extensions import db, login_manager, init_db
