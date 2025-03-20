@@ -363,7 +363,7 @@ def get_timetable_by_classroom_name(classroomName):
     return timetable
 
 def get_timetable_by_classroom_name_and_timestamp(classroomName, timeStamp):
-    timetable = Timetable.query.filter_by(classroomName=classroomName, timeStamp=timeStamp).first()
+    timetable = Timetable.query.filter_by(classroomName=classroomName, timeStamp=timeStamp).all()
     return timetable
 
 def get_timetable_by_week(week):
@@ -400,6 +400,7 @@ def update_timetable(timetableId, timeStamp = None, week = None, className = Non
 
 def delete_timetable():
     db.session.query(Timetable).delete()
+    db.session.execute('ALTER TABLE timetable AUTO_INCREMENT = 1')
     db.session.commit()
 
 
