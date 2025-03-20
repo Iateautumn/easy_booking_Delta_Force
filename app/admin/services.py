@@ -21,8 +21,10 @@ from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, 
 import base64
 from io import BytesIO
 import os
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 def get_reservation_requests():
@@ -350,19 +352,23 @@ def admin_report_analysis():
             "matrix": joint_matrix
         }
 
-        # Generate PDF with the matrix table
-        def generate_matrix_pdf(joint_data, filename):
+        # Generate PDF with the matrix table and separate data
+        def generate_pdf(joint_data, separate_data, filename):
             pdf = SimpleDocTemplate(filename, pagesize=letter)
             elements = []
+            styles = getSampleStyleSheet()
 
-            # Prepare table data
-            table_data = [["Date/Time"] + time_map]  # Header row
-            for i, date in enumerate(joint_data["dates"]):
-                table_data.append([date] + joint_data["matrix"][i])  # Add each row
+            # Add title
+            elements.append(Paragraph("Admin Report Analysis", styles["Title"]))
 
-            # Create table
-            table = Table(table_data)
-            table.setStyle(TableStyle([
+            # Add separateData section
+            elements.append(Paragraph("Separate Data", styles["Heading2"]))
+            separate_table_data = [["Room Name", "Usage"]]
+            for data in separate_data:
+                separate_table_data.append([data["roomName"], data["usage"]])
+
+            separate_table = Table(separate_table_data)
+            separate_table.setStyle(TableStyle([
                 ("BACKGROUND", (0, 0), (-1, 0), colors.grey),  # Header background
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
@@ -371,18 +377,34 @@ def admin_report_analysis():
                 ("BACKGROUND", (0, 1), (-1, -1), colors.beige),  # Body background
                 ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grid lines
             ]))
+            elements.append(separate_table)
 
-            elements.append(table)
+            # Add jointData section
+            elements.append(Paragraph("Joint Data", styles["Heading2"]))
+            joint_table_data = [["Date/Time"] + time_map]  # Header row
+            for i, date in enumerate(joint_data["dates"]):
+                joint_table_data.append([date] + joint_data["matrix"][i])  # Add each row
+
+            joint_table = Table(joint_table_data)
+            joint_table.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),  # Header background
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),  # Header font
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),  # Header padding
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),  # Body background
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grid lines
+            ]))
+            elements.append(joint_table)
             pdf.build(elements)
 
-        # Save the matrix table as a PDF
-        matrix_pdf_filename = "joint_matrix_table.pdf"
-        generate_matrix_pdf(joint_data, matrix_pdf_filename)
+        # Save the PDF
+        pdf_filename = "admin_report_analysis.pdf"
+        generate_pdf(joint_data, separate_data, pdf_filename)
 
         return {
             "separateData": separate_data,
-            "jointData": joint_data,
-            "matrixPdfPath": matrix_pdf_filename
+            "jointData": joint_data
         }
 
     except Exception as e:
