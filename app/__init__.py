@@ -24,6 +24,7 @@ def create_app():
     app.register_blueprint(classroom_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(email_auth_bp)
 
     @app.route('/')
     def root_redirect():
