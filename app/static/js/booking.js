@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         handleFilters();
         filterModal.style.display = 'none';
     });
+    
     // set default date to today
     await getTodayClassrooms(dateInput);
 
@@ -64,6 +65,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const reportBtn = document.getElementById('report-btn');
+    const reportModal = document.getElementById('report-modal');
+    const applyReportBtn = document.getElementById('apply-report');
+
+
+    reportBtn.addEventListener('click', function () {
+        reportModal.style.display = 'flex';
+    });
+
+    reportModal.addEventListener('click', function (event) {
+        if (event.target === reportModal) {
+            reportModal.style.display = 'none';
+        }
+    });
+
+    applyReportBtn.addEventListener('click', async function () {
+       handleReport();
+       reportModal.style.display = 'none';
+    });
+
+})
+
 
 
 async function getTodayClassrooms(dateInput) {
@@ -175,6 +201,36 @@ async function getEquipmentType() {
     }
 }
 
+async function userReportIssue(issue){
+    const apiUrl = '/user/classroom/issue/report';
+    const userData = {
+        "issue": issue
+    };
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+
+    const Data = await response.json();
+
+    if (Data) {
+        switch (Data.code) {
+            case 200:
+                return true;
+            default:
+                alert(`Error, (${Data.message})`);
+                return false;
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return false;
+    }
+}
 
 async function viewRooms() {
 
@@ -186,12 +242,11 @@ async function viewRooms() {
             const room = document.createElement('div')
             room.className = 'room-card'
             room.innerHTML = `
-
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${classroom.isRestricted ? classroom.constrain : 'None'}</p>
-                            <p style="color: #d20000">${classroom.issue}</p>
+                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '')? 'None' : classroom.constrain}</p>
+                            ${classroom.issue ? '<p style="color: #d20000">Issue: ' + classroom.issue + '</p>' : ''}
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
             roomList.appendChild(room);
@@ -272,4 +327,16 @@ async function handleBookings(room_id) {
         alert('Booking failed');
     }
 }
+
+async function handleReport(){
+    const issue = document.getElementById('issue').value;
+    const result = await userReportIssue(issue);
+    if (result) {
+        alert('Reported');
+        issue = "";
+    } else {
+        alert('Error, Network Error');
+    }
+}
+
 

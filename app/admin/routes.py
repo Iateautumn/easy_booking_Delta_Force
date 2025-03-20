@@ -1,7 +1,8 @@
 
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template, send_file
+from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from app.utils.response import success_response, error_response
-from .services import *
+from app.admin.services import *
+
 from flask_login import current_user
 from app.utils.exceptions import BusinessError
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -170,6 +171,35 @@ def reservation_cancel():
         return error_response(str(e), e.code)
 
 
+@admin_bp.route('/issue/all', methods=['GET'])
+def allissue_request():
+    try:
+        issue_reports = get_reported_issue()
+        return success_response(issue_reports)
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/issue/report/delete', methods=['POST'])
+def delete_issue():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("can not resolve json: " + str(e), 400)
+
+    issue_id = data['issue_id']
+
+    try:
+        delete_issue_report(issue_id)
+        return success_response("success delete")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/issue', methods=['GET'])
+def issue():
+    try:
+        return render_template('admin/issue.html')
+    except BusinessError as e:
+        return error_response(str(e), e.code)
 # ------ formatted reprot ------
 @admin_bp.route('/report/analysis')
 def report_analysis():
