@@ -130,6 +130,10 @@ def all_classroom():
 def allreservations():
     return render_template('admin/allreservations.html')
 
+@admin_bp.route('/report')
+def report():
+    return render_template('admin/report.html')
+
 @admin_bp.route('/reservation/all')
 def admin_get_all_reservations():
     try:

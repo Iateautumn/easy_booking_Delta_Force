@@ -1,3 +1,14 @@
+document.addEventListener('DOMContentLoaded', async function () {
+    // viewReport();
+    console.log(getReport());
+    console.log(getReportPDF());
+
+});
+
+
+
+
+
 async function getReport() {
     const apiUrl = '/admin/report/analysis';
     const response = await fetch(apiUrl, {
