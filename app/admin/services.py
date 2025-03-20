@@ -17,7 +17,6 @@ from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
-import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 import os
