@@ -82,7 +82,7 @@ function handleRegister() {
         alert("Please fill in all fields!");
         return;
     }
-    if (!email.match(/^\w+@\w+\.\w+$/i)) {
+    if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
         alert('Invalid email address');
         return;
     }
@@ -97,7 +97,7 @@ function handleLogin() {
         alert("Please fill in all fields!");
         return;
     }
-    if (!email.match(/^\w+@\w+\.\w+$/i)) {
+    if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
         alert('Invalid email address');
         return;
     }
@@ -128,7 +128,7 @@ document.querySelector('.bx-left-arrow-alt').addEventListener('click', function 
 
 function sendVerificationCode() {
     const email = document.getElementById('verification-email').value;
-    if (!email.match(/^\w+@\w+\.\w+$/i)) {
+    if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
         alert('Invalid email address');
         return;
     }
