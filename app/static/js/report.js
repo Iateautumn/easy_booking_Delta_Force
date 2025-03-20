@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 
-
-
-
 async function getReport() {
     const apiUrl = '/admin/report/analysis';
     const response = await fetch(apiUrl, {
@@ -29,8 +26,7 @@ async function getReport() {
                 alert(`Error, (${Data.message})`);
                 return [];
         }
-    }
-    else {
+    } else {
         alert('Error, Network Error');
         return [];
     }
@@ -45,7 +41,7 @@ async function getReportPDF() {
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = 'all_reservation.ics';
+            a.download = 'report.pdf';
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -57,21 +53,111 @@ async function viewReport() {
     const reports = await getReport();
     const reportList = document.querySelector('.report-list');
 
-    if (reports.length > 0) {
-        reportList.innerHTML = '';
-        reports.forEach(report => {
-            const reportCard = document.createElement('div');
-            reportCard.className = 'report-card';
-            reportCard.innerHTML = `
+    if (reports) {
+        const dates = reports.jointData.dates;
+        const matrix = reports.jointData.matrix;
+        const jointReport = document.createElement('div');
+        jointReport.classList.add('report-card');
+        jointReport.innerHTML = `
+            <div id="main-chart" class="about"></div>
+        `;
+        reportList.appendChild(jointReport);
+        const chartDom = document.getElementById('main-chart');
+        const myChart = echarts.init(chartDom);
+        var option;
+        var data = [];
+
+        function addDays(dateString, days) {
+            const date = new Date(dateString);
+            date.setDate(date.getDate() + days);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        var day = 0
+        for (var i = 0; i < matrix.length; i++) {
+            for (var j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] === 0) {
+                    day++;
+                    continue;
+                }
+                data.push([addDays('2023-01-01', day++), matrix[i][j]]);
+            }
+        }
+
+        option = {
+            title: {
+                top: 0,
+                left: 'left',
+                text: 'All Rooms Heatmap',
+                textStyle: {
+                    color: '#13439b'
+                }
+            },
+            tooltip: {
+                formatter: function (params) {
+                    return String(params.value[1]);
+                }
+            },
+            visualMap: {
+                show: true,
+                inRange: {
+                    color: ['#b0cbfc', '#13439b']
+                },
+                type: 'piecewise',
+                pieces: [
+                    {min: 0, max: 1},
+                    {min: 2, max: 3},
+                    {min: 3, max: 6},
+                    {min: 6},
+                ],
+                orient: 'horizontal',
+                left: 'left',
+                top: 30
+            },
+            calendar: {
+                itemStyle: {
+                    color: '#EBEDF0',
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                },
+                cellSize: [20, 20],
+                range: ['2023-01-01', '2023-03-11'],
+                splitLine: true,
+                dayLabel: {
+                    firstDay: 0,
+                    nameMap: dates
+                },
+                monthLabel: {
+                    show: false
+                },
+                yearLabel: {
+                    show: false
+                },
+                silent: {
+                    show: false
+                }
+            },
+            series: {
+                type: 'heatmap',
+                coordinateSystem: 'calendar',
+                data: data
+            }
+        };
+        option && myChart.setOption(option);
+
+        reports.separateData.forEach(report => {
+            const reportItem = document.createElement('div');
+            reportItem.classList.add('report-card');
+            reportItem.innerHTML = `
                 <div class="report-text">
                     <h3>${report.roomName}</h3>
                     <p>Weekly Usage: ${report.usage}%</p>
                 </div>
-                <div class="report-img>
-                    <img src="${report.heatGraph}" alt="Heat Graph">
-                </div>
             `;
-            reportList.appendChild(reportCard);
-        })
+            reportList.appendChild(reportItem);
+        });
     }
 }

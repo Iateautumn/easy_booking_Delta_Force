@@ -17,7 +17,6 @@ from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
-import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 import os
@@ -253,7 +252,7 @@ def admin_report_analysis():
             # Update joint matrix
             for day in range(7):
                 for time_slot in range(len(time_map)):
-                    joint_matrix[day][time_slot] += round(usage_data[day][time_slot] / 0.7, 2)
+                    joint_matrix[day][time_slot] += usage_data[day][time_slot]
 
         # Prepare jointData
         joint_data = {
