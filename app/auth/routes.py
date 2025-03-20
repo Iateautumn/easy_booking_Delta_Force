@@ -76,7 +76,7 @@ def code_login():
     except BusinessError as e:
         return error_response(str(e), e.code)
 
-@email_auth_bp.route('/email/code/send', methods=['POST'])
+@email_auth_bp.route('/code/send', methods=['POST'])
 def send_email_code():
     try:
         data = request.get_json()
