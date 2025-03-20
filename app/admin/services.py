@@ -231,7 +231,7 @@ def admin_report_analysis():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Reserved)
         classroom_data = get_all_classrooms()
-        classroom_data = [room for room in classroom_data if room["isDeleted"] == False]
+        classroom_data = [room for room in classroom_data if not room.isDeleted]
         classroom_data = sorted(classroom_data, key=lambda x: x["classroomId"])
         classroom_data = {room["classroomId"]: room for room in classroom_data}
         time_map = slot_time_map()
