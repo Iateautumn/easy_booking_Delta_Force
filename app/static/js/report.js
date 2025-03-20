@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    const exportBtn = document.getElementById('export-report-btn');
+    exportBtn.addEventListener('click', async function () {
+        await getReportPDF();
+    });
     viewReport();
 });
 
