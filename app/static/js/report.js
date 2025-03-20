@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    // viewReport();
-    console.log(getReport());
-    console.log(getReportPDF());
-
+    viewReport();
 });
 
 
@@ -50,4 +47,27 @@ async function getReportPDF() {
             window.URL.revokeObjectURL(url);
         })
         .catch(error => console.error('Error:', error));
+}
+
+async function viewReport() {
+    const reports = await getReport();
+    const reportList = document.querySelector('.report-list');
+
+    if (reports.length > 0) {
+        reportList.innerHTML = '';
+        reports.forEach(report => {
+            const reportCard = document.createElement('div');
+            reportCard.className = 'report-card';
+            reportCard.innerHTML = `
+                <div class="report-text">
+                    <h3>${report.roomName}</h3>
+                    <p>Weekly Usage: ${report.usage}%</p>
+                </div>
+                <div class="report-img>
+                    <img src="${report.heatGraph}" alt="Heat Graph">
+                </div>
+            `;
+            reportList.appendChild(reportCard);
+        })
+    }
 }
