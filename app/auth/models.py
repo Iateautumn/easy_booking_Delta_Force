@@ -57,19 +57,19 @@ def add_user(status, name, email, password_hash, salt):
     return user
 
 def get_all_users():
-    return User.query.all()
+    return User.query.filter_by(isDeleted=False).all()
 
 def get_user_by_email(email):
-    return User.query.filter_by(email=email).first()
+    return User.query.filter_by(email=email,isDeleted=False).first()
 
 def get_user_by_name(name):
-    return User.query.filter_by(name=name).first()
+    return User.query.filter_by(name=name,isDeleted=False).first()
 
 def get_user_by_id(user_id):
-    return User.query.filter_by(userId=user_id).first()
+    return User.query.filter_by(userId=user_id,isDeleted=False).first()
 
 def get_user_by_status(status):
-    return User.query.filter_by(status=status).all()
+    return User.query.filter_by(status=status,isDeleted=False).all()
 
 def update_user(user_id, status = None, name = None, email = None, password_hash = None, salt = None):
     if user_id is not None:
@@ -108,6 +108,7 @@ def get_users_by_filter(user_id, status = None, name = None, email = None):
         quary = quary.filter(name=name)
     if email is not None:
         quary = quary.filter(email=email)
+    quary = quary.filter(isDeleted=False)
     return quary.all()
 
 class IssueReport(db.Model):
@@ -122,7 +123,7 @@ class IssueReport(db.Model):
     createdAt = db.Column(db.DateTime)
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
-    User = db.relationship('User', backref=db.backref('issue_reports', lazy=True))
+    User = db.relationship('User', backref=db.backref('issuereport', lazy=True))
 
     def __init__(self, userId, description):
         self.userId = userId
@@ -148,15 +149,16 @@ def get_issue_report_by_filter(userId=None,  isBanned=None):
     #     query = query.filter(IssueReport.endTime<=endTime)
     if isBanned is not None:
         query = query.filter_by(isBanned=isBanned)
+    query = query.filter_by(isDeleted=False)
     list_issue_report = query.all()
     return list_issue_report
 
 def get_issue_report_by_id(reportId):
-    issue_report = IssueReport.query.filter_by(reportId=reportId).first()
+    issue_report = IssueReport.query.filter_by(reportId=reportId,isDeleted=False).first()
     return issue_report
 
 def get_issue_report_by_user_id(userId):
-    list_issue_report = IssueReport.query.filter_by(userId=userId).all()
+    list_issue_report = IssueReport.query.filter_by(userId=userId,isDeleted=False).all()
     return list_issue_report
 
 

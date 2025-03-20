@@ -42,7 +42,7 @@ class Reservation(db.Model):
 
 # list all reservations
 def get_all_reservations():
-    list_reservation = Reservation.query.all()
+    list_reservation = Reservation.query.filter_by(isDeleted=False).all()
     return list_reservation
 
 # add a new reservation
@@ -64,28 +64,29 @@ def get_reservation_by_filter(userId=None, classroomId=None, startTime=None, end
         query = query.filter(Reservation.endTime<=endTime)
     if status is not None:
         query = query.filter_by(status=status)
+    query = query.filter_by(isDeleted=False)
     list_reservation = query.all()
     return list_reservation
 
 
 def get_reservation_by_time(startTime, endTime):
-    list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime).all()
+    list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime,isDeleted=False).all()
     return list_reservation
 
 def get_reservation_by_id(reservationId):
-    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation = Reservation.query.filter_by(reservationId=reservationId,isDeleted=False).first()
     return reservation
 
 def get_reservation_by_user_id(userId):
-    list_reservation = Reservation.query.filter_by(userId=userId).all()
+    list_reservation = Reservation.query.filter_by(userId=userId,isDeleted=False).all()
     return list_reservation
 
 def get_reservation_by_classroom_id(classroomId):
-    list_reservation = Reservation.query.filter_by(classroomId=classroomId).all()
+    list_reservation = Reservation.query.filter_by(classroomId=classroomId,isDeleted=False).all()
     return list_reservation
 
 def get_reservation_by_status(status):
-    list_reservation = Reservation.query.filter_by(status=status).all()
+    list_reservation = Reservation.query.filter_by(status=status,isDeleted=False).all()
     return list_reservation
 
 def delete_reservation(reservationId):
@@ -95,7 +96,7 @@ def delete_reservation(reservationId):
     return reservation
 
 def update_reservation(reservationId, userId = None, classroomId = None, startTime = None, endTime = None, status = None):
-    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation = Reservation.query.filter_by(reservationId=reservationId,isDeleted=False).first()
     if reservation is None:
         return False
     if userId is not None:
@@ -114,7 +115,9 @@ def update_reservation(reservationId, userId = None, classroomId = None, startTi
 
 
 def cancel_reservation(reservationId):
-    reservation = Reservation.query.filter_by(reservationId=reservationId).first()
+    reservation = Reservation.query.filter_by(reservationId=reservationId,isDeleted=False).first()
+    if reservation is None:
+        return False
     reservation.status = ReservationStatus.Cancelled
     reservation.updatedAt = datetime.now()
     db.session.commit()
