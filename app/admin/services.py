@@ -262,7 +262,7 @@ def admin_report_analysis():
         # Prepare separateData and save heatmap images
         separate_data = []
         for room_id, usage_data in report.items():
-            room_name = classroom_data[room_id]["classroomName"]
+            room_name = classroom_data[room_id].classroomName
             heat_graph = list(usage_data.values())
             usage = sum(heat_graph)
             heatmap_filename = f"{room_name}_heatmap.png"
