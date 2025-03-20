@@ -359,7 +359,11 @@ def get_timetable_by_id(timetableId):
     return timetable
 
 def get_timetable_by_classroom_name(classroomName):
-    timetable = Timetable.query.filter_by(classroomName=classroomName).first()
+    timetable = Timetable.query.filter_by(classroomName=classroomName).all()
+    return timetable
+
+def get_timetable_by_classroom_name_and_timestamp(classroomName, timeStamp):
+    timetable = Timetable.query.filter_by(classroomName=classroomName, timeStamp=timeStamp).first()
     return timetable
 
 def get_timetable_by_week(week):
@@ -367,7 +371,7 @@ def get_timetable_by_week(week):
     return timetable
 
 def get_timetable_by_week_and_classroom_name(week, classroomName):
-    timetable = Timetable.query.filter_by(week=week, classroomName=classroomName).first()
+    timetable = Timetable.query.filter_by(week=week, classroomName=classroomName).all()
     return timetable
 
 def add_timetable(timeStamp, week, className, professor, classroomName):
