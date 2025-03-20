@@ -231,7 +231,7 @@ def admin_report_analysis():
     try:
         reservations = get_reservation_by_status(ReservationStatus.Reserved)
         classroom_data = get_all_classrooms()
-        classroom_data = [room for room in classroom_data if room["isDeleted"] == False]
+        classroom_data = [room for room in classroom_data if not room.isDeleted]
         classroom_data = sorted(classroom_data, key=lambda x: x["classroomId"])
         classroom_data = {room["classroomId"]: room for room in classroom_data}
         time_map = slot_time_map()
@@ -262,7 +262,7 @@ def admin_report_analysis():
         # Prepare separateData and save heatmap images
         separate_data = []
         for room_id, usage_data in report.items():
-            room_name = classroom_data[room_id]["classroomName"]
+            room_name = classroom_data[room_id].classroomName
             heat_graph = list(usage_data.values())
             usage = sum(heat_graph)
             heatmap_filename = f"{room_name}_heatmap.png"
