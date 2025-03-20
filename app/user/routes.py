@@ -103,5 +103,4 @@ def output_all_calendar():
         # os.remove(ics_file_path)
         return response
     except Exception as e:
-        print(e)
-        raise NotImplementedError
+        return error_response(str(e), e.code)
