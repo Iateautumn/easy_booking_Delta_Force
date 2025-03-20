@@ -83,7 +83,7 @@ def send_email_code():
     except Exception as e:
         return error_response("bad request: " + str(e), 400)
     try:
-        send_email_celery(**data)
+        asyncio.run(send_email_async(**data))
         return success_response("send email successfully")
     except BusinessError as e:
         return error_response(str(e), e.code)
