@@ -17,6 +17,13 @@ from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+import os
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 
 def get_reservation_requests():
     try:
@@ -220,4 +227,96 @@ def admin_reservation_all():
 
     return reservation_info_list
 
+def admin_report_analysis():
+    try:
+        reservations = get_reservation_by_status(ReservationStatus.Reserved)
+        classroom_data = get_all_classrooms()
+        classroom_data = [room for room in classroom_data if room["isDeleted"] == False]
+        classroom_data = sorted(classroom_data, key=lambda x: x["classroomId"])
+        classroom_data = {room["classroomId"]: room for room in classroom_data}
+        time_map = slot_time_map()
+        report = {room_id: {time: 0 for time in time_map} for room_id in classroom_data}
 
+        # Populate the report with reservation data
+        for reservation in reservations:
+            classroom_id = reservation.classroomId
+            start_time = reservation.startTime
+            end_time = reservation.endTime
+            time_slot = get_time_slot(str(start_time))
+            date = get_date_time(str(start_time))[0]
+            if date < datetime.now().date():
+                continue
+            start_time = time_map[time_slot]
+            end_time = time_map[get_time_slot(str(end_time))]
+            for i in range(start_time, end_time):
+                report[classroom_id][i] += 1
+
+        # Helper function to generate heatmap image and save it as a file
+        def generate_heatmap_image(data, filename):
+            plt.figure(figsize=(10, 1))
+            plt.imshow([data], cmap="hot", aspect="auto")
+            plt.axis("off")
+            plt.savefig(filename, format="png", bbox_inches="tight", pad_inches=0)
+            plt.close()
+
+        # Prepare separateData and save heatmap images
+        separate_data = []
+        for room_id, usage_data in report.items():
+            room_name = classroom_data[room_id]["classroomName"]
+            heat_graph = list(usage_data.values())
+            usage = sum(heat_graph)
+            heatmap_filename = f"{room_name}_heatmap.png"
+            generate_heatmap_image(heat_graph, heatmap_filename)
+            separate_data.append({
+                "roomName": room_name,
+                "usage": usage,
+                "heatGraph": heatmap_filename
+            })
+
+        # Prepare jointData and save the joint heatmap image
+        joint_heat_graph = [0] * len(time_map)
+        for usage_data in report.values():
+            for i, usage in enumerate(usage_data.values()):
+                joint_heat_graph[i] += usage
+
+        joint_heatmap_filename = "joint_heatmap.png"
+        generate_heatmap_image(joint_heat_graph, joint_heatmap_filename)
+
+        joint_data = {
+            "heatGraph": joint_heatmap_filename
+        }
+
+        # Export data to a PDF
+        pdf_filename = "admin_report_analysis.pdf"
+        pdf_path = os.path.join(os.getcwd(), pdf_filename)
+        c = canvas.Canvas(pdf_path, pagesize=letter)
+        c.setFont("Helvetica", 12)
+        c.drawString(50, 750, "Admin Report Analysis")
+        c.drawString(50, 730, "Separate Data:")
+
+        y_position = 710
+        for room in separate_data:
+            c.drawString(50, y_position, f"Room Name: {room['roomName']}, Usage: {room['usage']}")
+            y_position -= 20
+            c.drawImage(room["heatGraph"], 50, y_position - 50, width=400, height=50)
+            y_position -= 70
+            if y_position < 100:  # Add a new page if space is insufficient
+                c.showPage()
+                c.setFont("Helvetica", 12)
+                y_position = 750
+
+        c.drawString(50, y_position, "Joint Data:")
+        y_position -= 20
+        c.drawImage(joint_data["heatGraph"], 50, y_position - 50, width=400, height=50)
+
+        c.save()
+
+        return {
+            "separateData": separate_data,
+            "jointData": joint_data,
+            "pdfReportPath": pdf_path
+        }
+
+    except Exception as e:
+        raise BusinessError("Service error: " + str(e), 500)
+    
