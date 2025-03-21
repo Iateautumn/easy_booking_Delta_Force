@@ -72,7 +72,7 @@ async function viewIssues() {
             issueCard.innerHTML = `
                 <h3>Issue ID: ${issue.issueId}</h3>
                 <p>Issue: ${issue.issue}</p>
-                <p>Reported by: ${issue.username}</p>
+                <p>Reported by: ${issue.userName}</p>
                 <p>Date Reported: ${issue.date}</p>
                 <button class="action-btn" id="remove-issue">Remove</button>
             `;
