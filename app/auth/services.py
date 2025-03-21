@@ -75,7 +75,7 @@ async def send_email_async(email):
         raise BusinessError("User not found", 404)
 
     code = str(random.randint(100000, 999999))
-    
+
 
     from_name = user.name
     from_addr = "1534433057@qq.com"
