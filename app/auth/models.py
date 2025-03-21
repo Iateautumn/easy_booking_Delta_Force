@@ -3,6 +3,7 @@ from app.extensions import db
 from datetime import datetime
 from enum import Enum
 from flask_login import UserMixin
+from utils.database_encryption import create_encrypted_string
 # from app.classroom.models import Classroom, ClassroomType
 # from app.booking.models import Reservation
 
@@ -17,8 +18,10 @@ class User(UserMixin,db.Model):
     
     userId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.Enum(UserStatus), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(create_encrypted_string(100), nullable=False)
+    nameHash = db.Column(db.String(255))
+    email = db.Column(create_encrypted_string(255),unique=True, nullable=False)
+    emailHash = db.Column(db.String(255))
     password = db.Column(db.String(255), nullable=False)
     salt = db.Column(db.String(10), nullable=False)
     createdAt = db.Column(db.DateTime)
@@ -32,10 +35,12 @@ class User(UserMixin,db.Model):
     def get_id(self):
         return self.userId
 
-    def __init__(self, status, name, email, password_hash, salt):
+    def __init__(self, status, name,nameHash,email,emailHash, password_hash, salt):
         self.status = status
         self.name = name
+        self.nameHash = nameHash
         self.email = email
+        self.emailHash = emailHash
         self.password = password_hash
         self.salt = salt
         self.createdAt = datetime.now()
@@ -49,9 +54,8 @@ class User(UserMixin,db.Model):
         return Classroom.query.join(Reservation).filter(Reservation.userId == self.userId).all()
 
 
-# add user
-def add_user(status, name, email, password_hash, salt):
-    user = User(status, name, email, password_hash, salt)
+def add_user(status, name,nameHash,email,emailHash,password_hash, salt):
+    user = User(status=status, name=name,nameHash = nameHash,email = email,emailHash = emailHash, password_hash = password_hash, salt = salt)
     db.session.add(user)
     db.session.commit()
     return user
@@ -59,11 +63,11 @@ def add_user(status, name, email, password_hash, salt):
 def get_all_users():
     return User.query.filter_by(isDeleted=False).all()
 
-def get_user_by_email(email):
-    return User.query.filter_by(email=email,isDeleted=False).first()
+def get_user_by_email(emailHash):
+    return User.query.filter_by(emailHash=emailHash,isDeleted=False).first()
 
-def get_user_by_name(name):
-    return User.query.filter_by(name=name,isDeleted=False).first()
+def get_user_by_name(nameHash):
+    return User.query.filter_by(nameHash=nameHash,isDeleted=False).first()
 
 def get_user_by_id(user_id):
     return User.query.filter_by(userId=user_id,isDeleted=False).first()
