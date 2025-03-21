@@ -27,12 +27,12 @@ class Reservation(db.Model):
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
 
-    def __init__(self, userId, classroomId, startTime, endTime):
+    def __init__(self, userId, classroomId, startTime, endTime, status):
         self.userId = userId
         self.classroomId = classroomId
         self.startTime = startTime
         self.endTime = endTime
-        self.status = ReservationStatus.Reserved
+        self.status = status
         self.createdAt = datetime.now()
         self.updatedAt = datetime.now()
         self.isDeleted = False
@@ -46,8 +46,8 @@ def get_all_reservations():
     return list_reservation
 
 # add a new reservation
-def add_reservation(userId, classroomId, startTime, endTime):
-    new_reservation = Reservation(userId, classroomId, startTime, endTime)
+def add_reservation(userId, classroomId, startTime, endTime, status):
+    new_reservation = Reservation(userId, classroomId, startTime, endTime, status)
     db.session.add(new_reservation)
     db.session.commit()
     return new_reservation
