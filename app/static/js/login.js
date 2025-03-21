@@ -183,22 +183,20 @@ async function authenticateCode(email, verification_code){
 }
 
 
-function sendVerificationCode() {
+async function sendVerificationCode() {
     const email = document.getElementById('verification-email').value;
     if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
         alert('Invalid email address');
         return;
     }
-
-    console.log(sendCode(email));
-    
-
-    if(!sendCode(email)){
+    const result = await sendCode(email)
+    if(!result){
         alert('Verification code sent failed, please try again');
         return;
+    } else {
+        alert('Verification code sent to ' + email);
     }
 
-    alert('Verification code sent to ' + email);
     
     document.getElementById('send-code-btn').style.display = 'none';
     document.getElementById('verification-code-box').style.display = 'block';
