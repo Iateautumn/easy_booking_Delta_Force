@@ -2,3 +2,5 @@ test/
 run_test.py
 __pycache__/
 E-R diagram.png
+config.json
+update_timetable.py
