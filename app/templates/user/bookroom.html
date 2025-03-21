@@ -43,6 +43,7 @@
             <section id="book-room-section" class="content-section">
                 <div class="search-bar">
                     <button class="filter-btn" id="filter-btn">Filter</button>
+                    <button class="filter-btn" id="report-btn">Report Issue</button>
                     <label id="filter-date" class="checking-date-label"></label>
                 </div>
                 <div class="room-list" id="room-list">
@@ -87,6 +88,16 @@
             <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
         </div>
     </div>
+    
+    <!-- Report Modal -->
+    <div class="filter-modal" id="report-modal">
+        <div class="filter-content">
+            <h2>Report Issue</h2>
+            <textarea class="input" type="text" id="issue" placeholder="Enter Issue" style="height: 100px; overflow: auto; resize: none;"></textarea>
+            <button class="apply-btn" id="apply-report">Report</button>
+        </div>
+    </div>
+
     <!-- Filter Modal -->
     <div class="filter-modal" id="filter-modal">
         <div class="filter-content">
