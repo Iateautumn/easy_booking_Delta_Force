@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, send_file
 from flask_login import current_user
 from app.user.services import own_reservations
-from .services import own_reservations, modify_reservation, cancel_my_reservation, to_calendar
+from .services import *
 from app.utils.response import success_response, error_response
 from app.utils.exceptions import BusinessError
 import os
@@ -105,3 +105,19 @@ def output_all_calendar():
     except Exception as e:
         print(e)
         raise NotImplementedError
+
+@user_bp.route('/classroom/issue/report', methods=['POST'])
+def issue_report():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+    
+    user_id = current_user.userId
+    issue = data.get('issue')
+    
+    try:
+        report_issue(user_id, issue)
+        return success_response("success issue report")
+    except BusinessError as e:
+        return error_response(str(e), e.code)

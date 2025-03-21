@@ -45,7 +45,7 @@
                         </a>
                     </li>
                     <li id="room-issue-nav">
-                        <a href="./room_issue">
+                        <a href="./issue">
                             <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
                             Room Issue
                         </a>
@@ -73,6 +73,7 @@
             <section id="book-room-section" class="content-section">
                 <div class="search-bar">
                     <button class="filter-btn" id="filter-btn">Filter</button>
+                    <button class="filter-btn" id="report-btn">Report Issue</button>
                     <label id="filter-date" class="checking-date-label"></label>
                 </div>
                 <div class="room-list" id="room-list">
@@ -92,21 +93,42 @@
             <div class="booking-group">
                 <label class="booking-label">Time Slots:</label>
                 <div class="time-slots">
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="0"> 8:00~8:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="1"> 8:55~9:40</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="2"> 9:50~10:35</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="3"> 10:45~11:30</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="4"> 11:40~12:25</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="5"> 12:35~13:20</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="6"> 13:30~14:15</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="7"> 14:25~15:10</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="8"> 15:20~16:05</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="9"> 16:15~17:00</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="0">
+                        8:00~8:45</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="1">
+                        8:55~9:40</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="2">
+                        9:50~10:35</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="3">
+                        10:45~11:30</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="4">
+                        11:40~12:25</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="5">
+                        12:35~13:20</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="6">
+                        13:30~14:15</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="7">
+                        14:25~15:10</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="8">
+                        15:20~16:05</label>
+                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="9">
+                        16:15~17:00</label>
                 </div>
             </div>
             <button class="apply-btn" id="confirm-booking">Confirm Booking</button>
         </div>
     </div>
+
+    <!-- Report Modal -->
+    <div class="filter-modal" id="report-modal">
+        <div class="filter-content">
+            <h2>Report Issue</h2>
+            <textarea class="input" type="text" id="issue" placeholder="Enter Issue" style="height: 100px; overflow: auto; resize: none;"></textarea>
+            <button class="apply-btn" id="apply-report">Report</button>
+        </div>
+    </div>
+
+
     <!-- Filter Modal -->
     <div class="filter-modal" id="filter-modal">
         <div class="filter-content">
@@ -130,9 +152,10 @@
             </div>
             <button class="apply-btn" id="apply-filter">Apply Filters</button>
         </div>
-    </div>
-    
-    <script src="../../static/js/booking.js"></script>
+
+
+
+        <script src="../../static/js/booking.js"></script>
 </body>
 
 </html>

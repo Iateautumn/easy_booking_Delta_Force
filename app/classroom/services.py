@@ -56,7 +56,8 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
             "constrain": classroom.constrain,
             "isRestricted": classroom.isRestricted,
             "equipments": [get_equipment_dict(equipment) for equipment in classroom.Equipments],
-            "timePeriod": time_period
+            "timePeriod": time_period,
+            "issue": classroom.issue
         }
         return result
 

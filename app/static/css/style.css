@@ -162,7 +162,7 @@ header h1 {
     overflow: auto;
 }
 
-.booking-list, .approval-list, .reservation-list {
+.booking-list, .approval-list, .reservation-list, .issue-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -193,6 +193,7 @@ header h1 {
     cursor: pointer;
     font-size: 16px;
 }
+
 
 .filter-modal {
     display: none;

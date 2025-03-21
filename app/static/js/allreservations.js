@@ -91,8 +91,8 @@ async function viewReservations() {
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
                 <p>Equipment: ${reservation.equipment}</p>
-                <p>Constrain: ${reservation.constrain}</p>
-
+                <p>Constrain: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
+                ${reservation.issue ? '<p style="color: #d20000">Issue: ' + reservation.issue + '</p>' : ''}
                 <button class="action-btn" id="cancel-reservation">Cancel</button>
             `;
             reservationList.appendChild(reservationCard);
