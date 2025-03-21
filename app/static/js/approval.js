@@ -96,14 +96,14 @@ async function viewApprovals() {
     const timeTable = [
         '8:00~8:45',
         '8:55~9:40',
-        '9:50~10:35',
-        '10:45~11:30',
-        '11:40~12:25',
-        '12:35~13:20',
-        '13:30~14:15',
-        '14:25~15:10',
-        '15:20~16:05',
-        '16:15~17:00'
+        '10:00~10:45',
+        '10:55~11:40',
+        '14:00~14:45',
+        '14:55~15:40',
+        '16:00~16:45',
+        '16:55~17:40',
+        '19:00~19:45',
+        '19:55~20:40'
       ];
 
 
@@ -116,6 +116,7 @@ async function viewApprovals() {
                 <h1>Reservation ID: ${approval.reservationId}</h1>
                 <h3>Room ${approval.classroomName}</h3>
                 <p>Constrain: ${approval.constrain}</p>
+                <p style="color: #d20000">${approval.issue}</p>
                 <h4>User: ${approval.username}</h4>
                 <p>User Status: ${approval.userstatus}</p>
                 <p>Date: ${approval.date}</p>

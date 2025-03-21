@@ -44,12 +44,18 @@
                             Approval Request
                         </a>
                     </li>
-<!--                    <li id="report-nav">-->
-<!--                        <a href="#report">-->
-<!--                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">-->
-<!--                            Report-->
-<!--                        </a>-->
-<!--                    </li>-->
+                    <li id="room-issue-nav">
+                        <a href="./issue">
+                            <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
+                            Room Issue
+                        </a>
+                    </li>
+                    <li id="report-nav">
+                        <a href="./report">
+                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                            Report
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <a href="/auth/logout" class="logout">
@@ -66,7 +72,9 @@
 
             <section id="room-management-section" class="content-section">
                 <div class="room-management">
-                    <button class="action-btn" id="add-room-btn">Add Room</button>
+                    <div class="function-bar">
+                        <button class="action-btn" id="add-room-btn">Add Room</button>
+                    </div>
                     <div class="room-list">
                     </div>
                 </div>
@@ -125,10 +133,14 @@
                 <label class="modify-room-label">Constrain:</label>
                 <input type="text" id="input-modify-room-constrain" class="input">
             </div>
+            <div>
+                <label class="modify-room-issue">Issue:</label>
+                <input type="text" id="input-modify-room-issue" class="input">
+            </div>
             <button class="apply-btn" id="apply-modify-room-btn">Modify</button>
         </div>
     </div>
-    
+
     <script src="../../static/js/management.js"></script>
 </body>
 

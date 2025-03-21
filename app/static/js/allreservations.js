@@ -66,14 +66,14 @@ async function viewReservations() {
     const timeTable = [
         '8:00~8:45',
         '8:55~9:40',
-        '9:50~10:35',
-        '10:45~11:30',
-        '11:40~12:25',
-        '12:35~13:20',
-        '13:30~14:15',
-        '14:25~15:10',
-        '15:20~16:05',
-        '16:15~17:00'
+        '10:00~10:45',
+        '10:55~11:40',
+        '14:00~14:45',
+        '14:55~15:40',
+        '16:00~16:45',
+        '16:55~17:40',
+        '19:00~19:45',
+        '19:55~20:40'
       ];
 
 
@@ -91,8 +91,8 @@ async function viewReservations() {
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
                 <p>Equipment: ${reservation.equipment}</p>
-                <p>Constrain: ${reservation.constrain}</p>
-
+                <p>Constrain: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
+                ${reservation.issue ? '<p style="color: #d20000">Issue: ' + reservation.issue + '</p>' : ''}
                 <button class="action-btn" id="cancel-reservation">Cancel</button>
             `;
             reservationList.appendChild(reservationCard);

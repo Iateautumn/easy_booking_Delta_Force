@@ -1,4 +1,5 @@
 # app/classrooms/routes.py
+import asyncio
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template
 from flask_login import current_user, login_user
 from app.auth.services import my_login_user
@@ -35,7 +36,7 @@ def booking_room():
     date = data['date']
 
     try:
-        new_booking(user_id, room_id, time_period, date)
+        asyncio.run(new_booking(user_id, room_id, time_period, date))
         return success_response("success reservation")
     except BusinessError as e:
         return error_response(str(e), e.code)

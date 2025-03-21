@@ -2,12 +2,13 @@
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user
-from app.auth.services import register_user, my_login_user
+from .services import *
 from app.utils.response import success_response, error_response
 from app.utils.exceptions import BusinessError
 
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+email_auth_bp = Blueprint('email_auth', __name__, url_prefix='/email')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -30,6 +31,7 @@ def login():
         next_page = request.args.get('next')
         return redirect(url_for('user.bookroom')) if user.status.value != "Admin" else redirect(url_for('admin.bookroom'))
     return render_template('auth/login.html')
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     if current_user.is_authenticated:
@@ -56,4 +58,32 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+@email_auth_bp.route('/code/login', methods=['POST'])
+def code_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('user.bookroom'))
 
+    try:
+        data = request.get_json()
+    except Exception:
+        return render_template('auth/login.html')
+
+    try:
+        user = verify_code(**data)
+        login_user(user)
+        next_page = request.args.get('next')
+        return redirect(url_for('user.bookroom')) if user.status.value != "Admin" else redirect(url_for('admin.bookroom'))
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@email_auth_bp.route('/code/send', methods=['POST'])
+def send_email_code():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+    try:
+        asyncio.run(send_email_async(**data))
+        return success_response("send email successfully")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
