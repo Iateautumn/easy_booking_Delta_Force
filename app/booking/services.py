@@ -7,6 +7,12 @@ from app.booking.models import add_reservation, get_reservation_by_time, Reserva
 from app.utils.datetime_utils import time_slot_map, add_time, slot_time_map, get_current_date
 from app.extensions import db
 from app.classroom.models import get_classroom_by_id
+from app.auth.models import get_user_by_id
+from app.auth.services import send_email_sync
+import asyncio
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formataddr
 
 def get_certain_reservation(classrooom_id, start_time, end_time):
     reservations = get_reservation_by_time(start_time, end_time)
@@ -33,5 +39,37 @@ def new_booking(user_id, classroom_id, time_period, date):
             reservation = add_reservation(int(user_id), int(classroom_id), start_time, end_time, status)
         except Exception as e:
             raise BusinessError("failed to make a reservation " + str(e),400)
-
+    if reservation.status == ReservationStatus.Reserved:
+        reservation_email_async(reservation, 'Your classroom reservation has been confirmed.')
     return reservation
+
+async def reservation_email_async(reservation, msg):
+    
+    user = get_user_by_id(reservation.userId)
+
+    from_name = user.name
+    from_addr = "1534433057@qq.com"
+    from_pwd = "oeisscrfcfukgccf"
+    to_addr = user.email
+    my_title = "Reservation Success"
+    my_msg = f"""
+Hello, {user.name}! f{msg}
+Reservation Details:
+Classroom ID: {reservation.classroomId}
+Start Time: {reservation.startTime}
+End Time: {reservation.endTime}
+Thank you for using our service.
+"""
+
+    msg = MIMEText(my_msg, 'plain', 'utf-8')
+    msg['From'] = formataddr([from_name, from_addr])
+    msg['To'] = to_addr
+    msg['Subject'] = my_title
+
+    smtp_srv = "smtp.qq.com"
+
+    try:
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, send_email_sync, smtp_srv, from_addr, from_pwd, to_addr, msg)
+    except Exception as e:
+        raise BusinessError(f"Failed to send email: {str(e)}", 500)
