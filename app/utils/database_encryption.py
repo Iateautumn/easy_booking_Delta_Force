@@ -48,3 +48,6 @@ print(Config.ENCRYPTION_KEY,Config.HMAC_KEY)
 # extensions.py
 def create_encrypted_string(length):
     return StringEncryptedType(type_in=String(length),key=Config.ENCRYPTION_KEY, engine=FernetEngine)
+
+
+
