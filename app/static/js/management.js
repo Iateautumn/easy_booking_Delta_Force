@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const issue = document.querySelector('#input-modify-room-issue').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
-        const result = await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain);
+        const result = await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain, issue);
 
         if (result) {
             alert('Modify successful');
@@ -97,7 +97,8 @@ async function viewAllRooms() {
                 <h3>${room.classroomName}</h3>
                 <p>Capacity: ${room.capacity}</p>
                 <p>Equipment: ${equipment_display}</p>
-                <p>Constrain: ${room.constrain}</p>
+                <p>Constrain: ${(!room.constrain || room.constrain == '') ? 'None': room.constrain}</p>
+                ${room.issue ? '<p style="color: #d20000">Issue: ' + room.issue + '</p>' : ''}
                 <button class="action-btn" id="modify-room" equipment-id="${equipment_id}">Modify</button>
                 <button class="action-btn" id="delete-room">Delete</button>
             `;

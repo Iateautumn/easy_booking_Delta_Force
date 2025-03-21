@@ -6,6 +6,7 @@ from ics import Calendar, Event
 import tempfile
 from datetime import datetime, timedelta
 from app.booking.models import ReservationStatus
+from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, update_issue_report, add_issue_report
 
 def to_calendar(user_id, reservation_ids=[]):
     try:
@@ -70,6 +71,7 @@ def own_reservations(user_id):
             "equipment": [equipment.equipmentName for equipment in classroom.Equipments],
             "isRestricted": classroom.isRestricted,
             "constrain": classroom.constrain,
+            "issue": classroom.issue
         }
         return result
     result = [reservation_to_dict(reservation) for reservation in reservations]
@@ -104,5 +106,11 @@ def cancel_my_reservation(userId, reservationId):
         cancel_reservation(reservationId)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
+    
+def report_issue(userId, issue):
+    try:
+        add_issue_report(userId, issue)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
 
-# (reservationId, userId, classroomId, startTime, endTime, status):
+

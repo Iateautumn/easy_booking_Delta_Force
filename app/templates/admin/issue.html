@@ -21,18 +21,18 @@
                         </a>
                     </li>
                     <li id="my-bookings-nav">
-                        <a href="./mybookings">
+                        <a href="#">
                             <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
                             My Bookings
                         </a>
                     </li>
-                    <li id="all-reservations-nav" class="active">
-                        <a href="#">
+                    <li id="all-reservations-nav">
+                        <a href="./allreservations">
                             <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
                             All Reservations
                         </a>
                     </li>
-                    <li id="room-management-nav" class="">
+                    <li id="room-management-nav">
                         <a href="./management">
                             <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
                             Room Management
@@ -44,18 +44,18 @@
                             Approval Request
                         </a>
                     </li>
-                    <li id="room-issue-nav">
-                        <a href="./issue">
+                    <li id="room-issue-nav" class="active">
+                        <a href="#">
                             <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
                             Room Issue
                         </a>
                     </li>
-                    <li id="report-nav">
-                        <a href="./report">
-                            <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
-                            Report
-                        </a>
-                    </li>
+                   <li id="report-nav">
+                       <a href="./report">
+                           <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                           Report
+                       </a>
+                   </li>
                 </ul>
             </nav>
             <a href="/auth/logout" class="logout">
@@ -67,21 +67,18 @@
         <main>
             <header>
                 <button class="menu-btn" id="menu-btn">☰</button>
-                <h1 id="page-title">All Reservations</h1>
+                <h1 id="page-title">Reported Room Issues</h1>
             </header>
-
-            <section id="all-reservations-section" class="content-section">
-                <div class="all-reservarions">
-                    <div class="reservation-list">
-                        
-                    </div>
+            <section id="issue-section" class="content-section">
+                <div class="issue-list">
                 </div>
             </section>
 
         </main>
     </div>
-
-    <script src="../../static/js/allreservations.js"></script>
+   
+    
+    <script src="../../static/js/issue.js"></script>
 </body>
 
 </html>
