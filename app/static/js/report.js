@@ -76,14 +76,12 @@ async function viewReport() {
             return `${year}-${month}-${day}`;
         }
 
-        var day = 0
         for (var i = 0; i < matrix.length; i++) {
             for (var j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] === 0) {
-                    day++;
                     continue;
                 }
-                data.push([addDays('2023-01-01', day++), matrix[i][j]]);
+                data.push([addDays('2023-01-01', j * 7 + i), matrix[i][j]]);
             }
         }
 
