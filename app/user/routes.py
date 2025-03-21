@@ -103,6 +103,7 @@ def output_all_calendar():
         # os.remove(ics_file_path)
         return response
     except Exception as e:
+        return error_response(str(e), 500)
         print(e)
         raise NotImplementedError
 

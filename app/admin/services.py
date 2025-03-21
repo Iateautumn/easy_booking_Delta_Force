@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import NewType
 
 from app.auth.models import User, get_user_by_id, UserStatus
@@ -17,6 +17,14 @@ from app.classroom.models import Classroom, get_classroom_by_id, add_issue
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, delete_issue_report, add_issue_report
+
+import base64
+from io import BytesIO
+import os
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 def get_reservation_requests():
@@ -277,5 +285,128 @@ def get_reported_issue():
 def delete_reported_issue(issue_id):
     try:
         delete_issue_report(issue_id)
+    except Exception as e:
+        raise BusinessError("Service error: " + str(e), 500)
+
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+
+def admin_report_analysis():
+    try:
+        reservations = get_reservation_by_status(ReservationStatus.Reserved)
+        classroom_data = get_all_classrooms()  # list of all classroom objects
+        classroom_data = [room for room in classroom_data if not room.isDeleted]  # filter out deleted classrooms
+        classroom_data = sorted(classroom_data, key=lambda x: x.classroomId)  # sort by classroomId
+        classroom_data = {room.classroomId: room for room in classroom_data}  # convert to dictionary for easy access
+        time_map = list(slot_time_map.keys())  # Get time slots as a list
+        today = datetime.now().date()
+        seven_days_ago = today - timedelta(days=7)
+
+        # Initialize report: a dictionary for each classroom with 7 days and time slots
+        report = {
+            room_id: [[0] * len(time_map) for _ in range(7)]  # 7 days x time slots
+            for room_id in classroom_data
+        }
+
+        # Populate the report with reservation data
+        for reservation in reservations:
+            classroom_id = reservation.classroomId
+            start_time = reservation.startTime
+            # end_time = reservation.endTime
+            time_slot_start = get_time_slot(str(start_time))
+            # time_slot_end = get_time_slot(str(end_time))
+            date = get_date_time(str(start_time))[0]
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+
+            if date < seven_days_ago or date > today:
+                continue
+
+            # Calculate the day index (0 = seven_days_ago, 6 = today)
+            day_index = (date - seven_days_ago).days
+
+            report[classroom_id][day_index][time_slot_start] += 1
+
+        # Prepare separateData
+        separate_data = []
+        joint_matrix = [[0] * len(time_map) for _ in range(7)]  # Initialize joint matrix
+
+        for room_id, usage_data in report.items():
+            room_name = classroom_data[room_id].classroomName
+            total_usage = round(sum(sum(day) for day in usage_data) / 0.7, 2)
+
+            # Add to separate data
+            separate_data.append({
+                "roomName": room_name,
+                "usage": str(total_usage)  # Convert usage to string as per the requirement
+            })
+
+            # Update joint matrix
+            for day in range(7):
+                for time_slot in range(len(time_map)):
+                    joint_matrix[day][time_slot] += usage_data[day][time_slot]
+
+        # Prepare jointData
+        joint_data = {
+            "dates": [(seven_days_ago + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)],
+            "matrix": joint_matrix
+        }
+
+        # Generate PDF with the matrix table and separate data
+        def generate_pdf(joint_data, separate_data, filename):
+            pdf = SimpleDocTemplate(filename, pagesize=letter)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Add title
+            elements.append(Paragraph("Admin Report Analysis", styles["Title"]))
+
+            # Add separateData section
+            elements.append(Paragraph("Separate Data", styles["Heading2"]))
+            separate_table_data = [["Room Name", "Usage"]]
+            for data in separate_data:
+                separate_table_data.append([data["roomName"], data["usage"] + "%"])
+
+            separate_table = Table(separate_table_data)
+            separate_table.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),  # Header background
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),  # Header font
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),  # Header padding
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),  # Body background
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grid lines
+            ]))
+            elements.append(separate_table)
+
+            # Add jointData section
+            elements.append(Paragraph("Joint Data", styles["Heading2"]))
+            joint_table_data = [["Date/Time"] + time_map]  # Header row
+            for i, date in enumerate(joint_data["dates"]):
+                joint_table_data.append([date] + joint_data["matrix"][i])  # Add each row
+
+            joint_table = Table(joint_table_data)
+            joint_table.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.grey),  # Header background
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Center align all cells
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),  # Header font
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 12),  # Header padding
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),  # Body background
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grid lines
+            ]))
+            elements.append(joint_table)
+            pdf.build(elements)
+
+        # Save the PDF
+        pdf_filename = "report.pdf"
+        generate_pdf(joint_data, separate_data, pdf_filename)
+
+        return {
+            "separateData": separate_data,
+            "jointData": joint_data
+        }
+
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)

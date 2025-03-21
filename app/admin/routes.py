@@ -1,5 +1,5 @@
 
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template
+from flask import Blueprint, request, jsonify, redirect, url_for, render_template, send_file
 from app.utils.response import success_response, error_response
 from app.admin.services import *
 
@@ -129,6 +129,10 @@ def all_classroom():
 def allreservations():
     return render_template('admin/allreservations.html')
 
+@admin_bp.route('/report')
+def report():
+    return render_template('admin/report.html')
+
 @admin_bp.route('/reservation/all')
 def admin_get_all_reservations():
     try:
@@ -173,7 +177,7 @@ def allissue_request():
         return success_response(issue_reports)
     except BusinessError as e:
         return error_response(str(e), e.code)
-    
+
 @admin_bp.route('/issue/report/delete', methods=['POST'])
 def delete_issue():
     try:
@@ -195,3 +199,69 @@ def issue():
         return render_template('admin/issue.html')
     except BusinessError as e:
         return error_response(str(e), e.code)
+# ------ formatted reprot ------
+@admin_bp.route('/report/analysis')
+def report_analysis():
+    try:
+        return success_response(admin_report_analysis())
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/report/analysis/export')
+def output_all_calendar():
+    try:
+        report_file_path = r'..\report.pdf'
+        response = send_file(report_file_path, as_attachment=True, download_name="report.pdf")
+        # TODO: elegantly delete the temp file after sending finished
+        # os.remove(report_file_path)
+        return response
+    except Exception as e:
+        return error_response(str(e), 500)
+
+@admin_bp.route('/issue/all', methods=['GET'])
+def allissue_request():
+    try:
+        issue_reports = get_reported_issue()
+        return success_response(issue_reports)
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/issue/report/delete', methods=['POST'])
+def delete_issue():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("can not resolve json: " + str(e), 400)
+
+    issue_id = data['issue_id']
+
+    try:
+        delete_issue_report(issue_id)
+        return success_response("success delete")
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/issue', methods=['GET'])
+def issue():
+    try:
+        return render_template('admin/issue.html')
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+# ------ formatted reprot ------
+@admin_bp.route('/report/analysis')
+def report_analysis():
+    try:
+        return success_response(admin_report_analysis())
+    except BusinessError as e:
+        return error_response(str(e), e.code)
+
+@admin_bp.route('/report/analysis/export')
+def output_all_calendar():
+    try:
+        report_file_path = r'..\report.pdf'
+        response = send_file(report_file_path, as_attachment=True, download_name="report.pdf")
+        # TODO: elegantly delete the temp file after sending finished
+        # os.remove(report_file_path)
+        return response
+    except Exception as e:
+        return error_response(str(e), 500)
