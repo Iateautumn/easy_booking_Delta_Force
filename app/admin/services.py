@@ -328,9 +328,6 @@ def admin_report_analysis():
 
             # Calculate the day index (0 = seven_days_ago, 6 = today)
             day_index = (date - seven_days_ago).days
-            print(classroom_id)
-            print(day_index)
-            print(time_slot_start)
             report[classroom_id][day_index - 1][time_slot_start] += 1
 
         # Prepare separateData
