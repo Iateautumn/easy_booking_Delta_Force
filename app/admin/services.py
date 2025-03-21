@@ -17,6 +17,7 @@ from app.classroom.models import Classroom, get_classroom_by_id
 from app.utils.datetime_utils import slot_time_map, get_time_slot
 from app.utils.exceptions import BusinessError
 
+from app.booking.services import reservation_email_async
 
 def get_reservation_requests():
     try:
@@ -53,7 +54,7 @@ def approve_reservation(reservationId):
         reservation = update_reservation(reservationId, userId, classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Reserved)
 
         # reservation.status = ReservationStatus.Approved
-        
+        reservation_email_async(reservation, 'Your classroom reservation has been approved by the administrator.')
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
     
@@ -64,6 +65,8 @@ def reject_reservation(reservationId):
         userId = reservation.userId
         classroomId = reservation.classroomId
         reservation = update_reservation(reservationId, userId, classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Rejected)
+
+        reservation_email_async(reservation, 'Your classroom reservation has been rejected by the administrator.')
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
          
