@@ -21,14 +21,14 @@ def get_certain_reservation(classrooom_id, start_time, end_time):
             return True
     return False
 
-def new_booking(user_id, classroom_id, time_period, date):
+async def new_booking(user_id, classroom_id, time_period, date):
     if not date:
         raise BusinessError("date is required", 400)
     for i in time_period:
         start_time = add_time(date, time_slot_map[i]['start'])
         end_time = add_time(date, time_slot_map[i]['end'])
         reservation = get_certain_reservation(int(classroom_id), start_time, end_time)
-        if reservation and (reservation.status == ReservationStatus.Reserved or reservation.status == ReservationStatus.Pending):
+        if reservation:
             raise BusinessError("a reservation is already existed", 400)
         try:
             classroom = get_classroom_by_id(classroom_id)
@@ -40,7 +40,7 @@ def new_booking(user_id, classroom_id, time_period, date):
         except Exception as e:
             raise BusinessError("failed to make a reservation " + str(e),400)
     if reservation.status == ReservationStatus.Reserved:
-        reservation_email_async(reservation, 'Your classroom reservation has been confirmed.')
+        await reservation_email_async(reservation, 'Your classroom reservation has been confirmed.')
     return reservation
 
 async def reservation_email_async(reservation, msg):

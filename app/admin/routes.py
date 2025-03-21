@@ -1,4 +1,5 @@
 
+import asyncio
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template, send_file
 from app.utils.response import success_response, error_response
 from app.admin.services import *
@@ -31,7 +32,7 @@ def reservation_approval():
         return error_response("can not resolve json: " + str(e), 400)
     reservation_id = data['reservation_id']
     try:
-        approve_reservation(reservation_id)
+        asyncio.run(approve_reservation(reservation_id))
         return success_response()
     except BusinessError as e:
         return error_response(str(e), e.code)
@@ -46,7 +47,7 @@ def reservation_reject():
         return error_response("can not resolve json: " + str(e), 400)
     reservation_id = data['reservation_id']
     try:
-        reject_reservation(reservation_id)
+        asyncio.run(reject_reservation(reservation_id))
         return success_response()
     except BusinessError as e:
         return error_response(str(e), e.code)

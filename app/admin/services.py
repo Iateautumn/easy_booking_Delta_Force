@@ -55,7 +55,7 @@ def get_reservation_requests():
     return reservation_info_list
 
 
-def approve_reservation(reservationId):
+async def approve_reservation(reservationId):
     try:
         reservation = get_reservation_by_id(reservationId)
         userId = reservation.userId
@@ -63,19 +63,19 @@ def approve_reservation(reservationId):
         reservation = update_reservation(reservationId, userId, classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Reserved)
 
         # reservation.status = ReservationStatus.Approved
-        reservation_email_async(reservation, 'Your classroom reservation has been approved by the administrator.')
+        await reservation_email_async(reservation, 'Your classroom reservation has been approved by the administrator.')
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
     
 
-def reject_reservation(reservationId):
+async def reject_reservation(reservationId):
     try:
         reservation = get_reservation_by_id(reservationId)
         userId = reservation.userId
         classroomId = reservation.classroomId
         reservation = update_reservation(reservationId, userId, classroomId, reservation.startTime, reservation.endTime, ReservationStatus.Rejected)
 
-        reservation_email_async(reservation, 'Your classroom reservation has been rejected by the administrator.')
+        await reservation_email_async(reservation, 'Your classroom reservation has been rejected by the administrator.')
     except Exception as e:
         raise BusinessError("Reservation not found: " + str(e), 404)
          
@@ -328,8 +328,10 @@ def admin_report_analysis():
 
             # Calculate the day index (0 = seven_days_ago, 6 = today)
             day_index = (date - seven_days_ago).days
-
-            report[classroom_id][day_index][time_slot_start] += 1
+            print(classroom_id)
+            print(day_index)
+            print(time_slot_start)
+            report[classroom_id][day_index - 1][time_slot_start] += 1
 
         # Prepare separateData
         separate_data = []
