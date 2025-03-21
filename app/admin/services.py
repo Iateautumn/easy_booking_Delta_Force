@@ -262,7 +262,8 @@ def get_reported_issue():
             issue_report_data = {
                 "issueId": issue_report.reportId,
                 "userName": user.name,
-                "issue": issue_report.description
+                "issue": issue_report.description,
+                "date": get_date_time(str(issue_report.createdAt))[0]
             }
             issue_report_list.append(issue_report_data)
         for issue_report in issue_reports:
