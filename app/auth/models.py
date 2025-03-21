@@ -75,16 +75,16 @@ def get_user_by_id(user_id):
 def get_user_by_status(status):
     return User.query.filter_by(status=status,isDeleted=False).all()
 
-def update_user(user_id, status = None, name = None, email = None, password_hash = None, salt = None):
+def update_user(user_id, status = None, nameHash = None, emailHash = None, password_hash = None, salt = None):
     if user_id is not None:
         user = get_user_by_id(user_id)
     if status is not None:
         user.status = status
-    if name is not None:
-        user.name = name
-    if email is not None:
-        if get_user_by_email(email) is None:
-            user.email = email
+    if nameHash is not None:
+        user.nameHash = nameHash
+    if emailHash is not None:
+        if get_user_by_email(emailHash) is None:
+            user.emailHash = emailHash
         else:
             return False
     if password_hash is not None:
@@ -101,17 +101,17 @@ def delete_user(user_id):
     db.session.commit()
     return user
 
-def get_users_by_filter(user_id, status = None, name = None, email = None):
+def get_users_by_filter(user_id, status = None, nameHash = None, emailHash = None):
     user = get_user_by_id(user_id)
     if user is None:
         return None
     quary = User.query
     if status is not None:
-        quary = quary.filter(status=status)
-    if name is not None:
-        quary = quary.filter(name=name)
-    if email is not None:
-        quary = quary.filter(email=email)
+        quary = quary.filter(User.status==status)
+    if nameHash is not None:
+        quary = quary.filter(User.nameHash == nameHash)
+    if emailHash is not None:
+        quary = quary.filter(User.emailHash==emailHash)
     quary = quary.filter(isDeleted=False)
     return quary.all()
 

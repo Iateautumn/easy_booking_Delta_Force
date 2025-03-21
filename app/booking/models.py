@@ -70,7 +70,7 @@ def get_reservation_by_filter(userId=None, classroomId=None, startTime=None, end
 
 
 def get_reservation_by_time(startTime, endTime):
-    list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime,isDeleted=False).all()
+    list_reservation = Reservation.query.filter(Reservation.startTime>=startTime, Reservation.endTime<=endTime,Reservation.isDeleted == False).all()
     return list_reservation
 
 def get_reservation_by_id(reservationId):
