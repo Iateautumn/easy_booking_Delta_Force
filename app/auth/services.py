@@ -1,3 +1,5 @@
+import hashlib
+
 from werkzeug.security import generate_password_hash
 from app.auth.models import User, add_user, get_user_by_email
 from app.utils.exceptions import BusinessError
@@ -12,6 +14,7 @@ import asyncio
 import time
 import random
 from typing import Dict, Tuple
+from app.utils.database_encryption import Config
 import os
 import asyncio
 import smtplib
@@ -23,6 +26,7 @@ from app.auth.models import get_user_by_email
 from app.utils.exceptions import BusinessError
 import smtplib
 from email.mime.text import MIMEText
+import hmac
 
 def generate_password_hash(password, salt=None):
     if salt is None:
@@ -40,9 +44,18 @@ def generate_password_hash(password, salt=None):
 
 def register_user(status, username, email, password):
     password_hash, salt = generate_password_hash(password)
-
+    email_hash = hmac.new(
+        key=Config.HMAC_KEY,
+        msg=email.encode(),
+        digestmod='sha256'
+    ).hexdigest()
+    name_hash = hmac.new(
+        key=Config.HMAC_KEY,
+        msg=username.encode(),
+        digestmod='sha256'
+    ).hexdigest()
     try:
-        user = add_user(status, username, email, password_hash, salt)
+        user = add_user(status=status, name=username, email=email, password_hash=password_hash, salt = salt, emailHash = email_hash, nameHash=name_hash)
     except Exception as e:
         raise BusinessError('Failed to register user: ' + str(e), 409)
 
@@ -50,7 +63,12 @@ def register_user(status, username, email, password):
 
 def my_login_user(username, password):
     try:
-        user = get_user_by_email(username)
+        email_hash = hmac.new(
+            key=Config.HMAC_KEY,
+            msg=username.encode(),
+            digestmod='sha256'
+        ).hexdigest()
+        user = get_user_by_email(emailHash=email_hash)
     except Exception as e:
         raise BusinessError('Failed to login user: ' + str(e), 500)
     if not user:
@@ -68,9 +86,17 @@ def my_login_user(username, password):
 
 verification_store: Dict[str, dict] = {}
 
+def my_get_hash(str):
+    hash_value = hmac.new(
+        key=Config.HMAC_KEY,
+        msg=str.encode(),
+        digestmod='sha256'
+    ).hexdigest()
+    return hash_value
+
 
 async def send_email_async(email):
-    user = get_user_by_email(email)
+    user = get_user_by_email(my_get_hash(email))
     if not user:
         raise BusinessError("User not found", 404)
 
@@ -122,4 +148,4 @@ def verify_code(email, verification_code):
     if record['code'] != verification_code:
         raise BusinessError("Invalid code", 401)
     del verification_store[email]
-    return get_user_by_email(email)
+    return get_user_by_email(my_get_hash(email))
