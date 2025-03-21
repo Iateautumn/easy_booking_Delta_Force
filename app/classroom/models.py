@@ -87,7 +87,7 @@ class Equipment(db.Model):
         self.isDeleted = False
 
 def get_all_equipments():
-    list_equipment = Equipment.query.all()
+    list_equipment = Equipment.query.filter_by(isDeleted=False).all()
     return list_equipment
 
 def add_equipment(equipmentName):
@@ -97,11 +97,11 @@ def add_equipment(equipmentName):
     return new_equipment
 
 def get_equipment_by_id(equipmentId):
-    equipment = Equipment.query.filter_by(equipmentId=equipmentId).first()
+    equipment = Equipment.query.filter_by(equipmentId=equipmentId,isDeleted=False).first()
     return equipment
 
 def get_equipment_by_name(equipmentName):
-    equipment = Equipment.query.filter_by(equipmentName=equipmentName).first()
+    equipment = Equipment.query.filter_by(equipmentName=equipmentName,isDeleted=False).first()
     return equipment
 
 def delete_equipment(equipmentId):
@@ -123,7 +123,7 @@ def update_equipment(equipmentId, equipmentName):
 def get_equipment_by_classroom_id(classroomId):
     from app.classroom.models import Classroom
     from app.classroom.models import ClassEquipment
-    classroom = Classroom.query.filter_by(classroomId=classroomId).first()
+    classroom = Classroom.query.filter_by(classroomId=classroomId,isDeleted=False).first()
     if classroom is None:
         return None
     list_equipment = Equipment.query.join(ClassEquipment).filter(ClassEquipment.classroomId == classroomId, ClassEquipment.isDeleted == False).all()
@@ -170,7 +170,7 @@ class Classroom(db.Model):
 
 
 def get_all_classrooms():
-    list_classroom = Classroom.query.all()
+    list_classroom = Classroom.query.filter_by(isDeleted=False).all()
     return list_classroom
 
 def add_classroom(classroomName, capacity, constrain=None, isRestricted=False):
@@ -184,15 +184,15 @@ def add_classroom(classroomName, capacity, constrain=None, isRestricted=False):
     return new_classroom
 
 def get_classroom_by_id(classroomId):
-    classroom = Classroom.query.filter_by(classroomId=classroomId).first()
+    classroom = Classroom.query.filter_by(classroomId=classroomId,isDeleted=False).first()
     return classroom
 
 def get_classroom_by_name(classroomName):
-    classroom = Classroom.query.filter_by(classroomName=classroomName).first()
+    classroom = Classroom.query.filter_by(classroomName=classroomName,isDeleted=False).first()
     return classroom
 
 def get_classroom_by_capacity(capacity):
-    list_classroom = Classroom.query.filter_by(capacity>capacity).all()
+    list_classroom = Classroom.query.filter_by(capacity>capacity,isDeleted=False).all()
     return list_classroom
 
 
@@ -237,6 +237,7 @@ def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None
         query = query.filter_by(capacity=capacity)  
     if isRestricted is not None:
         query = query.filter_by(isRestricted=isRestricted)  
+    query = query.filter_by(isDeleted=False)  
     list_classroom = query.all()  
     return list_classroom
 
@@ -285,7 +286,7 @@ class ClassEquipment(db.Model):
 
 
 def get_classequipment_by_id(classEquipmentId):
-    classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId).first()
+    classequipment = ClassEquipment.query.filter_by(classEquipmentId=classEquipmentId,isDeleted=False).first()
     return classequipment
 
 def delete_classequipment(classEquipmentId):
@@ -307,15 +308,15 @@ def update_classequipment(classEquipmentId, classroomId = None, equipmentId = No
     return classequipment
 
 def get_classequipment_by_classroom_id(classroomId):
-    list_classequipment = ClassEquipment.query.filter_by(classroomId=classroomId).all()
+    list_classequipment = ClassEquipment.query.filter_by(classroomId=classroomId,isDeleted=False).all()
     return list_classequipment
 
 def get_classequipment_by_equipment_id(equipmentId):
-    list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId).all()
+    list_classequipment = ClassEquipment.query.filter_by(equipmentId=equipmentId,isDeleted=False).all()
     return list_classequipment
 
 def get_classequipment_by_classroom_id_and_equipment_id(classroomId, equipmentId):
-    classequipment = ClassEquipment.query.filter_by(classroomId=classroomId, equipmentId=equipmentId).first()
+    classequipment = ClassEquipment.query.filter_by(classroomId=classroomId, equipmentId=equipmentId,isDeleted=False).first()
     return classequipment
 
 def add_classequipment(classroomId, equipmentId):
@@ -330,3 +331,94 @@ def add_classequipment(classroomId, equipmentId):
     return new_classequipment
 
 
+class Timetable(db.Model):
+    __tablename__ = 'timetable'
+    timetableId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    timeStamp = db.Column(db.DateTime,default=None)
+    week = db.Column(db.Integer, default=None)
+    className = db.Column(db.String(255), default=None)
+    professor = db.Column(db.String(100), default=None)
+    classroomName = db.Column(db.String(75), db.ForeignKey('classroom.classroomName'), default=None)
+
+    createdAt = db.Column(db.DateTime)
+    updatedAt = db.Column(db.DateTime)
+    
+    Classroom = db.relationship('Classroom', backref=db.backref('timetable', lazy=True))
+
+    def __init__(self, timeStamp = None, week = None, className = None, professor = None, classroomName = None):
+        self.timeStamp = timeStamp
+        self.week = week
+        self.className = className
+        self.professor = professor
+        self.classroomName = classroomName
+        self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
+
+def get_timetable_by_id(timetableId):
+    timetable = Timetable.query.filter_by(timetableId=timetableId).first()
+    return timetable
+
+def get_timetable_by_classroom_name(classroomName):
+    timetable = Timetable.query.filter_by(classroomName=classroomName).all()
+    return timetable
+
+def get_timetable_by_classroom_name_and_timestamp(classroomName, timeStamp):
+    timetable = Timetable.query.filter_by(classroomName=classroomName, timeStamp=timeStamp).all()
+    return timetable
+
+def get_timetable_by_week(week):
+    timetable = Timetable.query.filter_by(week=week).all()
+    return timetable
+
+def get_timetable_by_week_and_classroom_name(week, classroomName):
+    timetable = Timetable.query.filter_by(week=week, classroomName=classroomName).all()
+    return timetable
+
+def add_timetable(timeStamp, week, className, professor, classroomName):
+    new_timetable = Timetable(timeStamp, week, className, professor, classroomName)
+    db.session.add(new_timetable)
+    db.session.commit()
+    return new_timetable
+
+def update_timetable(timetableId, timeStamp = None, week = None, className = None, professor = None, classroomName = None):
+    timetable = Timetable.query.filter_by(timetableId=timetableId).first()
+    if timetable is None:
+        return False
+    if timeStamp is not None:
+        timetable.timeStamp = timeStamp
+    if week is not None:
+        timetable.week = week
+    if className is not None:
+        timetable.className = className
+    if professor is not None:
+        timetable.professor = professor
+    if classroomName is not None:
+        timetable.classroomName = classroomName
+    timetable.updatedAt = datetime.now()
+    db.session.commit()
+    return timetable
+
+def delete_timetable():
+    db.session.query(Timetable).delete()
+    db.session.execute('ALTER TABLE timetable AUTO_INCREMENT = 1')
+    db.session.commit()
+
+
+def bulk_insert_timetable_entries(data_list):
+    try:
+        current_time = datetime.now()
+        processed_data = []
+        for data in data_list:
+            item = data.copy() 
+            item['createdAt'] = current_time
+            item['updatedAt'] = current_time
+            processed_data.append(item)
+        # handle the bulk insert operation
+        db.session.bulk_insert_mappings(Timetable, processed_data)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        raise e 
+
+
+        
