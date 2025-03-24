@@ -267,6 +267,15 @@ def delete_issue(classroomId):
     db.session.commit()
     return classroom
 
+def get_classroom_by_issue(issue=None):
+    if issue is None or issue == "":
+        classroom = Classroom.query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False).all()
+    else:
+        classroom = Classroom.query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False).all()
+    return classroom
+
+
+
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'
     classEquipmentId = db.Column(db.Integer, primary_key=True, autoincrement=True)
