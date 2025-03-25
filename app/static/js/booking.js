@@ -268,6 +268,8 @@ async function viewRooms() {
         });
 
     }
+    const loading_item = document.getElementById('loading-item');
+    loading_item.style.display = 'none';
 }
 
 
