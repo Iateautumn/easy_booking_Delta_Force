@@ -1,4 +1,3 @@
-
 var rooms;
 var capacity_min = "";
 var capacity_max = "";
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         handleFilters();
         filterModal.style.display = 'none';
     });
-    
+
     // set default date to today
     await getTodayClassrooms(dateInput);
 
@@ -53,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     confirmBookingButton.addEventListener('click', () => {
         const roomId = bookingModal.getAttribute('data-room-id');
+        const loading_item = document.getElementById('loading-item');
+        loading_item.style.display = 'flex';
+        document.getElementById('loading-hint').innerText = 'Booking...';
+
         handleBookings(roomId);
 
         bookingModal.style.display = 'none';
@@ -84,12 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     applyReportBtn.addEventListener('click', async function () {
-       handleReport();
-       reportModal.style.display = 'none';
+        handleReport();
+        reportModal.style.display = 'none';
     });
 
 })
-
 
 
 async function getTodayClassrooms(dateInput) {
@@ -126,8 +128,7 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
                 alert(`Error, (${Data.message})`);
                 return [];
         }
-    }
-    else {
+    } else {
         alert('Error, Network Error');
         return [];
     }
@@ -139,7 +140,7 @@ async function bookClassroom(room_id, date, time_period) {
     const userData = {
 
         'room_id': room_id,
-        'date':date,
+        'date': date,
         'time_period': time_period
 
     };
@@ -165,8 +166,7 @@ async function bookClassroom(room_id, date, time_period) {
                 alert(`Error, (${Data.message})`);
                 return false;
         }
-    }
-    else {
+    } else {
         alert('Error, Network Error');
         return false;
     }
@@ -201,7 +201,7 @@ async function getEquipmentType() {
     }
 }
 
-async function userReportIssue(issue){
+async function userReportIssue(issue) {
     const apiUrl = '/user/classroom/issue/report';
     const userData = {
         "issue": issue
@@ -225,8 +225,7 @@ async function userReportIssue(issue){
                 alert(`Error, (${Data.message})`);
                 return false;
         }
-    }
-    else {
+    } else {
         alert('Error, Network Error');
         return false;
     }
@@ -245,7 +244,7 @@ async function viewRooms() {
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '')? 'None' : classroom.constrain}</p>
+                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
                             ${classroom.issue ? '<p style="color: #d20000">Issue: ' + classroom.issue + '</p>' : ''}
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
@@ -280,11 +279,13 @@ async function handleFilters() {
     equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 
+    const loading_item = document.getElementById('loading-item');
+    loading_item.style.display = 'flex';
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
     const roomList = document.getElementById('room-list');
+    roomList.innerHTML = '';
 
     if (rooms.length > 0) {
-        roomList.innerHTML = '';
         rooms.forEach(classroom => {
             const room = document.createElement('div')
             room.className = 'room-card'
@@ -292,7 +293,7 @@ async function handleFilters() {
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '')? 'None' : classroom.constrain}</p>
+                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
                             ${classroom.issue ? '<p style="color: #d20000">Issue: ' + classroom.issue + '</p>' : ''}
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
@@ -315,6 +316,7 @@ async function handleFilters() {
 
         });
     }
+    loading_item.style.display = 'none';
 }
 
 async function handleBookings(room_id) {
@@ -323,6 +325,7 @@ async function handleBookings(room_id) {
     const result = await bookClassroom(room_id, date, time_period);
     if (result) {
         alert('Booked');
+        document.getElementById('loading-hint').innerText = 'Loading Rooms...';
         rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
         viewRooms();
     } else {
@@ -330,8 +333,8 @@ async function handleBookings(room_id) {
     }
 }
 
-async function handleReport(){
-    const issue = document.getElementById('issue').value;
+async function handleReport() {
+    var issue = document.getElementById('issue').value;
     const result = await userReportIssue(issue);
     if (result) {
         alert('Reported');

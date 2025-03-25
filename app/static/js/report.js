@@ -121,7 +121,7 @@ async function viewReport() {
                     borderWidth: 3,
                     borderColor: '#fff'
                 },
-                cellSize: [20, 20],
+                cellSize: 22,
                 range: ['2023-01-01', '2023-03-11'],
                 splitLine: true,
                 dayLabel: {

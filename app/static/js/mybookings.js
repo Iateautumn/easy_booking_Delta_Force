@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
     applyModifyBtn.addEventListener('click', async function() {
+        document.getElementById('loading-item').style.display = 'flex';
+        document.getElementById('loading-hint').innerText = 'Modifying booking...';
         handleModify(modifyModal.getAttribute('data-reservation-id'),);
         modifyModal.style.display = 'none';
     });
@@ -114,6 +116,8 @@ async function cancelBooking(reservationId) {
 }
 
 async function viewBookings() {
+    const loading_item = document.getElementById('loading-item');
+    loading_item.style.display = 'flex';
     const bookings = await getAllMyBookings();
     const bookingList = document.querySelector('.booking-list');
     const timeTable = [
@@ -186,6 +190,7 @@ async function viewBookings() {
             handleCancel(bookings[index].reservationId);
         });
     });
+    loading_item.style.display = 'none';
 }
 
 async function handleModify(reservationId) {
@@ -194,6 +199,7 @@ async function handleModify(reservationId) {
     const result = await modifyBooking(reservationId,date,time_period);
     if (result) {
         alert('Booking modification successful');
+        document.getElementById('loading-hint').innerText = 'Loading Reservations...';
         await viewBookings();
     } else {
         alert('Booking modification failed');
