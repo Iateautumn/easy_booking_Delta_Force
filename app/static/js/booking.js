@@ -323,13 +323,14 @@ async function handleBookings(room_id) {
     const date = document.getElementById('booking-date').value;
     const time_period = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
     const result = await bookClassroom(room_id, date, time_period);
+    document.getElementById('loading-hint').innerText = 'Loading Rooms...';
     if (result) {
         alert('Booked');
-        document.getElementById('loading-hint').innerText = 'Loading Rooms...';
         rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
         viewRooms();
     } else {
         alert('Booking failed');
+        document.getElementById('loading-item').style.display = 'none';
     }
 }
 

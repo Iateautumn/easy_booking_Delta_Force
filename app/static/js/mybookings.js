@@ -197,12 +197,13 @@ async function handleModify(reservationId) {
     const date = document.querySelector('#check-modify-date').textContent;
     const time_period = document.querySelector('input[name="time-period"]:checked').value;
     const result = await modifyBooking(reservationId,date,time_period);
+        document.getElementById('loading-hint').innerText = 'Loading Reservations...';
     if (result) {
         alert('Booking modification successful');
-        document.getElementById('loading-hint').innerText = 'Loading Reservations...';
         await viewBookings();
     } else {
         alert('Booking modification failed');
+        document.getElementById('loading-item').style.display = 'none';
     }
 }
 
