@@ -512,7 +512,7 @@ header h1 {
 }
 
 .content-section {
-    padding: 20px;
+    padding: 0 20px 20px 0;
 }
 
 .action-btn {
@@ -535,6 +535,10 @@ header h1 {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booking-card h1, .room-card h1, .approval-card h1, .issue-card h1, .report-card h1 {
+    margin: 0 0 10px;
 }
 
 .booking-card h3, .room-card h3, .approval-card h3, .issue-card h3, .report-card h3 {

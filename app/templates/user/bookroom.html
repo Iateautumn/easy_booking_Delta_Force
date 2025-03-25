@@ -40,18 +40,20 @@
                 <h1 id="page-title">Book Room</h1>
             </header>
 
+            <div class="search-bar">
+                <button class="filter-btn" id="filter-btn">Filter</button>
+                <button class="filter-btn" id="report-btn">Report Issue</button>
+                <label id="filter-date" class="checking-date-label"></label>
+            </div>
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Rooms...</p>
+            </div>
+            
             <section id="book-room-section" class="content-section">
-                <div class="search-bar">
-                    <button class="filter-btn" id="filter-btn">Filter</button>
-                    <button class="filter-btn" id="report-btn">Report Issue</button>
-                    <label id="filter-date" class="checking-date-label"></label>
-                </div>
-                <div id="loading-item">
-                    <svg class="loading-box" viewBox="25 25 50 50">
-                        <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
-                    </svg>
-                    <p id="loading-hint">Loading Rooms...</p>
-                </div>
+                
                 <div class="room-list" id="room-list">
 
                 </div>

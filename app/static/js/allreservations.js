@@ -86,11 +86,11 @@ async function viewReservations() {
                 <h1>Reservation ID: ${reservation.reservationId}</h1>
                 <h3>Room ${reservation.roomName}</h3>
                 <h4>User: ${reservation.userName}</h4>
-                <p>User Status: ${reservation.status}</p>
+                <p>Reservation Status: ${reservation.status}</p>
                 <p>Date: ${reservation.date}</p>
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
-                <p>Equipment: ${reservation.equipment}</p>
+                <p>Equipment: ${(!reservation.equipment || reservation.equipment.length == 0) ? 'None' : reservation.equipment}</p>
                 <p>Constrain: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
                 ${reservation.issue ? '<p style="color: #d20000">Issue: ' + reservation.issue + '</p>' : ''}
                 <button class="action-btn" id="cancel-reservation">Cancel</button>

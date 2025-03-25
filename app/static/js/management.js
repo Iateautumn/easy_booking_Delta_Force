@@ -121,7 +121,7 @@ async function viewAllRooms() {
             roomCard.innerHTML = `
                 <h3>${room.classroomName}</h3>
                 <p>Capacity: ${room.capacity}</p>
-                <p>Equipment: ${equipment_display}</p>
+                <p>Equipment: ${!equipment_display ? 'None' : equipment_display}</p>
                 <p>Constrain: ${(!room.constrain || room.constrain == '') ? 'None': room.constrain}</p>
                 ${room.issue ? '<p style="color: #d20000">Issue: ' + room.issue + '</p>' : ''}
                 <button class="action-btn" id="modify-room" equipment-id="${equipment_id}">Modify</button>
