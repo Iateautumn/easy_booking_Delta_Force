@@ -93,6 +93,8 @@ async function rejectBookingRequest(reservation_id) {
 async function viewApprovals() {
     const approvals = await getAllBookingRequests();
     const approvalList = document.querySelector('.approval-list');
+    const loading_item = document.getElementById('loading-item');
+
     const timeTable = [
         '8:00~8:45',
         '8:55~9:40',
@@ -135,13 +137,23 @@ async function viewApprovals() {
     approveBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
             const reservation_id = approvals[index].reservationId;
+
+            approvalList.innerHTML = '';
+
+            loading_item.style.display = 'flex';
+            document.getElementById('loading-hint').innerText = 'Approving...';
+
             const result = await approveBookingRequest(reservation_id);
+            
+            document.getElementById('loading-hint').innerText = 'Loading Approvals...';
+            
             if (result) {
                 alert('Approved');
                 viewApprovals();
             }
             else {
                 alert('Error, Network Error');
+                viewApprovals();
             }
         });
     });
@@ -149,15 +161,27 @@ async function viewApprovals() {
     rejectBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
             const reservation_id = approvals[index].reservationId;
+
+            approvalList.innerHTML = '';
+
+            loading_item.style.display = 'flex';
+            document.getElementById('loading-hint').innerText = 'Rejecting...';
+
             const result = await rejectBookingRequest(reservation_id);
+            
+            document.getElementById('loading-hint').innerText = 'Loading Approvals...';
+            
             if (result) {
                 alert('Rejected');
                 viewApprovals();
             }
             else {
                 alert('Error, Network Error');
+                viewApprovals();
             }
         });
     });
+
+    loading_item.style.display = 'none';
 
 }

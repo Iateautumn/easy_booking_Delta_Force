@@ -100,22 +100,33 @@ async function viewReservations() {
     }
 
     const cancelBtns = document.querySelectorAll('#cancel-reservation');
-    console.log(cancelBtns);
-    
+    const loading_item = document.getElementById('loading-item');
 
     cancelBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
-            console.log("111");
+
+            reservationList.innerHTML = '';
+
+            loading_item.style.display = 'flex';
+            document.getElementById('loading-hint').innerText = 'Canceling...';
+
             const reservation_id = reservations[index].reservationId;
             const result = await cancelReservation(reservation_id);
+
+            document.getElementById('loading-hint').innerText = 'Loading Reservations...';
+
             if (result) {
                 alert('Cancelled');
                 viewReservations();
             }
             else {
                 alert('Error, Network Error');
+                viewReservations();
             }
         });
     });
+
+    
+    loading_item.style.display = 'none';
 
 }

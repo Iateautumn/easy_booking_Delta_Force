@@ -70,11 +70,19 @@
                 <h1 id="page-title">Room Management</h1>
             </header>
 
+            <div class="function-bar">
+                <button class="action-btn" id="add-room-btn">Add Room</button>
+            </div>
+
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Rooms...</p>
+            </div>
+
             <section id="room-management-section" class="content-section">
                 <div class="room-management">
-                    <div class="function-bar">
-                        <button class="action-btn" id="add-room-btn">Add Room</button>
-                    </div>
                     <div class="room-list">
                     </div>
                 </div>

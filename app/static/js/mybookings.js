@@ -1,27 +1,25 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const modifyModal = document.querySelector('#modify-modal');
     const applyModifyBtn = document.querySelector('#apply-modify');
     const exportAllBtn = document.querySelector('#export-all-btn');
     const exportSelectedBtn = document.querySelector('#export-selected-btn');
 
-    modifyModal.addEventListener('click', function(event) {
+    modifyModal.addEventListener('click', function (event) {
         if (event.target === modifyModal) {
             modifyModal.style.display = 'none';
         }
     });
 
-    applyModifyBtn.addEventListener('click', async function() {
-        document.getElementById('loading-item').style.display = 'flex';
-        document.getElementById('loading-hint').innerText = 'Modifying booking...';
+    applyModifyBtn.addEventListener('click', async function () {
         handleModify(modifyModal.getAttribute('data-reservation-id'),);
         modifyModal.style.display = 'none';
     });
 
-    exportAllBtn.addEventListener('click', async function() {
+    exportAllBtn.addEventListener('click', async function () {
         await getAllReservationAsCalendar();
     });
 
-    exportSelectedBtn.addEventListener('click', async function() {
+    exportSelectedBtn.addEventListener('click', async function () {
         await getSelectedReservationAsCalendar();
     });
 
@@ -51,7 +49,7 @@ async function getAllMyBookings() {
     }
 }
 
-async function modifyBooking(reservationId,date,time_period) {
+async function modifyBooking(reservationId, date, time_period) {
     const apiUrl = '/user/reservation/modify';
     const userData = {
         'reservation_id': reservationId,
@@ -131,9 +129,9 @@ async function viewBookings() {
         '16:55~17:40',
         '19:00~19:45',
         '19:55~20:40'
-      ];
+    ];
 
-    if(bookings.length > 0) {
+    if (bookings.length > 0) {
         bookingList.innerHTML = '';
         bookings.forEach(booking => {
             const bookingCard = document.createElement('div')
@@ -151,7 +149,7 @@ async function viewBookings() {
                             <p>Time: ${timeTable[booking.timePeriod]}</p>
                             <p>Capacity: ${booking.capacity}</p>
                             <p>Equipment: ${booking.equipment}</p>
-                            <p>Constrain: ${!booking.constrain || booking.constrain == '' ? 'None': booking.constrain}</p>
+                            <p>Constrain: ${!booking.constrain || booking.constrain == '' ? 'None' : booking.constrain}</p>
                             ${booking.issue ? '<p style="color: #d20000">Issue: ' + booking.issue + '</p>' : ''}
                             <button class="action-btn" id="modify-booking">Modify</button>
                             <button class="action-btn" id="cancel-booking">Cancel</button>
@@ -196,24 +194,46 @@ async function viewBookings() {
 async function handleModify(reservationId) {
     const date = document.querySelector('#check-modify-date').textContent;
     const time_period = document.querySelector('input[name="time-period"]:checked').value;
-    const result = await modifyBooking(reservationId,date,time_period);
-        document.getElementById('loading-hint').innerText = 'Loading Reservations...';
+    
+    const loading_item = document.getElementById('loading-item');
+    const bookingList = document.querySelector('.booking-list');
+    bookingList.innerHTML = '';
+
+    loading_item.style.display = 'flex';
+    document.getElementById('loading-hint').innerText = 'Modifying...';
+
+    const result = await modifyBooking(reservationId, date, time_period);
+
+    document.getElementById('loading-hint').innerText = 'Loading Reservations...';
     if (result) {
         alert('Booking modification successful');
         await viewBookings();
     } else {
         alert('Booking modification failed');
         document.getElementById('loading-item').style.display = 'none';
+        await viewBookings();
     }
 }
 
 async function handleCancel(reservationId) {
+
+    const loading_item = document.getElementById('loading-item');
+    const bookingList = document.querySelector('.booking-list');
+    bookingList.innerHTML = '';
+
+    loading_item.style.display = 'flex';
+    document.getElementById('loading-hint').innerText = 'Canceling...';
+
     const result = await cancelBooking(reservationId);
+
+    document.getElementById('loading-hint').innerText = 'Loading Reservations...';
+
     if (result) {
         alert('Booking cancellation successful');
         viewBookings();
     } else {
         alert('Booking cancellation failed');
+        viewBookings();
     }
 }
 

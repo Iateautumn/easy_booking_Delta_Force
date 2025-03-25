@@ -158,4 +158,6 @@ async function viewReport() {
             reportList.appendChild(reportItem);
         });
     }
+    const loading_item = document.getElementById('loading-item');
+    loading_item.style.display = 'none';
 }

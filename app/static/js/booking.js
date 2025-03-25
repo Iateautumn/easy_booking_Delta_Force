@@ -279,11 +279,11 @@ async function handleFilters() {
     equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 
+    const roomList = document.getElementById('room-list');
+    roomList.innerHTML = '';
     const loading_item = document.getElementById('loading-item');
     loading_item.style.display = 'flex';
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
-    const roomList = document.getElementById('room-list');
-    roomList.innerHTML = '';
 
     if (rooms.length > 0) {
         rooms.forEach(classroom => {
@@ -323,6 +323,9 @@ async function handleBookings(room_id) {
     const date = document.getElementById('booking-date').value;
     const time_period = Array.from(document.querySelectorAll('input[name="time-period"]:checked')).map(checkbox => parseInt(checkbox.value));
     const result = await bookClassroom(room_id, date, time_period);
+
+    const roomList = document.getElementById('room-list');
+    roomList.innerHTML = '';
     document.getElementById('loading-hint').innerText = 'Loading Rooms...';
     if (result) {
         alert('Booked');
@@ -331,6 +334,7 @@ async function handleBookings(room_id) {
     } else {
         alert('Booking failed');
         document.getElementById('loading-item').style.display = 'none';
+        viewRooms();
     }
 }
 
@@ -339,7 +343,7 @@ async function handleReport() {
     const result = await userReportIssue(issue);
     if (result) {
         alert('Reported');
-        issue = "";
+        document.getElementById('issue').value = "";
     } else {
         alert('Error, Network Error');
     }
