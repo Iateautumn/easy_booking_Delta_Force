@@ -267,8 +267,8 @@ def delete_issue(classroomId):
     db.session.commit()
     return classroom
 
-def get_classroom_by_issue(issue=None):
-    if issue is None or issue == "":
+def get_classroom_by_issue(issue=False):
+    if not issue:
         classroom = Classroom.query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False).all()
     else:
         classroom = Classroom.query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False).all()
