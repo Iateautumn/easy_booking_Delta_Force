@@ -70,6 +70,13 @@
                 <h1 id="page-title">Approval Request</h1>
             </header>
 
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Approvals...</p>
+            </div>
+
             <section id="approval-request-section" class="content-section">
                 <div class="approval-list">
                 </div>
@@ -128,13 +135,20 @@
             <div class="filter-group">
                 <label class="filter-label">Date/Time:</label>
                 <div class="days">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0">
+                        Mon</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1">
+                        Tue</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2">
+                        Wed</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3">
+                        Thu</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4">
+                        Fri</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5">
+                        Sat</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6">
+                        Sun</label>
                 </div>
             </div>
             <div class="filter-group">
@@ -144,7 +158,7 @@
             <button class="apply-btn" id="apply-filter">Apply Filters</button>
         </div>
     </div>
-    
+
     <script src="../../static/js/approval.js"></script>
 </body>
 

@@ -29,15 +29,26 @@ document.addEventListener('DOMContentLoaded', async function () {
         const constrain = document.querySelector('#input-add-room-constrain').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
+        const roomList = document.querySelector('.room-list');
+        const loading_item = document.getElementById('loading-item');
+        roomList.innerHTML = '';
+
+        addRoomModal.style.display = 'none';
+
+        loading_item.style.display = 'flex';
+        document.getElementById('loading-hint').innerText = 'Adding...';
+
         const result = await adminAddRoom(classroom_name, capacity, equipment, new_equipment, constrain);
+
+        document.getElementById('loading-hint').innerText = 'Loading Rooms...';
 
         if (result) {
             alert('Add successful');
             viewAllRooms();
         } else {
             alert('Add failed');
+            viewAllRooms();
         }
-        addRoomModal.style.display = 'none';
     });
 
     applyModifyBtn.addEventListener('click', async function () {
@@ -50,15 +61,27 @@ document.addEventListener('DOMContentLoaded', async function () {
         const issue = document.querySelector('#input-modify-room-issue').value;
         const new_equipment = new_equipment_str.split(',').map(equipment => equipment.trim());
 
+
+        const roomList = document.querySelector('.room-list');
+        const loading_item = document.getElementById('loading-item');
+        roomList.innerHTML = '';
+
+        modifyRoomModal.style.display = 'none';
+
+        loading_item.style.display = 'flex';
+        document.getElementById('loading-hint').innerText = 'Modifying...';
+
         const result = await adminModifyRoomInfo(classroom_id, classroom_name, capacity, equipment, new_equipment, constrain, issue);
+
+        document.getElementById('loading-hint').innerText = 'Loading Rooms...';
 
         if (result) {
             alert('Modify successful');
             viewAllRooms();
         } else {
             alert('Modify failed');
+            viewAllRooms();
         }
-        modifyRoomModal.style.display = 'none';
     });
 
     addRoomModal.addEventListener('click', function (event) {
@@ -80,6 +103,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 async function viewAllRooms() {
     const rooms = await adminGetAllRoomsInfo();
     const roomList = document.querySelector('.room-list');
+    const loading_item = document.getElementById('loading-item');
+
 
     if (rooms.length > 0) {
         roomList.innerHTML = '';
@@ -96,7 +121,7 @@ async function viewAllRooms() {
             roomCard.innerHTML = `
                 <h3>${room.classroomName}</h3>
                 <p>Capacity: ${room.capacity}</p>
-                <p>Equipment: ${equipment_display}</p>
+                <p>Equipment: ${!equipment_display ? 'None' : equipment_display}</p>
                 <p>Constrain: ${(!room.constrain || room.constrain == '') ? 'None': room.constrain}</p>
                 ${room.issue ? '<p style="color: #d20000">Issue: ' + room.issue + '</p>' : ''}
                 <button class="action-btn" id="modify-room" equipment-id="${equipment_id}">Modify</button>
@@ -117,6 +142,7 @@ async function viewAllRooms() {
                 document.querySelector('#input-modify-room-constrain').value = room.constrain;
                 document.querySelector('#modify-room-modal').style.display = 'flex';
                 document.querySelector('#modify-room-modal').setAttribute('room-id', room.classroomId);
+                document.querySelector('#input-modify-room-issue').value = room.issue;
 
                 const equipments = await getEquipmentType();
                 const equipments_container = document.getElementById('modify-room-equipment')
@@ -141,17 +167,28 @@ async function viewAllRooms() {
         deleteRoomBtns.forEach((btn, index) => {
             btn.addEventListener('click', async () => {
                 const room = rooms[index];
+
+                roomList.innerHTML = '';
+
+                loading_item.style.display = 'flex';
+                document.getElementById('loading-hint').innerText = 'Deleting...';
+
                 const result = await adminDeleteRoom(room.classroomId);
+
+                document.getElementById('loading-hint').innerText = 'Loading Rooms...';
 
                 if (result) {
                     alert('Delete successful');
                     viewAllRooms();
                 } else {
                     alert('Delete failed');
+                    viewAllRooms();
                 }
             });
         });
     }
+
+    loading_item.style.display = 'none';
 }
 
 async function adminGetAllRoomsInfo() {
