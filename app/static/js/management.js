@@ -97,7 +97,7 @@ async function viewAllRooms() {
                 <h3>${room.classroomName}</h3>
                 <p>Capacity: ${room.capacity}</p>
                 <p>Equipment: ${equipment_display}</p>
-                <p>Constrain: ${(!room.constrain || room.constrain == '') ? 'None': room.constrain}</p>
+                <p>Constraint: ${(!room.constrain || room.constrain == '') ? 'None': room.constrain}</p>
                 ${room.issue ? '<p style="color: #d20000">Issue: ' + room.issue + '</p>' : ''}
                 <button class="action-btn" id="modify-room" equipment-id="${equipment_id}">Modify</button>
                 <button class="action-btn" id="delete-room">Delete</button>

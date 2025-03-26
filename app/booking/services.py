@@ -58,7 +58,7 @@ async def reservation_email_async(reservation, msg):
     to_addr = user.email
     my_title = "Reservation Success"
     my_msg = f"""
-Hello, {user.name}! f{msg}
+Hello, {user.name}! {msg}
 Reservation Details:
 Classroom ID: {reservation.classroomId}
 Start Time: {reservation.startTime}
