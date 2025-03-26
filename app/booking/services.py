@@ -7,7 +7,7 @@ from app.booking.models import add_reservation, get_reservation_by_time, Reserva
 from app.utils.datetime_utils import time_slot_map, add_time, slot_time_map, get_current_date
 from app.extensions import db
 from app.classroom.models import get_classroom_by_id
-from app.auth.models import get_user_by_id
+from app.auth.models import get_user_by_id, UserStatus
 from app.auth.services import send_email_sync
 import asyncio
 import smtplib
@@ -24,6 +24,7 @@ def get_certain_reservation(classrooom_id, start_time, end_time):
 async def new_booking(user_id, classroom_id, time_period, date):
     if not date:
         raise BusinessError("date is required", 400)
+    user = get_user_by_id(user_id)
     for i in time_period:
         start_time = add_time(date, time_slot_map[i]['start'])
         end_time = add_time(date, time_slot_map[i]['end'])
@@ -36,7 +37,7 @@ async def new_booking(user_id, classroom_id, time_period, date):
             raise BusinessError("a reservation is already existed", 400)
         try:
             classroom = get_classroom_by_id(classroom_id)
-            if classroom.isRestricted:
+            if classroom.isRestricted and user.status != UserStatus.Admin:
                 status = ReservationStatus.Pending
             else:
                 status = ReservationStatus.Reserved
