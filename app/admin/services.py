@@ -44,7 +44,8 @@ def get_reservation_requests():
                 "username": user.name,
                 "userstatus": user.status.value,
                 "date": get_date_time(str(reservation.startTime))[0],
-                "timePeriod": get_time_slot(str(reservation.startTime))
+                "timePeriod": get_time_slot(str(reservation.startTime)),
+                "issue": classroom.issue,
             }
             reservation_info_list.append(reservation_data)
         for reservation in reservations:

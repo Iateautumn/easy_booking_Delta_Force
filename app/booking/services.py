@@ -28,6 +28,10 @@ async def new_booking(user_id, classroom_id, time_period, date):
         start_time = add_time(date, time_slot_map[i]['start'])
         end_time = add_time(date, time_slot_map[i]['end'])
         reservation = get_certain_reservation(int(classroom_id), start_time, end_time)
+        
+        if end_time < datetime.now():
+            raise BusinessError("cannot reserve past time", 400)
+        
         if reservation:
             raise BusinessError("a reservation is already existed", 400)
         try:
