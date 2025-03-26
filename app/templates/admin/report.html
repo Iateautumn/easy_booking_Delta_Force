@@ -71,12 +71,20 @@
                 <button class="menu-btn" id="menu-btn">☰</button>
                 <h1 id="page-title">Report</h1>
             </header>
-            <section id="report-section" class="content-section">
-                <div class="function-bar">
-                    <button class="action-btn" id="export-report-btn">Export as PDF</button>
-                </div>
-                <div class="report-list">
 
+            <div class="function-bar">
+                <button class="export-btn" id="export-report-btn">Export as PDF</button>
+            </div>
+
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Reports...</p>
+            </div>
+
+            <section id="report-section" class="content-section">
+                <div class="report-list">
                 </div>
             </section>
 

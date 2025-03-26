@@ -86,12 +86,12 @@ async function viewReservations() {
                 <h1>Reservation ID: ${reservation.reservationId}</h1>
                 <h3>Room ${reservation.roomName}</h3>
                 <h4>User: ${reservation.userName}</h4>
-                <p>User Status: ${reservation.status}</p>
+                <p>Reservation Status: ${reservation.status}</p>
                 <p>Date: ${reservation.date}</p>
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
-                <p>Equipment: ${reservation.equipment}</p>
-                <p>Constraint: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
+                <p>Equipment: ${(!reservation.equipment || reservation.equipment.length == 0) ? 'None' : reservation.equipment}</p>
+                <p>Constrain: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
                 ${reservation.issue ? '<p style="color: #d20000">Issue: ' + reservation.issue + '</p>' : ''}
                 <button class="action-btn" id="cancel-reservation">Cancel</button>
             `;
@@ -100,22 +100,33 @@ async function viewReservations() {
     }
 
     const cancelBtns = document.querySelectorAll('#cancel-reservation');
-    console.log(cancelBtns);
-    
+    const loading_item = document.getElementById('loading-item');
 
     cancelBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
-            console.log("111");
+
+            reservationList.innerHTML = '';
+
+            loading_item.style.display = 'flex';
+            document.getElementById('loading-hint').innerText = 'Canceling...';
+
             const reservation_id = reservations[index].reservationId;
             const result = await cancelReservation(reservation_id);
+
+            document.getElementById('loading-hint').innerText = 'Loading Reservations...';
+
             if (result) {
                 alert('Cancelled');
                 viewReservations();
             }
             else {
                 alert('Error, Network Error');
+                viewReservations();
             }
         });
     });
+
+    
+    loading_item.style.display = 'none';
 
 }

@@ -115,6 +115,12 @@ def get_users_by_filter(user_id, status = None, nameHash = None, emailHash = Non
     quary = quary.filter(isDeleted=False)
     return quary.all()
 
+def get_user_status_by_id(user_id):
+    user = get_user_by_id(user_id)
+    if user is None:
+        return None
+    return user.status
+
 class IssueReport(db.Model):
     __tablename__ = 'issuereport'
     reportId = db.Column(db.Integer, primary_key=True, autoincrement=True)
