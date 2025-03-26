@@ -10,7 +10,7 @@ from datetime import datetime
 def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date()):
 
     query = Classroom.query
-
+    query = query.filter(Classroom.isDeleted == False)
     if capacity_range[0]:
         query = query.filter(Classroom.capacity >= capacity_range[0])
     if capacity_range[1]:
