@@ -228,7 +228,7 @@ def update_classroom(classroomId = None, classroomName = None, capacity = None, 
     db.session.commit()
     return classroom
 
-def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None):
+def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None, issue=None):
     query = Classroom.query  
     
     if classroomName is not None:
@@ -237,6 +237,11 @@ def get_classroom_by_filter(classroomName=None, capacity=None, isRestricted=None
         query = query.filter_by(capacity=capacity)  
     if isRestricted is not None:
         query = query.filter_by(isRestricted=isRestricted)  
+    if issue is not None:
+        if not issue:
+            query = query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False)
+        else:
+            query = query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False)
     query = query.filter_by(isDeleted=False)  
     list_classroom = query.all()  
     return list_classroom
@@ -266,6 +271,15 @@ def delete_issue(classroomId):
     classroom.updatedAt = datetime.now()
     db.session.commit()
     return classroom
+
+def get_classroom_by_issue(issue=False):
+    if not issue:
+        classroom = Classroom.query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False).all()
+    else:
+        classroom = Classroom.query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False).all()
+    return classroom
+
+
 
 class ClassEquipment(db.Model):
     __tablename__ = 'classequipment'

@@ -7,7 +7,7 @@ from app.booking.models import get_reservation_by_classroom_id, ReservationStatu
 from app.utils.datetime_utils import time_slot_map, slot_time_map, is_same_date, get_time_slot, get_current_date
 from datetime import datetime
 
-def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date()):
+def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date(), issue=None):
 
     query = Classroom.query
     query = query.filter(Classroom.isDeleted == False)
@@ -22,6 +22,11 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
         query = query.join(ClassEquipment).filter(and_(*conditions))
     if not date:
         date = get_current_date()
+    if issue is not None:
+        if not issue:
+            query = query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False)
+        else:
+            query = query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False)
     classrooms = query.all()
     result_classrooms = []
     for classroom in classrooms:
