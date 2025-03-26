@@ -100,11 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
 async function getTodayClassrooms(dateInput) {
     const date = new Date().toISOString().split('T')[0];
     dateInput.value = date;
-    rooms = await getFilteredClassrooms("", "", date, []);
+    rooms = await getFilteredClassrooms("", "", date, [], 2);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
 }
 
-async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment) {
+async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment, issue) {
     const apiUrl = '/classroom/filter';
     const userData = {
         "capacity_min": capacity_min,
@@ -112,6 +112,10 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
         "date": date,
         "equipment": equipment
     };
+
+    if (issue != 2){
+        userData.issue = issue == 1 ? true : false;
+    }
 
     const response = await fetch(apiUrl, {
         method: 'POST',
@@ -284,12 +288,13 @@ async function handleFilters() {
     date = document.getElementById('booking-date').value;
     equipment = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(checkbox => checkbox.value);
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
+    issue = document.getElementById('issue-select').value;
 
+    const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment,issue);
     const roomList = document.getElementById('room-list');
     roomList.innerHTML = '';
     const loading_item = document.getElementById('loading-item');
     loading_item.style.display = 'flex';
-    const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
 
     if (rooms.length > 0) {
         rooms.forEach(classroom => {

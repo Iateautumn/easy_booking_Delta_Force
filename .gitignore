@@ -4,3 +4,4 @@ __pycache__/
 E-R diagram.png
 config.json
 update_timetable.py
+encryption_key.json
