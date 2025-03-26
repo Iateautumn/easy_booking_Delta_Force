@@ -92,7 +92,7 @@ def modify_reservation(reservationId, userId, date, timePeriod):
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     try:
-        update_reservation(reservationId, userId, reservation.classroomId, startTime, endTime, reservation.status)
+        update_reservation(reservationId, userId, reservation.classroomId, startTime, endTime, ReservationStatus.Pending)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
