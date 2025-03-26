@@ -23,6 +23,22 @@ body {
     justify-content: space-between;
 }
 
+.input-box input,
+.input-box select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #ffffff;
+    outline: none;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+
+
 .sidebar.hidden {
     transform: translateX(-100%);
 }
