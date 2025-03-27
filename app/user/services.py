@@ -77,9 +77,40 @@ def own_reservations(user_id):
     result = [reservation_to_dict(reservation) for reservation in reservations]
     return result
 
+def get_available_time_periods(reservationId):
+    try:
+        reservation = get_reservation_by_id(reservationId)
+    except BusinessError as e:
+        raise BusinessError(str(e), e.code)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+    
+    try:
+        reservations = get_reservation_by_filter(
+            classroomId=reservation.classroomId,
+            startTime=reservation.startTime,
+            endTime=reservation.endTime
+        )
+    except BusinessError as e:
+        raise BusinessError(str(e), e.code)
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+    
+    current_time_slot = get_time_slot(datetime.now().strftime("%H:%M:%S"))
+    time_periods = [i for i in range(1, 9) if i > current_time_slot] 
+
+    for res in reservations:
+        time_slot = get_time_slot(str(res.startTime))
+        if time_slot in time_periods:
+            time_periods.remove(time_slot)
+
+    return time_periods
+
 def modify_reservation(reservationId, userId, date, timePeriod):
     startTime = add_time(date, time_slot_map[int(timePeriod)]['start'])
     endTime = add_time(date, time_slot_map[int(timePeriod)]['end'])
+    
+
     if endTime < datetime.now():
         raise BusinessError("cannot reserve past time", 400)
     
