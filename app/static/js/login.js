@@ -74,6 +74,9 @@ async function loginUser(email, password) {
 
 async function sendRegistrationCode() {
     const email = document.getElementById('registration-email').value;
+    document.getElementById('registration-code-box').style.display = 'block';
+    document.getElementById('send-registration-code-btn').style.display = 'none';
+    document.getElementById('register-btn').style.display = 'block';
     const response = await fetch('/email/registration-code/send', {
         method: 'POST',
         headers: {
@@ -83,13 +86,13 @@ async function sendRegistrationCode() {
     });
 
     const data = await response.json();
-    if (data.success) {
-        alert('Verification code sent to your email.');
-        document.getElementById('registration-code-box').style.display = 'block';
-        document.getElementById('send-registration-code-btn').style.display = 'none';
-        document.getElementById('register-btn').style.display = 'block';
-    } else {
-        alert(data.message);
+    if (data) {
+        switch (data.code) {
+            case 200:
+                alert('Verification code sent to your email.');
+            default:
+                alert(data.message);
+        }
     }
 }
 
