@@ -91,8 +91,9 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
             starttime = time_slot_map[i]['start']
             starttime = datetime.strptime(starttime, '%H:%M:%S')
             require_date = datetime.strptime(date, '%Y-%m-%d')
-            if starttime.time() < datetime.now().time() and require_date.date() <= datetime.now().date():
-
+            if require_date.date() < datetime.now().date():
+                continue
+            if starttime.time() < datetime.now().time() and require_date.date() == datetime.now().date():
                 continue
             if i not in b:
                 valid_time_slots.append(i)
