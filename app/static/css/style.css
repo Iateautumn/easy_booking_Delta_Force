@@ -83,6 +83,20 @@ body {
     margin-right: 10px;
 }
 
+.profile-container{
+    margin-top: auto;
+}
+
+.profile {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
 .logout {
     color: white;
     text-decoration: none;
@@ -93,7 +107,7 @@ body {
     margin-top: auto;
 }
 
-.logout .icon {
+.logout .icon, .profile .icon {
     display: inline-block;
     width: 30px;
     margin-right: 10px;
