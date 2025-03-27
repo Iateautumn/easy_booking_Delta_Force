@@ -25,7 +25,7 @@ def login():
         try:
             user = my_login_user(username, password)
         except BusinessError as e:
-            return error_response(str(e), e.code)
+            return error_response(e.message, e.code)
 
         login_user(user)
         next_page = request.args.get('next')
@@ -50,7 +50,7 @@ def register():
             register_user(status, username, email, password)
             return success_response("register successfully")
         except BusinessError as e:
-            return error_response(str(e),e.code)
+            return error_response(e.message, e.code)
     return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
@@ -74,7 +74,7 @@ def code_login():
         next_page = request.args.get('next')
         return redirect(url_for('user.bookroom')) if user.status.value != "Admin" else redirect(url_for('admin.bookroom'))
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @email_auth_bp.route('/code/send', methods=['POST'])
 def send_email_code():
@@ -86,7 +86,7 @@ def send_email_code():
         asyncio.run(send_email_async(**data))
         return success_response("send email successfully")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @email_auth_bp.route('/registration-code/send', methods=['POST'])
 def signup_send_email_code():
@@ -98,7 +98,7 @@ def signup_send_email_code():
         asyncio.run(send_email_async(**data, type="register"))
         return success_response("send email successfully")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
     
 @email_auth_bp.route('/registration-code/register', methods=['POST'])
 def code_signup():
@@ -112,4 +112,4 @@ def code_signup():
         signup_verify_code(**data)
         return success_response("register successfully")
     except BusinessError as e:
-        return error_response(str(e),e.code)
+        return error_response(e.message, e.code)

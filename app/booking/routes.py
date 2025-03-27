@@ -39,7 +39,7 @@ def booking_room():
         asyncio.run(new_booking(user_id, room_id, time_period, date))
         return success_response("success reservation")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 
 

@@ -81,7 +81,7 @@ def get_available_time_periods(reservation_id):
     try:
         reservation = get_reservation_by_id(reservation_id)
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     
@@ -95,7 +95,7 @@ def get_available_time_periods(reservation_id):
         )
         reservations = [res for res in reservations if res.status != ReservationStatus.Cancelled]
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     
@@ -126,7 +126,7 @@ def modify_reservation(reservationId, userId, date, timePeriod):
         if userId != reservation.userId:
             raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     try:
@@ -141,7 +141,7 @@ def cancel_my_reservation(userId, reservationId):
         if userId != reservation.userId:
             raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
