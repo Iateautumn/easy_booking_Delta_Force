@@ -251,7 +251,7 @@ async function viewRooms() {
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${(!classroom.equipments || classroom.equipments.length == 0) ? 'None' : classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
+                            <p>Constraint: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
                             ${classroom.issue ? '<p style="color: #d20000">Issue: ' + classroom.issue + '</p>' : ''}
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
@@ -305,7 +305,7 @@ async function handleFilters() {
                             <h3>${classroom.classroomName}</h3>
                             <p>Capacity: ${classroom.capacity}</p>
                             <p>Equipment: ${(!classroom.equipments || classroom.equipments.length == 0) ? 'None' : classroom.equipments.map(equipment => equipment.equipmentName).join(', ')}</p>
-                            <p>Constrain: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
+                            <p>Constraint: ${(!classroom.constrain || classroom.constrain == '') ? 'None' : classroom.constrain}</p>
                             ${classroom.issue ? '<p style="color: #d20000">Issue: ' + classroom.issue + '</p>' : ''}
                             <button class="action-btn book-now-btn" data-room-id="${classroom.classroomId}" data-room-available-time="${classroom.timePeriod}">Book Now</button>
                     `;
