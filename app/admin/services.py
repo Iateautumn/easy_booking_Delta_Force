@@ -230,7 +230,10 @@ def admin_reservation_all():
                 "issue": classroom.issue
             }
             reservation_info_list.append(reservation_data)
+        current_time = datetime.now()
         for reservation in reservations:
+            if reservation.startTime < current_time:
+                continue
             get_dict(reservation)
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)

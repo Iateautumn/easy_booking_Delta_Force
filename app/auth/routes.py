@@ -87,3 +87,13 @@ def send_email_code():
         return success_response("send email successfully")
     except BusinessError as e:
         return error_response(str(e), e.code)
+
+@auth_bp.route('/profile')
+def profile():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return success_response([{
+        "username": current_user.name,
+        "status": current_user.status.value,
+        "email": current_user.email
+    }])
