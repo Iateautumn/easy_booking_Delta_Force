@@ -39,6 +39,8 @@ class Reservation(db.Model):
 
     # user = db.relationship('User', back_populates='classrooms')
     # classroom = db.relationship('Classroom', back_populates='users')
+    user = db.relationship('User', backref=db.backref('reservations', lazy=True))
+    classroom = db.relationship('Classroom', backref=db.backref('reservations', lazy=True))
 
 # list all reservations
 def get_all_reservations():
