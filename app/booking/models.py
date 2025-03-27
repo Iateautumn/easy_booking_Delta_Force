@@ -27,7 +27,7 @@ class Reservation(db.Model):
     updatedAt = db.Column(db.DateTime)
     isDeleted = db.Column(db.Boolean, default=False)
 
-    def __init__(self, userId, classroomId, startTime, endTime, status):
+    def __init__(self, userId, classroomId, startTime, endTime,status):
         self.userId = userId
         self.classroomId = classroomId
         self.startTime = startTime
@@ -39,6 +39,8 @@ class Reservation(db.Model):
 
     # user = db.relationship('User', back_populates='classrooms')
     # classroom = db.relationship('Classroom', back_populates='users')
+    user = db.relationship('User', backref=db.backref('reservations', lazy=True))
+    classroom = db.relationship('Classroom', backref=db.backref('reservations', lazy=True))
 
 # list all reservations
 def get_all_reservations():
@@ -47,7 +49,7 @@ def get_all_reservations():
 
 # add a new reservation
 def add_reservation(userId, classroomId, startTime, endTime, status):
-    new_reservation = Reservation(userId, classroomId, startTime, endTime, status)
+    new_reservation = Reservation(userId, classroomId, startTime, endTime,status)
     db.session.add(new_reservation)
     db.session.commit()
     return new_reservation
