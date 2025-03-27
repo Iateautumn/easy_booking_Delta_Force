@@ -7,7 +7,7 @@ import tempfile
 from datetime import datetime, timedelta
 from app.booking.models import ReservationStatus
 from app.auth.models import get_issue_report_by_filter, get_issue_report_by_id, update_issue_report, add_issue_report
-
+from app.auth.models import get_user_by_id, UserStatus
 def to_calendar(user_id, reservation_ids=[]):
     try:
         if reservation_ids:
@@ -130,7 +130,14 @@ def modify_reservation(reservationId, userId, date, timePeriod):
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     try:
-        update_reservation(reservationId, userId, reservation.classroomId, startTime, endTime, ReservationStatus.Pending)
+
+        user = get_user_by_id(userId)
+        if  user.status != UserStatus.Admin:
+            update_reservation(reservationId, userId, reservation.classroomId, add_time(date, time_slot_map[int(timePeriod)]['start']), add_time(date, time_slot_map[int(timePeriod)]['end']), reservation.status)
+        else:
+            update_reservation(reservationId, userId, reservation.classroomId,
+                               add_time(date, time_slot_map[int(timePeriod)]['start']),
+                               add_time(date, time_slot_map[int(timePeriod)]['end']), ReservationStatus.Reserved)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 

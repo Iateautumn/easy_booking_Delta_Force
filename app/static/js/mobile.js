@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const minDate = `${year}-${month}-${day}`;
     bookingDate.setAttribute('min', minDate);} );
 
+
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
 const backdrop = document.querySelector('.menu-backdrop');

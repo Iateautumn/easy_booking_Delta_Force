@@ -294,6 +294,7 @@ async function handleFilters() {
     roomList.innerHTML = '';
     const loading_item = document.getElementById('loading-item');
     loading_item.style.display = 'flex';
+
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment,issue);
 
 
