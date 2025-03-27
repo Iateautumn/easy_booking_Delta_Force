@@ -20,7 +20,7 @@ def reservation_request():
         reservation_requests = get_reservation_requests()
         return success_response(reservation_requests)
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/reservation/approval', methods=['POST'])
 def reservation_approval():
@@ -35,7 +35,7 @@ def reservation_approval():
         asyncio.run(approve_reservation(reservation_id))
         return success_response()
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/reservation/reject', methods=['POST'])
 def reservation_reject():
@@ -50,7 +50,7 @@ def reservation_reject():
         asyncio.run(reject_reservation(reservation_id))
         return success_response()
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
     
 @admin_bp.route('/approval')
 def approval():
@@ -80,7 +80,7 @@ def add_classroom():
         add_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+            return error_response(e.message, e.code)
     
 @admin_bp.route('/classroom/modify', methods=['POST'])
 def modify_classroom():
@@ -98,7 +98,7 @@ def modify_classroom():
         modify_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/classroom/remove', methods=['POST'])
 def delete_classroom():
@@ -115,15 +115,14 @@ def delete_classroom():
         delete_room(**data)
         return success_response("success reservation")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/classroom/all')
 def all_classroom():
     try:
         return success_response(get_all_rooms())
     except BusinessError as e:
-
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 # ------- cancel ------
 
 @admin_bp.route('/allreservations')
@@ -139,7 +138,7 @@ def admin_get_all_reservations():
     try:
         return success_response(admin_reservation_all())
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/mybookings')
 def mybookings():
@@ -168,7 +167,7 @@ def reservation_cancel():
         admin_cancel_reservation(reservation_id)
         return success_response("success cancel")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/issue/report/delete', methods=['POST'])
 def delete_issue():
@@ -183,14 +182,14 @@ def delete_issue():
         delete_issue_report(issue_id)
         return success_response("success delete")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/issue', methods=['GET'])
 def issue():
     try:
         return render_template('admin/issue.html')
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 
 @admin_bp.route('/issue/all', methods=['GET'])
@@ -199,7 +198,7 @@ def allissue_request():
         issue_reports = get_reported_issue()
         return success_response(issue_reports)
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 # ------ formatted reprot ------
 @admin_bp.route('/report/analysis')
@@ -207,7 +206,7 @@ def report_analysis():
     try:
         return success_response(admin_report_analysis())
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
 @admin_bp.route('/report/analysis/export')
 def output_all_calendar():

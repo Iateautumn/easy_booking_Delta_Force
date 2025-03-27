@@ -16,7 +16,7 @@ def reservations():
         try:
             users = own_reservations(user_id)
         except BusinessError as e:
-            return error_response(str(e), e.code)
+            return error_response(e.message, e.code)
         return success_response(users)
 
 @user_bp.route('/bookroom')
@@ -58,7 +58,7 @@ def reservation_modify():
         )
         return success_response("success modified")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
     
 
 @user_bp.route('/reservation/cancel', methods=['POST'])
@@ -81,7 +81,8 @@ def reservation_cancel():
         )
         return success_response("success cancel")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
+
 
 @user_bp.route('/calendar', methods=['GET', 'POST'])
 def output_all_calendar():
@@ -104,8 +105,6 @@ def output_all_calendar():
         return response
     except Exception as e:
         return error_response(str(e), 500)
-        print(e)
-        raise NotImplementedError
 
 @user_bp.route('/classroom/issue/report', methods=['POST'])
 def issue_report():
@@ -121,7 +120,7 @@ def issue_report():
         report_issue(user_id, issue)
         return success_response("success issue report")
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
 
     
 @user_bp.route('/reservation/timeperiod', methods=['POST'])
@@ -135,4 +134,4 @@ def get_available_time_for_reservation():
         available_period = get_available_time_periods(**data)
         return success_response(available_period)
     except BusinessError as e:
-        return error_response(str(e), e.code)
+        return error_response(e.message, e.code)
