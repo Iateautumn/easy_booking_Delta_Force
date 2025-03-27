@@ -60,7 +60,7 @@ def own_reservations(user_id):
         raise BusinessError("error: " + str(e), 500)
 
     def reservation_to_dict(reservation):
-        classroom = get_classroom_by_id(reservation.classroomId)
+        classroom = reservation.classroom
         result = {
             "reservationId": reservation.reservationId,
             "status": str(reservation.status.value),
