@@ -113,7 +113,7 @@ body {
     position: fixed;
     left: 0;
     top: 0;
-    background: #112d6f;
+    background: #13439b;
     color: white;
     transition: 0.3s;
     overflow-x: hidden;
@@ -182,7 +182,7 @@ body {
     font-weight: bold;
 }
 
-.logout {
+.sidebar-item {
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -192,7 +192,7 @@ body {
     margin-top: auto;
 }
 
-.logout .icon {
+.sidebar-item .icon {
     display: inline-block;
     width: 30px;
     margin-right: 10px;
@@ -864,7 +864,13 @@ header h1 {
 
 .heatmap-container {
     width: 300px;
-    margin: 20px;
+    overflow-x: auto; /* 添加水平滚动条 */
+}
+
+@media (max-width: 380px) {
+    .heatmap-container {
+        width: 100%;
+    }
 }
 
 .legend {
@@ -917,7 +923,6 @@ header h1 {
 .heatmap-cell {
     width: 20px;
     height: 20px;
-    /* border: 1px solid #ddd; */
     position: relative;
     border-radius: 2px;
 }
@@ -932,5 +937,9 @@ header h1 {
     padding: 2px 5px;
     border-radius: 3px;
     font-size: 0.8em;
+    white-space: nowrap;
+}
+
+#report-btn {
     white-space: nowrap;
 }

@@ -92,66 +92,6 @@ async function viewReport() {
             }
         }
 
-        // option = {
-        //     title: {
-        //         top: 0,
-        //         left: 'left',
-        //         text: 'All Rooms Heatmap',
-        //         textStyle: {
-        //             color: '#13439b'
-        //         }
-        //     },
-        //     tooltip: {
-        //         formatter: function (params) {
-        //             return String(params.value[1]);
-        //         }
-        //     },
-        //     visualMap: {
-        //         show: true,
-        //         inRange: {
-        //             color: ['#b0cbfc', '#13439b']
-        //         },
-        //         type: 'piecewise',
-        //         pieces: [
-        //             {min: 0, max: 1},
-        //             {min: 2, max: 3},
-        //             {min: 3, max: 6},
-        //             {min: 6},
-        //         ],
-        //         orient: 'horizontal',
-        //         left: 'left',
-        //         top: 30
-        //     },
-        //     calendar: {
-        //         itemStyle: {
-        //             color: '#EBEDF0',
-        //             borderWidth: 3,
-        //             borderColor: '#fff'
-        //         },
-        //         cellSize: 22,
-        //         range: ['2023-01-01', '2023-03-11'],
-        //         splitLine: true,
-        //         dayLabel: {
-        //             firstDay: 0,
-        //             nameMap: dates
-        //         },
-        //         monthLabel: {
-        //             show: false
-        //         },
-        //         yearLabel: {
-        //             show: false
-        //         },
-        //         silent: {
-        //             show: false
-        //         }
-        //     },
-        //     series: {
-        //         type: 'heatmap',
-        //         coordinateSystem: 'calendar',
-        //         data: data
-        //     }
-        // };
-        // option && myChart.setOption(option);
         const heatmap = document.getElementById('heatmap');
 
         bookingsData.forEach((dayData, index) => {
@@ -168,12 +108,6 @@ async function viewReport() {
                 heatmap.appendChild(cell);
             });
         });
-
-        // Add a row for time labels
-        // const timeLabels = document.createElement('div');
-        // timeLabels.className = 'time-labels';
-
-        // Add an empty cell for alignment
         const emptyCell = document.createElement('span');
         heatmap.appendChild(emptyCell);
 
