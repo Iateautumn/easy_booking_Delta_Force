@@ -24,9 +24,6 @@
                     <input id="password" type="password" placeholder="Password">
                     <i class="bx bxs-lock-alt"></i>
                 </div>
-                <!--                <div class="forgot-link">-->
-                <!--                    <a href="#">Forgot Password?</a>-->
-                <!--                </div>-->
                 <button type="button" class="btn" onclick="handleLogin()">Login</button>
                 <p>or login with email verification</p>
                 <div class="social-icons">
@@ -81,14 +78,12 @@
                 </select>
                 <i class="bx bxs-user-detail"></i>
             </div>
-            <!-- <div class="forgot-link">
-                <a href="#">Forgot Password?</a>
-            </div> -->
-            <button type="button" class="btn" onclick="handleRegister()">Register</button>
-            <!--                <p>or register with social platforms</p>-->
-            <!--                <div class="social-icons">-->
-            <!--                    <a href="#"><i class="bx bxl-microsoft"></i></a>-->
-            <!--                </div>-->
+            <div class="input-box" id="registration-code-box" style="display: none;">
+                <input id="registration-code" type="text" placeholder="Verification Code">
+                <i class="bx bxs-key"></i>
+            </div>
+            <button type="button" class="btn" id="send-registration-code-btn" onclick="sendRegistrationCode()">Send Code</button>
+            <button type="button" class="btn" onclick="handleRegister()" style="display: none" id="register-btn">Register</button>
         </form>
     </div>
 
