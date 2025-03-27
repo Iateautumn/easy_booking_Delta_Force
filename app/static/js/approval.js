@@ -117,7 +117,7 @@ async function viewApprovals() {
             approvalCard.innerHTML = `
                 <h1>Reservation ID: ${approval.reservationId}</h1>
                 <h3>Room ${approval.classroomName}</h3>
-                <p>Constraint: ${(approval.constrain || approval.constrain == '' ? 'None' : approval.constrain)}</p>
+                <p>Constraint: ${(!approval.constrain || approval.constrain == '') ? 'None' : approval.constrain}</p>
                 ${approval.issue ? '<p style="color: #d20000">Issue: ' + approval.issue + '</p>' : ''}
                 <p>User: ${approval.username}</p>
                 <p>User Status: ${approval.userstatus}</p>

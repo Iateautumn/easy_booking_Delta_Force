@@ -33,10 +33,9 @@ def get_reservation_requests():
         reservations = get_reservation_by_status(ReservationStatus.Pending)
         reservation_info_list = []
         def get_dict(reservation):
-            userId = reservation.userId
-            classroomId = reservation.classroomId
-            user = get_user_by_id(userId)
-            classroom = get_classroom_by_id(classroomId)
+
+            user = reservation.user
+            classroom = reservation.classroom
             reservation_data = {
                 "reservationId": reservation.reservationId,
                 "constrain": classroom.constrain,
@@ -48,7 +47,10 @@ def get_reservation_requests():
                 "issue": classroom.issue,
             }
             reservation_info_list.append(reservation_data)
+        current_time = datetime.now()
         for reservation in reservations:
+            if reservation.startTime < current_time:
+                continue
             get_dict(reservation)
     except Exception as e:
         raise BusinessError("Service error: " + str(e), 500)
@@ -212,10 +214,9 @@ def admin_reservation_all():
 
         reservation_info_list = []
         def get_dict(reservation):
-            userId = reservation.userId
-            classroomId = reservation.classroomId
-            user = get_user_by_id(userId)
-            classroom = get_classroom_by_id(classroomId)
+
+            user = reservation.user
+            classroom = reservation.classroom
             reservation_data = {
                 "reservationId": reservation.reservationId,
                 "constrain": classroom.constrain,

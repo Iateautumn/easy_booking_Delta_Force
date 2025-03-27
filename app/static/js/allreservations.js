@@ -91,7 +91,7 @@ async function viewReservations() {
                 <p>Time: ${timeTable[reservation.timePeriod]}</p>
                 <p>Capacity: ${reservation.capacity}</p>
                 <p>Equipment: ${(!reservation.equipment || reservation.equipment.length == 0) ? 'None' : reservation.equipment}</p>
-                <p>Constrain: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
+                <p>Constraint: ${(!reservation.constrain || reservation.constrain == '') ? 'None': reservation.constrain}</p>
                 ${reservation.issue ? '<p style="color: #d20000">Issue: ' + reservation.issue + '</p>' : ''}
                 <button class="action-btn" id="cancel-reservation">Cancel</button>
             `;

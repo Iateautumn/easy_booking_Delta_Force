@@ -149,7 +149,7 @@ async function viewBookings() {
                             <p>Time: ${timeTable[booking.timePeriod]}</p>
                             <p>Capacity: ${booking.capacity}</p>
                             <p>Equipment: ${(!booking.equipment || booking.equipment.length == 0) ? 'None' : booking.equipment}</p>
-                            <p>Constrain: ${!booking.constrain || booking.constrain == '' ? 'None' : booking.constrain}</p>
+                            <p>Constraint: ${!booking.constrain || booking.constrain == '' ? 'None' : booking.constrain}</p>
                             ${booking.issue ? '<p style="color: #d20000">Issue: ' + booking.issue + '</p>' : ''}
                             <button class="action-btn" id="modify-booking">Modify</button>
                             <button class="action-btn" id="cancel-booking">Cancel</button>
@@ -169,15 +169,19 @@ async function viewBookings() {
     const checkModifyDate = document.querySelector('#check-modify-date');
 
     modifyBtns.forEach((btn, index) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             modifyModal.style.display = 'flex';
             checkModifyDate.innerHTML = `${bookings[index].date}`;
             modifyModal.setAttribute('data-reservation-id', bookings[index].reservationId);
             modifyModal.setAttribute('data-room-available-time', bookings[index].timePeriod);
+            availble_time = await getAvailableTime(bookings[index].reservationId);
             document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
                 checkbox.checked = false;
+                checkbox.disabled = false;
                 if (checkbox.value == bookings[index].timePeriod) {
                     checkbox.checked = true;
+                } else if (!availble_time.includes(parseInt(checkbox.value))) {
+                    checkbox.disabled = true;
                 }
             });
         });
@@ -189,6 +193,36 @@ async function viewBookings() {
         });
     });
     loading_item.style.display = 'none';
+}
+
+async function getAvailableTime(reservation_id) {
+    const apiUrl = '/user/reservation/timeperiod';
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "reservation_id": reservation_id
+        }),
+    });
+
+    const data = await response.json();
+
+    if (data) {
+        switch (data.code) {
+            case 200:
+                return data.data;
+            default:
+                alert(`Error, (${data.message})`);
+                return [];
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return [];
+    }
+    
 }
 
 async function handleModify(reservationId) {

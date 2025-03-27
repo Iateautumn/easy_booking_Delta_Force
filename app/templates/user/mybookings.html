@@ -28,7 +28,7 @@
                     </li>
                 </ul>
             </nav>
-            <a href="/auth/logout" class="logout">
+            <a href="/auth/logout" class="sidebar-item">
                 <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
                 Logout
             </a>
@@ -36,7 +36,39 @@
 
         <main>
             <header>
-                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="menu-backdrop" onclick="toggleMenu()"></div>
+                <button class="menu-btn hamburger" onclick="toggleMenu()" id="menu-btn">☰</button>
+                <nav id="sideMenu">
+                    <div class="sidebar-brand">Easy Booking</div>
+
+                    <button class="close-btn" onclick="toggleMenu()">
+                        <i class="fas fa-times"></i>
+                        ×
+                    </button>
+
+                    <div class="item-container">
+                        <div class="menu-item">
+                            <a href="./bookroom" class="sidebar-item">
+                                <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                                Book Room
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="#" class="sidebar-item">
+                                <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                                My Bookings
+                            </a>
+                        </div>
+                        <div class="menu-item" style="position: absolute; bottom: 80px;">
+                            <a href="/auth/logout" class="sidebar-item">
+                                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+
+
+                </nav>
                 <h1 id="page-title">My Bookings</h1>
             </header>
             <div class="function-bar">
@@ -98,6 +130,7 @@
 
 
     <script src="../../static/js/mybookings.js"></script>
+    <script src="../../static/js/mobile.js"></script>
 </body>
 
 </html>
