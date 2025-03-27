@@ -22,14 +22,15 @@ def list_classrooms():
 
         capacity_min = data['capacity_min']
         capacity_max = data['capacity_max']
-        equipments = data['equipment']
+        equipments = data.get('equipment', [])
         date = data['date']
-
+        issue = data.get('issue', None)
 
         classrooms = filter_classrooms(
             capacity_range=[capacity_min, capacity_max],
             equipments=equipments,
-            date=date
+            date=date,
+            issue=issue
         )
 
     return success_response(classrooms)

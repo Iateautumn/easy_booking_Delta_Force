@@ -66,9 +66,77 @@
 
         <main>
             <header>
-                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="menu-backdrop" onclick="toggleMenu()"></div>
+                <button class="menu-btn hamburger" onclick="toggleMenu()" id="menu-btn">☰</button>
+                <nav id="sideMenu">
+                    <div class="sidebar-brand">Easy Booking</div>
+
+                    <button class="close-btn" onclick="toggleMenu()">
+                        <i class="fas fa-times"></i>
+                        ×
+                    </button>
+
+                    <div class="item-container">
+                        <div class="menu-item">
+                            <a href="./bookroom" class="logout">
+                                <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                                Book Room
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./mybookings" class="logout">
+                                <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                                My Bookings
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./allreservations" class="logout">
+                                <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
+                                All Reservations
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./management" class="logout">
+                                <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                                Room Management
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="#" class="logout">
+                                <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                                Approval Request
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./issue" class="logout">
+                                <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
+                                Room Issue
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./report" class="logout">
+                                <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                                Report
+                            </a>
+                        </div>
+                        <div class="menu-item" style="position: absolute; bottom: 80px;">
+                            <a href="/auth/logout" class="logout">
+                                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
                 <h1 id="page-title">Approval Request</h1>
             </header>
+
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Approvals...</p>
+            </div>
 
             <section id="approval-request-section" class="content-section">
                 <div class="approval-list">
@@ -128,13 +196,20 @@
             <div class="filter-group">
                 <label class="filter-label">Date/Time:</label>
                 <div class="days">
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0"> Mon</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1"> Tue</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2"> Wed</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3"> Thu</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4"> Fri</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5"> Sat</label>
-                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6"> Sun</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="0">
+                        Mon</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="1">
+                        Tue</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="2">
+                        Wed</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="3">
+                        Thu</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="4">
+                        Fri</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="5">
+                        Sat</label>
+                    <label class="date_label"><input type="checkbox" class="ui-checkbox" name="days" value="6">
+                        Sun</label>
                 </div>
             </div>
             <div class="filter-group">
@@ -144,8 +219,9 @@
             <button class="apply-btn" id="apply-filter">Apply Filters</button>
         </div>
     </div>
-    
+
     <script src="../../static/js/approval.js"></script>
+    <script src="../../static/js/mobile.js"></script>
 </body>
 
 </html>

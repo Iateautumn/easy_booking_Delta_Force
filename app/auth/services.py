@@ -43,6 +43,8 @@ def generate_password_hash(password, salt=None):
 
 
 def register_user(status, username, email, password):
+    if not email.endswith("@dundee.ac.uk"):
+        raise BusinessError("Invalid email address", 403)
     password_hash, salt = generate_password_hash(password)
     email_hash = hmac.new(
         key=Config.HMAC_KEY,
@@ -95,18 +97,23 @@ def my_get_hash(str):
     return hash_value
 
 
-async def send_email_async(email):
+async def send_email_async(email, type="login"):
     user = get_user_by_email(my_get_hash(email))
-    if not user:
+    
+    if not email.endswith("@dundee.ac.uk"):
+        raise BusinessError("Invalid email address", 403)
+    if not user and type == "login":
         raise BusinessError("User not found", 404)
+    if user and type == "register":
+        raise BusinessError("User already exists", 409)
 
     code = str(random.randint(100000, 999999))
 
 
-    from_name = user.name
+    from_name = 'Easy Booking Team'
     from_addr = "1534433057@qq.com"
     from_pwd = "oeisscrfcfukgccf"
-    to_addr = user.email
+    to_addr = email
     my_title = "Your Easy Booking Verification Code"
     my_msg = "Your Easy Booking verification code is:" + str(code)
 
@@ -149,3 +156,15 @@ def verify_code(email, verification_code):
         raise BusinessError("Invalid code", 401)
     del verification_store[email]
     return get_user_by_email(my_get_hash(email))
+
+def signup_verify_code(code, email, **kwargs):
+    record = verification_store.get(email)
+    if not record:
+        raise BusinessError("Get the code first", 401)
+    if time.time() - record['timestamp'] > 300:
+        del verification_store[email]
+        raise BusinessError("The verification code has expired", 401)
+    if record['code'] != code:
+        raise BusinessError("Invalid code", 401)
+    del verification_store[email]
+    return register_user(email=email, **kwargs)

@@ -59,92 +59,154 @@ async function viewReport() {
         const jointReport = document.createElement('div');
         jointReport.classList.add('report-card');
         jointReport.innerHTML = `
-            <div id="main-chart" class="about"></div>
+        <div class="heatmap-container">
+            <h2>All Rooms Heatmap</h2>
+            <div class="legend">
+                <span class="legend-item" data-range="0-1"></span> 0 - 1
+                <span class="legend-item" data-range="2-3"></span> 2 - 3
+                <span class="legend-item" data-range="3-6"></span> 3 - 6
+                <span class="legend-item" data-range=">6"></span> > 6
+            </div>
+            <div id="heatmap"></div>
+        </div>
         `;
         reportList.appendChild(jointReport);
-        const chartDom = document.getElementById('main-chart');
-        const myChart = echarts.init(chartDom);
-        var option;
-        var data = [];
+        // const chartDom = document.getElementById('main-chart');
+        // const myChart = echarts.init(chartDom);
+        // var option;
+        // var data = [];
 
-        function addDays(dateString, days) {
-            const date = new Date(dateString);
-            date.setDate(date.getDate() + days);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
+        const bookingsData = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
 
         for (var i = 0; i < matrix.length; i++) {
             for (var j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] === 0) {
-                    continue;
-                }
-                data.push([addDays('2023-01-01', j * 7 + i), matrix[i][j]]);
+                bookingsData[i][j] = matrix[i][j];
             }
         }
 
-        option = {
-            title: {
-                top: 0,
-                left: 'left',
-                text: 'All Rooms Heatmap',
-                textStyle: {
-                    color: '#13439b'
-                }
-            },
-            tooltip: {
-                formatter: function (params) {
-                    return String(params.value[1]);
-                }
-            },
-            visualMap: {
-                show: true,
-                inRange: {
-                    color: ['#b0cbfc', '#13439b']
-                },
-                type: 'piecewise',
-                pieces: [
-                    {min: 0, max: 1},
-                    {min: 2, max: 3},
-                    {min: 3, max: 6},
-                    {min: 6},
-                ],
-                orient: 'horizontal',
-                left: 'left',
-                top: 30
-            },
-            calendar: {
-                itemStyle: {
-                    color: '#EBEDF0',
-                    borderWidth: 3,
-                    borderColor: '#fff'
-                },
-                cellSize: [20, 20],
-                range: ['2023-01-01', '2023-03-11'],
-                splitLine: true,
-                dayLabel: {
-                    firstDay: 0,
-                    nameMap: dates
-                },
-                monthLabel: {
-                    show: false
-                },
-                yearLabel: {
-                    show: false
-                },
-                silent: {
-                    show: false
-                }
-            },
-            series: {
-                type: 'heatmap',
-                coordinateSystem: 'calendar',
-                data: data
-            }
-        };
-        option && myChart.setOption(option);
+        // option = {
+        //     title: {
+        //         top: 0,
+        //         left: 'left',
+        //         text: 'All Rooms Heatmap',
+        //         textStyle: {
+        //             color: '#13439b'
+        //         }
+        //     },
+        //     tooltip: {
+        //         formatter: function (params) {
+        //             return String(params.value[1]);
+        //         }
+        //     },
+        //     visualMap: {
+        //         show: true,
+        //         inRange: {
+        //             color: ['#b0cbfc', '#13439b']
+        //         },
+        //         type: 'piecewise',
+        //         pieces: [
+        //             {min: 0, max: 1},
+        //             {min: 2, max: 3},
+        //             {min: 3, max: 6},
+        //             {min: 6},
+        //         ],
+        //         orient: 'horizontal',
+        //         left: 'left',
+        //         top: 30
+        //     },
+        //     calendar: {
+        //         itemStyle: {
+        //             color: '#EBEDF0',
+        //             borderWidth: 3,
+        //             borderColor: '#fff'
+        //         },
+        //         cellSize: 22,
+        //         range: ['2023-01-01', '2023-03-11'],
+        //         splitLine: true,
+        //         dayLabel: {
+        //             firstDay: 0,
+        //             nameMap: dates
+        //         },
+        //         monthLabel: {
+        //             show: false
+        //         },
+        //         yearLabel: {
+        //             show: false
+        //         },
+        //         silent: {
+        //             show: false
+        //         }
+        //     },
+        //     series: {
+        //         type: 'heatmap',
+        //         coordinateSystem: 'calendar',
+        //         data: data
+        //     }
+        // };
+        // option && myChart.setOption(option);
+        const heatmap = document.getElementById('heatmap');
+
+        bookingsData.forEach((dayData, index) => {
+            const dateLabel = document.createElement('div');
+            dateLabel.className = 'date-label';
+            dateLabel.textContent = dates[index];
+            heatmap.appendChild(dateLabel);
+        
+            dayData.forEach(count => {
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                cell.style.backgroundColor = getColor(count);
+                cell.setAttribute('data-count', count);
+                heatmap.appendChild(cell);
+            });
+        });
+
+        // Add a row for time labels
+        // const timeLabels = document.createElement('div');
+        // timeLabels.className = 'time-labels';
+
+        // Add an empty cell for alignment
+        const emptyCell = document.createElement('span');
+        heatmap.appendChild(emptyCell);
+
+        timeSlotMap = {
+            0: "8:00",
+            1: "8:55",
+            2: "10:00",
+            3: "10:55",
+            4: "14:00",
+            5: "14:55",
+            6: "16:00",
+            7: "16:55",
+            8: "20:00",
+            9: "20:55"
+        }
+
+        // Add time slots
+        for (let i = 0; i < 10; i++) {
+            const timeSlot = document.createElement('span');
+            timeSlot.textContent = timeSlotMap[i];
+            timeSlot.style.fontSize = '8px';
+            heatmap.appendChild(timeSlot);
+        }
+
+        // heatmap.appendChild(timeLabels);
+
+        function getColor(count) {
+            if (count <= 0) return '#F5F5F5';
+            if (count <= 1) return '#b0cbfc';
+            if (count <= 3) return '#7c9edc';
+            if (count <= 6) return '#4770bb';
+            return '#13439b';
+        }
 
         reports.separateData.forEach(report => {
             const reportItem = document.createElement('div');
@@ -158,4 +220,6 @@ async function viewReport() {
             reportList.appendChild(reportItem);
         });
     }
+    const loading_item = document.getElementById('loading-item');
+    loading_item.style.display = 'none';
 }

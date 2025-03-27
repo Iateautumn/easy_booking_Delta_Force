@@ -36,13 +36,82 @@
 
         <main>
             <header>
-                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="menu-backdrop" onclick="toggleMenu()"></div>
+                <button class="menu-btn hamburger" onclick="toggleMenu()" id="menu-btn">☰</button>
+                <nav id="sideMenu">
+                    <div class="sidebar-brand">Easy Booking</div>
+
+                    <button class="close-btn" onclick="toggleMenu()">
+                        <i class="fas fa-times"></i>
+                        ×
+                    </button>
+
+                    <div class="item-container">
+                        <div class="menu-item">
+                            <a href="./bookroom" class="logout">
+                                <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                                Book Room
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="#" class="logout">
+                                <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                                My Bookings
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./allreservations" class="logout">
+                                <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
+                                All Reservations
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./management" class="logout">
+                                <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                                Room Management
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./approval" class="logout">
+                                <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                                Approval Request
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./issue" class="logout">
+                                <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
+                                Room Issue
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./report" class="logout">
+                                <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                                Report
+                            </a>
+                        </div>
+                        <div class="menu-item" style="position: absolute; bottom: 80px;">
+                            <a href="/auth/logout" class="logout">
+                                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+
+
+                </nav>
                 <h1 id="page-title">My Bookings</h1>
             </header>
-            <div class="export-bar">
-                    <button class="export-btn" id="export-all-btn">Export All</button>
-                    <button class="export-btn" id="export-selected-btn">Export Selected</button>
+            <div class="function-bar">
+                <button class="export-btn" id="export-all-btn">Export All</button>
+                <button class="export-btn" id="export-selected-btn">Export Selected</button>
             </div>
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Reservations...</p>
+            </div>
+            
             <section id="my-bookings-section" class="content-section">
                 <div class="booking-list">
                    
@@ -63,34 +132,35 @@
             <div class="booking-group">
                 <label class="booking-label">Time Slots:</label>
                 <div class="time-slots">
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="0">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="0">
                         8:00~8:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="1">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="1">
                         8:55~9:40</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="2">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="2">
                         10:00~10:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="3">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="3">
                         10:55~11:40</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="4">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="4">
                         14:00~14:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="5">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="5">
                         14:55~15:40</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="6">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="6">
                         16:00~16:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="7">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="7">
                         16:55~17:40</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="8">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="8">
                         19:00~19:45</label>
-                    <label class="date_label"><input type="checkbox" name="time-period" class="ui-checkbox" value="9">
+                    <label class="date_label"><input type="radio" name="time-period" class="ui-checkbox" value="9">
                         19:55~20:40</label>
                 </div>
             </div>
             <button class="apply-btn" id="apply-modify">Modify Booking</button>
         </div>
     </div>
-   
-    
+
+
     <script src="../../static/js/mybookings.js"></script>
+    <script src="../../static/js/mobile.js"></script>
 </body>
 
 </html>

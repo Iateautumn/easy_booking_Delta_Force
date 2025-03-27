@@ -54,7 +54,7 @@ def to_calendar(user_id, reservation_ids=[]):
 
 def own_reservations(user_id):
     try:
-        reservations = get_reservation_by_user_id(user_id)
+        reservations = get_reservation_by_filter(userId=user_id, startTime=datetime.now())
         print(reservations)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
@@ -78,6 +78,11 @@ def own_reservations(user_id):
     return result
 
 def modify_reservation(reservationId, userId, date, timePeriod):
+    startTime = add_time(date, time_slot_map[int(timePeriod)]['start'])
+    endTime = add_time(date, time_slot_map[int(timePeriod)]['end'])
+    if endTime < datetime.now():
+        raise BusinessError("cannot reserve past time", 400)
+    
     try:
         reservation = get_reservation_by_id(reservationId)
         if userId != reservation.userId:
@@ -87,6 +92,7 @@ def modify_reservation(reservationId, userId, date, timePeriod):
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     try:
+
         user = get_user_by_id(userId)
         if  user.status != UserStatus.Admin:
             update_reservation(reservationId, userId, reservation.classroomId, add_time(date, time_slot_map[int(timePeriod)]['start']), add_time(date, time_slot_map[int(timePeriod)]['end']), reservation.status)

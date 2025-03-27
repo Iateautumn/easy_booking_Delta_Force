@@ -68,15 +68,84 @@
 
         <main>
             <header>
-                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="menu-backdrop" onclick="toggleMenu()"></div>
+                <button class="menu-btn hamburger" onclick="toggleMenu()" id="menu-btn">☰</button>
+                <nav id="sideMenu">
+                    <div class="sidebar-brand">Easy Booking</div>
+
+                    <button class="close-btn" onclick="toggleMenu()">
+                        <i class="fas fa-times"></i>
+                        ×
+                    </button>
+
+                    <div class="item-container">
+                        <div class="menu-item">
+                            <a href="./bookroom" class="logout">
+                                <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                                Book Room
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./mybookings" class="logout">
+                                <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                                My Bookings
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./allreservations" class="logout">
+                                <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
+                                All Reservations
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./management" class="logout">
+                                <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                                Room Management
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./approval" class="logout">
+                                <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                                Approval Request
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./issue" class="logout">
+                                <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
+                                Room Issue
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="#" class="logout">
+                                <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                                Report
+                            </a>
+                        </div>
+                        <div class="menu-item" style="position: absolute; bottom: 80px;">
+                            <a href="/auth/logout" class="logout">
+                                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
                 <h1 id="page-title">Report</h1>
             </header>
-            <section id="report-section" class="content-section">
-                <div class="function-bar">
-                    <button class="action-btn" id="export-report-btn">Export as PDF</button>
-                </div>
-                <div class="report-list">
 
+            <div class="function-bar">
+                <button class="export-btn" id="export-report-btn">Export as PDF</button>
+            </div>
+
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Reports...</p>
+            </div>
+
+            <section id="report-section" class="content-section">
+                <div class="report-list">
                 </div>
             </section>
 
@@ -85,6 +154,7 @@
 
 
     <script src="../../static/js/report.js"></script>
+    <script src="../../static/js/mobile.js"></script>
 </body>
 
 </html>

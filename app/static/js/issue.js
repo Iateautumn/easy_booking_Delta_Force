@@ -61,8 +61,8 @@ async function removeRoomIssue(issue_id) {
 
 async function viewIssues() {
     const issues = await getRoomIssue();
-
     const issueList = document.querySelector('.issue-list');
+    const loading_item = document.getElementById('loading-item');
 
     if(issues.length > 0) {
         issueList.innerHTML = '';
@@ -84,16 +84,26 @@ async function viewIssues() {
     removeBtns.forEach((btn, index) => {
         btn.addEventListener('click', async () => {
             const issue_id = issues[index].issueId;
+
+            issueList.innerHTML = '';
+
+            loading_item.style.display = 'flex';
+            document.getElementById('loading-hint').innerText = 'Removing...';
+
             const result = await removeRoomIssue(issue_id);
+
+            document.getElementById('loading-hint').innerText = 'Loading Issues...';
+
             if (result) {
                 alert('Removed');
                 viewIssues();
             }
             else {
                 alert('Error, Network Error');
+                viewIssues();
             }
         });
     });
 
-
+    loading_item.style.display = 'none';
 }

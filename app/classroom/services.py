@@ -5,11 +5,12 @@ from app.classroom.models import Classroom, get_all_equipments, ClassEquipment, 
 from sqlalchemy import and_
 from app.booking.models import get_reservation_by_classroom_id, ReservationStatus
 from app.utils.datetime_utils import time_slot_map, slot_time_map, is_same_date, get_time_slot, get_current_date
+from datetime import datetime
 
-def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date()):
+def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_current_date(), issue=None):
 
     query = Classroom.query
-
+    query = query.filter(Classroom.isDeleted == False)
     if capacity_range[0]:
         query = query.filter(Classroom.capacity >= capacity_range[0])
     if capacity_range[1]:
@@ -21,6 +22,11 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
         query = query.join(ClassEquipment).filter(and_(*conditions))
     if not date:
         date = get_current_date()
+    if issue is not None:
+        if not issue:
+            query = query.filter(Classroom.issue.is_(None) | (Classroom.issue == ""), Classroom.isDeleted == False)
+        else:
+            query = query.filter(Classroom.issue.isnot(None) & (Classroom.issue != ""), Classroom.isDeleted == False)
     classrooms = query.all()
     result_classrooms = []
     for classroom in classrooms:
@@ -79,8 +85,19 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
             b.append(get_time_slot(str(timetable.timeStamp)) + 1)
         if len(b) == len(slot_time_map.keys()):
             continue
+        
+        valid_time_slots = []
+        for i in range(len(time_slot_map.keys())):
+            starttime = time_slot_map[i]['start']
+            starttime = datetime.strptime(starttime, '%H:%M:%S')
+            require_date = datetime.strptime(date, '%Y-%m-%d')
+            if starttime.time() < datetime.now().time() and require_date.date() <= datetime.now().date():
 
-        result_classrooms.append(get_classroom_dict(classroom, [i for i in range(len(time_slot_map.keys())) if i not in b]))
+                continue
+            if i not in b:
+                valid_time_slots.append(i)
+
+        result_classrooms.append(get_classroom_dict(classroom, valid_time_slots))
 
     return result_classrooms
 

@@ -66,15 +66,84 @@
 
         <main>
             <header>
-                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="menu-backdrop" onclick="toggleMenu()"></div>
+                <button class="menu-btn hamburger" onclick="toggleMenu()" id="menu-btn">☰</button>
+                <nav id="sideMenu">
+                    <div class="sidebar-brand">Easy Booking</div>
+
+                    <button class="close-btn" onclick="toggleMenu()">
+                        <i class="fas fa-times"></i>
+                        ×
+                    </button>
+
+                    <div class="item-container">
+                        <div class="menu-item">
+                            <a href="./bookroom" class="logout">
+                                <img src="../../static/icon/book_room.svg" class="icon" alt="Book Room Icon">
+                                Book Room
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./mybookings" class="logout">
+                                <img src="../../static/icon/my_bookings.svg" class="icon" alt="My Bookings Icon">
+                                My Bookings
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./allreservations" class="logout">
+                                <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
+                                All Reservations
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="#" class="logout">
+                                <img src="../../static/icon/room_management.svg" class="icon" alt="Room Management Icon">
+                                Room Management
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./approval" class="logout">
+                                <img src="../../static/icon/approval_request.svg" class="icon" alt="Approval Request Icon">
+                                Approval Request
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./issue" class="logout">
+                                <img src="../../static/icon/room_issue.svg" class="icon" alt="Room Issue Icon">
+                                Room Issue
+                            </a>
+                        </div>
+                        <div class="menu-item">
+                            <a href="./report" class="logout">
+                                <img src="../../static/icon/report.svg" class="icon" alt="Reports Icon">
+                                Report
+                            </a>
+                        </div>
+                        <div class="menu-item" style="position: absolute; bottom: 80px;">
+                            <a href="/auth/logout" class="logout">
+                                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
                 <h1 id="page-title">Room Management</h1>
             </header>
 
+            <div class="function-bar">
+                <button class="action-btn" id="add-room-btn">Add Room</button>
+            </div>
+
+            <div id="loading-item">
+                <svg class="loading-box" viewBox="25 25 50 50">
+                    <circle class="loading-circle" r="20" cy="50" cx="50"></circle>
+                </svg>
+                <p id="loading-hint">Loading Rooms...</p>
+            </div>
+
             <section id="room-management-section" class="content-section">
                 <div class="room-management">
-                    <div class="function-bar">
-                        <button class="action-btn" id="add-room-btn">Add Room</button>
-                    </div>
                     <div class="room-list">
                     </div>
                 </div>
@@ -93,7 +162,7 @@
             </div>
             <div class="add-room-group">
                 <label class="add-room-label">Capacity:</label>
-                <input type="number" id="add-room-capacity" placeholder="" min="1">
+                <input type="number" id="add-room-capacity" placeholder="" min="1" class="input">
             </div>
             <div class="add-room-group">
                 <label class="add-room-label">Equipment:</label>
@@ -103,7 +172,7 @@
                 <input type="text" id="add-room-new-equipment" class="input">
             </div>
             <div>
-                <label class="add-room-label">Constrain:</label>
+                <label class="add-room-label">Constraint:</label>
                 <input type="text" id="input-add-room-constrain" class="input">
             </div>
             <button class="apply-btn" id="apply-add-room-btn">Add</button>
@@ -120,7 +189,7 @@
             </div>
             <div class="modify-room-group">
                 <label class="modify-room-label">Capacity:</label>
-                <input type="number" id="modify-room-capacity" placeholder="" min="1">
+                <input type="number" id="modify-room-capacity" placeholder="" min="1" class="input">
             </div>
             <div class="modify-room-group">
                 <label class="modify-room-label">Equipment:</label>
@@ -130,7 +199,7 @@
                 <input type="text" id="modify-room-new-equipment" class="input">
             </div>
             <div>
-                <label class="modify-room-label">Constrain:</label>
+                <label class="modify-room-label">Constraint:</label>
                 <input type="text" id="input-modify-room-constrain" class="input">
             </div>
             <div>
@@ -142,6 +211,7 @@
     </div>
 
     <script src="../../static/js/management.js"></script>
+    <script src="../../static/js/mobile.js"></script>
 </body>
 
 </html>
