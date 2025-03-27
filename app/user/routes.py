@@ -122,3 +122,17 @@ def issue_report():
         return success_response("success issue report")
     except BusinessError as e:
         return error_response(str(e), e.code)
+
+    
+@user_bp.route('/reservation/timeperiod', methods=['POST'])
+def get_available_time_for_reservation():
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return error_response("bad request: " + str(e), 400)
+    
+    try:
+        available_period = get_available_time_periods(**data)
+        return success_response(available_period)
+    except BusinessError as e:
+        return error_response(str(e), e.code)
