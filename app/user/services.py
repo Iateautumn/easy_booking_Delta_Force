@@ -60,7 +60,7 @@ def own_reservations(user_id):
         raise BusinessError("error: " + str(e), 500)
 
     def reservation_to_dict(reservation):
-        classroom = get_classroom_by_id(reservation.classroomId)
+        classroom = reservation.classroom
         result = {
             "reservationId": reservation.reservationId,
             "status": str(reservation.status.value),
@@ -77,9 +77,47 @@ def own_reservations(user_id):
     result = [reservation_to_dict(reservation) for reservation in reservations]
     return result
 
+def get_available_time_periods(reservation_id):
+    try:
+        reservation = get_reservation_by_id(reservation_id)
+    except BusinessError as e:
+        raise e
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+    
+    try:
+        start = datetime.strptime(f"{reservation.startTime.strftime('%Y-%m-%d')} 00:00:00", "%Y-%m-%d %H:%M:%S")
+        end = datetime.strptime(f"{reservation.endTime.strftime('%Y-%m-%d')} 23:59:59", "%Y-%m-%d %H:%M:%S")
+        reservations = get_reservation_by_filter(
+            classroomId=reservation.classroomId,
+            startTime=start,
+            endTime=end
+        )
+        reservations = [res for res in reservations if res.status != ReservationStatus.Cancelled]
+    except BusinessError as e:
+        raise e
+    except Exception as e:
+        raise BusinessError("error: " + str(e), 500)
+    
+    now = datetime.now()
+    time_periods = []
+    for i in range(0, 10):
+        if now > datetime.strptime(f"{reservation.startTime.strftime('%Y-%m-%d')} {time_slot_map[i]['start']}", "%Y-%m-%d %H:%M:%S"):
+            continue
+        time_periods.append(i)
+    for res in reservations:
+        time_slot = get_time_slot(str(res.startTime))
+        print(time_slot)
+        if time_slot in time_periods:
+            time_periods.remove(time_slot)
+
+    return time_periods
+
 def modify_reservation(reservationId, userId, date, timePeriod):
     startTime = add_time(date, time_slot_map[int(timePeriod)]['start'])
     endTime = add_time(date, time_slot_map[int(timePeriod)]['end'])
+    
+
     if endTime < datetime.now():
         raise BusinessError("cannot reserve past time", 400)
     
@@ -88,7 +126,7 @@ def modify_reservation(reservationId, userId, date, timePeriod):
         if userId != reservation.userId:
             raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     try:
@@ -110,7 +148,7 @@ def cancel_my_reservation(userId, reservationId):
         if userId != reservation.userId:
             raise BusinessError("You do not have this reservation: " + str(reservationId), 404)
     except BusinessError as e:
-        raise BusinessError(str(e), e.code)
+        raise e
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
 
