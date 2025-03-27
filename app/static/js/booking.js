@@ -290,11 +290,12 @@ async function handleFilters() {
     document.getElementById('filter-date').innerText = `Checking Date: ${date}`;
     issue = document.getElementById('issue-select').value;
 
-    const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment,issue);
     const roomList = document.getElementById('room-list');
     roomList.innerHTML = '';
     const loading_item = document.getElementById('loading-item');
     loading_item.style.display = 'flex';
+    const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment);
+
 
     if (rooms.length > 0) {
         rooms.forEach(classroom => {

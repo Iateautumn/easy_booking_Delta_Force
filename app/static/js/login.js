@@ -10,13 +10,14 @@ loginBtn.addEventListener('click', () => {
     container.classList.remove('active')
 })
 
-async function registerUser(username, email, password, status) {
+async function registerUser(username, email, password, status, code) {
     const apiUrl = '/auth/register';
     const userData = {
         username,
         email,
         password,
-        status
+        status,
+        code
     };
     const response = await fetch(apiUrl, {
         method: 'POST',
@@ -71,11 +72,35 @@ async function loginUser(email, password) {
     }
 }
 
+async function sendRegistrationCode() {
+    const email = document.getElementById('registration-email').value;
+    document.getElementById('registration-code-box').style.display = 'block';
+    document.getElementById('send-registration-code-btn').style.display = 'none';
+    document.getElementById('register-btn').style.display = 'block';
+    const response = await fetch('/email/registration-code/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    if (data) {
+        switch (data.code) {
+            case 200:
+                alert('Verification code sent to your email.');
+            default:
+                alert(data.message);
+        }
+    }
+}
 
 function handleRegister() {
     const username = document.getElementById('registration-username').value;
     const email = document.getElementById('registration-email').value;
     const password = document.getElementById('registration-password').value;
+    const code = document.getElementById('registration-code').value;
     const status = document.getElementById('status').value;
 
     if (!username || !email || !password || status === "Select Your Identity...") {
@@ -86,7 +111,7 @@ function handleRegister() {
         alert('Invalid email address');
         return;
     }
-    registerUser(username, email, password, status);
+    registerUser(username, email, password, status, code);
 }
 
 function handleLogin() {
@@ -197,7 +222,7 @@ async function sendVerificationCode() {
         alert('Verification code sent to ' + email);
     }
 
-    
+
     document.getElementById('send-code-btn').style.display = 'none';
     document.getElementById('verification-code-box').style.display = 'block';
     document.getElementById('verification-code').style.display = 'block';
