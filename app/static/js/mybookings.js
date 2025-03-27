@@ -169,15 +169,19 @@ async function viewBookings() {
     const checkModifyDate = document.querySelector('#check-modify-date');
 
     modifyBtns.forEach((btn, index) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             modifyModal.style.display = 'flex';
             checkModifyDate.innerHTML = `${bookings[index].date}`;
             modifyModal.setAttribute('data-reservation-id', bookings[index].reservationId);
             modifyModal.setAttribute('data-room-available-time', bookings[index].timePeriod);
+            availble_time = await getAvailableTime(bookings[index].reservationId);
             document.querySelectorAll('input[name="time-period"]').forEach(checkbox => {
                 checkbox.checked = false;
+                checkbox.disabled = false;
                 if (checkbox.value == bookings[index].timePeriod) {
                     checkbox.checked = true;
+                } else if (!availble_time.includes(parseInt(checkbox.value))) {
+                    checkbox.disabled = true;
                 }
             });
         });
@@ -189,6 +193,36 @@ async function viewBookings() {
         });
     });
     loading_item.style.display = 'none';
+}
+
+async function getAvailableTime(reservation_id) {
+    const apiUrl = '/user/reservation/timeperiod';
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "reservation_id": reservation_id
+        }),
+    });
+
+    const data = await response.json();
+
+    if (data) {
+        switch (data.code) {
+            case 200:
+                return data.data;
+            default:
+                alert(`Error, (${data.message})`);
+                return [];
+        }
+    }
+    else {
+        alert('Error, Network Error');
+        return [];
+    }
+    
 }
 
 async function handleModify(reservationId) {

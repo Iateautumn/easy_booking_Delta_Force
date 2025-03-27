@@ -77,30 +77,37 @@ def own_reservations(user_id):
     result = [reservation_to_dict(reservation) for reservation in reservations]
     return result
 
-def get_available_time_periods(reservationId):
+def get_available_time_periods(reservation_id):
     try:
-        reservation = get_reservation_by_id(reservationId)
+        reservation = get_reservation_by_id(reservation_id)
     except BusinessError as e:
         raise BusinessError(str(e), e.code)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     
     try:
+        start = datetime.strptime(f"{reservation.startTime.strftime('%Y-%m-%d')} 00:00:00", "%Y-%m-%d %H:%M:%S")
+        end = datetime.strptime(f"{reservation.endTime.strftime('%Y-%m-%d')} 23:59:59", "%Y-%m-%d %H:%M:%S")
         reservations = get_reservation_by_filter(
             classroomId=reservation.classroomId,
-            startTime=reservation.startTime,
-            endTime=reservation.endTime
+            startTime=start,
+            endTime=end
         )
+        reservations = [res for res in reservations if res.status != ReservationStatus.Cancelled]
     except BusinessError as e:
         raise BusinessError(str(e), e.code)
     except Exception as e:
         raise BusinessError("error: " + str(e), 500)
     
-    current_time_slot = get_time_slot(datetime.now().strftime("%H:%M:%S"))
-    time_periods = [i for i in range(1, 9) if i > current_time_slot] 
-
+    now = datetime.now()
+    time_periods = []
+    for i in range(0, 10):
+        if now > datetime.strptime(f"{reservation.startTime.strftime('%Y-%m-%d')} {time_slot_map[i]['start']}", "%Y-%m-%d %H:%M:%S"):
+            continue
+        time_periods.append(i)
     for res in reservations:
         time_slot = get_time_slot(str(res.startTime))
+        print(time_slot)
         if time_slot in time_periods:
             time_periods.remove(time_slot)
 
