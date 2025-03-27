@@ -83,6 +83,105 @@ body {
     margin-right: 10px;
 }
 
+
+.menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+    display: none;
+}
+
+
+
+.hamburger {
+    font-size: 2em;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    left: 20px;
+    top: 15px;
+}
+
+#sideMenu {
+    display: none;
+    width: 0;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #112d6f;
+    color: white;
+    transition: 0.3s;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+#sideMenu.active {
+    width: 240px;
+    padding: 50px 20px 20px 0;
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 40px;
+    background: transparent;
+    border: 0;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: 0.2s opacity;
+}
+
+.close-btn:hover {
+    opacity: 0.8;
+}
+
+
+.sidebar-header {
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.item-container {
+    margin-top: 50px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 12px 12px 0;
+    margin: 8px 0;
+    border-radius: 4px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-item i {
+    width: 24px;
+    margin-right: 16px;
+    font-size: 1.1em;
+}
+
+
+.sidebar-brand {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
 .logout {
     color: white;
     text-decoration: none;
@@ -112,6 +211,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 header h1 {
@@ -126,7 +226,7 @@ header h1 {
     border: none;
     font-size: 24px;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px 10px 5px 10px;
     border-radius: 5px;
 }
 
@@ -138,7 +238,8 @@ header h1 {
     margin-top: 20px;
 }
 
-.search-bar, .function-bar {
+.search-bar,
+.function-bar {
     display: flex;
     margin-bottom: 20px;
     align-items: center;
@@ -154,7 +255,8 @@ header h1 {
     border-radius: 5px;
 }
 
-.search-bar .search-btn, .search-bar .filter-btn {
+.search-bar .search-btn,
+.search-bar .filter-btn {
     padding: 10px 20px;
     background-color: #13439b;
     color: white;
@@ -165,7 +267,8 @@ header h1 {
     margin-left: 0;
 }
 
-.search-bar .search-btn:hover, .search-bar .filter-btn:hover {
+.search-bar .search-btn:hover,
+.search-bar .filter-btn:hover {
     background-color: #112d6f;
 }
 
@@ -173,16 +276,30 @@ header h1 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    height: 70vh;
+    height: 78vh;
 
     overflow: auto;
 }
 
-.booking-list, .approval-list, .reservation-list, .issue-list, .report-list {
+.booking-list,
+.approval-list,
+.reservation-list,
+.issue-list,
+.report-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 78vh;
+
+    overflow: auto;
 }
+
+.reservation-list,
+.issue-list,
+.approval-list{
+    height: 85vh;
+}
+
 .room-card {
     background-color: white;
     padding: 15px;
@@ -263,15 +380,18 @@ header h1 {
     border-radius: .5rem;
     border: 1px solid rgba(0, 0, 0, 0.2);
     font-size: 1rem;
-    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
+    transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
 }
 
-.capacity-inputs input:hover, .capacity-inputs input:focus, .capacity-inputs input-group:hover .capacity-inputs input {
+.capacity-inputs input:hover,
+.capacity-inputs input:focus,
+.capacity-inputs input-group:hover .capacity-inputs input {
     outline: none;
     border-color: #05060f;
 }
-  
-.capacity-inputs input-group:hover .label, .capacity-inputs input:focus {
+
+.capacity-inputs input-group:hover .label,
+.capacity-inputs input:focus {
     color: #05060fc2;
 }
 
@@ -319,12 +439,20 @@ header h1 {
         display: block;
     }
 
+    #sideMenu {
+        display: block;
+    }
+
     .menu-btn:hover {
         background-color: #112d6f;
     }
+
+    .menu-backdrop.active {
+        display: block;
+    }
 }
 
-/* From Uiverse.io by alexruix */ 
+/* From Uiverse.io by alexruix */
 .input {
     width: 100%;
     height: 36px;
@@ -338,7 +466,7 @@ header h1 {
     margin-bottom: 4px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     font-size: 1rem;
-    transition: border-color .3s cubic-bezier(.25,.01,.25,1) 0s, color .3s cubic-bezier(.25,.01,.25,1) 0s,background .2s cubic-bezier(.25,.01,.25,1) 0s;
+    transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
 }
 
 .filter-label {
@@ -347,19 +475,22 @@ header h1 {
     font-size: 1rem;
     font-weight: bold;
     color: #05060f99;
-    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
 }
-  
-.input:hover, .input:focus, .input-group:hover .input {
+
+.input:hover,
+.input:focus,
+.input-group:hover .input {
     outline: none;
     border-color: #05060f;
 }
-  
-.input-group:hover .label, .input:focus {
+
+.input-group:hover .label,
+.input:focus {
     color: #05060fc2;
 }
 
-/* From Uiverse.io by Galahhad */ 
+/* From Uiverse.io by Galahhad */
 /* checkbox settings 👇 */
 
 .ui-checkbox {
@@ -380,17 +511,17 @@ header h1 {
     --checkbox-border-style: solid;
     /* checkmark */
     --checkmark-size: 1.2;
-  }
-  
-  .ui-checkbox, 
-  .ui-checkbox *, 
-  .ui-checkbox *::before, 
-  .ui-checkbox *::after {
+}
+
+.ui-checkbox,
+.ui-checkbox *,
+.ui-checkbox *::before,
+.ui-checkbox *::after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-  }
+}
 
-  /* 添加 :disabled 伪类 */
+/* 添加 :disabled 伪类 */
 .ui-checkbox:disabled {
     background: var(--disabled-color);
     border-color: var(--disabled-color);
@@ -403,7 +534,7 @@ header h1 {
 }
 
 
-  .ui-checkbox {
+.ui-checkbox {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -417,9 +548,9 @@ header h1 {
     transition: all 0.3s;
     cursor: pointer;
     position: relative;
-  }
-  
-  .ui-checkbox::after {
+}
+
+.ui-checkbox::after {
     content: "";
     position: absolute;
     top: 0;
@@ -433,9 +564,9 @@ header h1 {
     -webkit-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
     -o-transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
     transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
-  }
-  
-  .ui-checkbox::before {
+}
+
+.ui-checkbox::before {
     top: 40%;
     left: 50%;
     content: "";
@@ -448,23 +579,23 @@ header h1 {
     -ms-transform: translate(-50%, -50%) rotate(45deg) scale(0);
     transform: translate(-50%, -50%) rotate(45deg) scale(0);
     opacity: 0;
-    -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-    -o-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-    transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),opacity 0.1s;
-  }
-  
-  /* actions */
-  
-  .ui-checkbox:hover {
+    -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+    -o-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+    transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+}
+
+/* actions */
+
+.ui-checkbox:hover {
     border-color: var(--primary-color);
-  }
-  
-  .ui-checkbox:checked {
+}
+
+.ui-checkbox:checked {
     background: var(--primary-color);
     border-color: transparent;
-  }
+}
 
-  .ui-checkbox:checked::before {
+.ui-checkbox:checked::before {
     opacity: 1;
     -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
     -ms-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
@@ -472,18 +603,18 @@ header h1 {
     -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
     -o-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
     transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-  }
-  
-  .ui-checkbox:active:not(:checked)::after {
+}
+
+.ui-checkbox:active:not(:checked)::after {
     -webkit-transition: none;
     -o-transition: none;
     -webkit-box-shadow: none;
     box-shadow: none;
     transition: none;
     opacity: 1;
-  }
+}
 
-  .date_label {
+.date_label {
     display: flex;
     align-items: center;
 }
@@ -546,23 +677,39 @@ header h1 {
     background-color: #112d6f;
 }
 
-.booking-card, .room-card, .approval-card, .issue-card, .report-card {
+.booking-card,
+.room-card,
+.approval-card,
+.issue-card,
+.report-card {
     background-color: white;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.booking-card h1, .room-card h1, .approval-card h1, .issue-card h1, .report-card h1 {
+.booking-card h1,
+.room-card h1,
+.approval-card h1,
+.issue-card h1,
+.report-card h1 {
     margin: 0 0 10px;
 }
 
-.booking-card h3, .room-card h3, .approval-card h3, .issue-card h3, .report-card h3 {
+.booking-card h3,
+.room-card h3,
+.approval-card h3,
+.issue-card h3,
+.report-card h3 {
     margin: 0 0 10px;
     color: #13439b;
 }
 
-.booking-card p, .room-card p, .approval-card p, .issue-card p, .report-card p {
+.booking-card p,
+.room-card p,
+.approval-card p,
+.issue-card p,
+.report-card p {
     margin: 0 0 12px;
     color: #666;
 }
@@ -573,7 +720,8 @@ header h1 {
 /*    align-items: center;*/
 /*}*/
 
-.report-img, .report-img img {
+.report-img,
+.report-img img {
     width: 20vw;
     float: right;
 }
@@ -582,7 +730,9 @@ header h1 {
     margin-bottom: 20px;
 }
 
-.booking-modal, .modify-room-modal, .add-room-modal {
+.booking-modal,
+.modify-room-modal,
+.add-room-modal {
     display: none;
     justify-content: center;
     align-items: center;
@@ -595,7 +745,9 @@ header h1 {
     z-index: 1000;
 }
 
-.booking-content, .add-room-content, .modify-room-content {
+.booking-content,
+.add-room-content,
+.modify-room-content {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -603,11 +755,15 @@ header h1 {
     width: 300px;
 }
 
-.booking-group, .add-room-group, .modify-room-group {
+.booking-group,
+.add-room-group,
+.modify-room-group {
     margin-bottom: 15px;
 }
 
-.booking-label, .add-room-label, .modify-room-label {
+.booking-label,
+.add-room-label,
+.modify-room-label {
     display: block;
     margin-bottom: 5px;
     color: #13439b;
@@ -649,14 +805,14 @@ header h1 {
     font-size: 1rem;
     font-weight: bold;
     color: #05060f99;
-    transition: color .3s cubic-bezier(.25,.01,.25,1) 0s;
+    transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
 
 }
 
 .about {
-  width: 100%;
-  height: 220px;
-  margin-top: 0;
+    width: 100%;
+    height: 220px;
+    margin-top: 0;
 }
 
 #loading-item {
@@ -673,7 +829,7 @@ header h1 {
     transform-origin: center;
     animation: rotate4 2s linear infinite;
 }
-   
+
 .loading-circle {
     fill: none;
     stroke: #13439b;
@@ -683,26 +839,26 @@ header h1 {
     stroke-linecap: round;
     animation: dash4 1.5s ease-in-out infinite;
 }
-   
+
 @keyframes rotate4 {
     100% {
-     transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
-   
+
 @keyframes dash4 {
     0% {
-     stroke-dasharray: 1, 200;
-     stroke-dashoffset: 0;
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
     }
-   
+
     50% {
-     stroke-dasharray: 90, 200;
-     stroke-dashoffset: -35px;
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
     }
-   
+
     100% {
-     stroke-dashoffset: -125px;
+        stroke-dashoffset: -125px;
     }
 }
 
