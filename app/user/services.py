@@ -36,9 +36,9 @@ def to_calendar(user_id, reservation_ids=[]):
         event = Event()
         event.name = f"Reservation: {reservation['classroomName']}"
         event.begin = datetime.strptime(f"{reservation['date']} {reservation['startTime']}",
-                                        "%Y-%m-%d %H:%M:%S") - timedelta(hours=10, minutes=30)
+                                        "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
         event.end = datetime.strptime(f"{reservation['date']} {reservation['endTime']}",
-                                      "%Y-%m-%d %H:%M:%S") - timedelta(hours=10, minutes=30)
+                                      "%Y-%m-%d %H:%M:%S") - timedelta(hours=8)
         event.description = (
             f"Classroom: {reservation['classroomName']}\n"
             f"Equipment: {', '.join(reservation['equipment'])}\n"

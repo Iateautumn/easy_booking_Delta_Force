@@ -37,7 +37,7 @@ async def new_booking(user_id, classroom_id, time_period, date):
             raise BusinessError("a reservation is already existed", 400)
         try:
             classroom = get_classroom_by_id(classroom_id)
-            if classroom.isRestricted and user.status != UserStatus.Admin:
+            if classroom.constrain and user.status != UserStatus.Admin:
                 status = ReservationStatus.Pending
             else:
                 status = ReservationStatus.Reserved
