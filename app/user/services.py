@@ -133,7 +133,7 @@ def modify_reservation(reservationId, userId, date, timePeriod):
 
         user = get_user_by_id(userId)
         if  user.status != UserStatus.Admin:
-            update_reservation(reservationId, userId, reservation.classroomId, add_time(date, time_slot_map[int(timePeriod)]['start']), add_time(date, time_slot_map[int(timePeriod)]['end']), reservation.status)
+            update_reservation(reservationId, userId, reservation.classroomId, add_time(date, time_slot_map[int(timePeriod)]['start']), add_time(date, time_slot_map[int(timePeriod)]['end']), ReservationStatus.Pending)
         else:
             update_reservation(reservationId, userId, reservation.classroomId,
                                add_time(date, time_slot_map[int(timePeriod)]['start']),

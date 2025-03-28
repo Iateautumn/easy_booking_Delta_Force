@@ -3,7 +3,7 @@ from pycparser.ply.yacc import resultlimit
 
 from app.classroom.models import Classroom, get_all_equipments, ClassEquipment, get_timetable_by_classroom_name
 from sqlalchemy import and_
-from app.booking.models import get_reservation_by_classroom_id, ReservationStatus
+from app.booking.models import get_reservation_by_classroom_id, ReservationStatus, get_reservation_by_filter
 from app.utils.datetime_utils import time_slot_map, slot_time_map, is_same_date, get_time_slot, get_current_date
 from datetime import datetime
 
@@ -68,8 +68,11 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
         return result
 
     result_classrooms = []
+    first_period_start = datetime.strptime((date + " " + time_slot_map[0]['start']), "%Y-%m-%d %H:%M:%S")
+    last_period_end = datetime.strptime((date + " " + time_slot_map[9]["end"]), "%Y-%m-%d %H:%M:%S")
     for classroom in classrooms:
-        reservations = get_reservation_by_classroom_id(classroom.classroomId)
+        reservations = get_reservation_by_filter(classroomId = classroom.classroomId, startTime=first_period_start, endTime=last_period_end)
+        #reservations = get_reservation_by_classroom_id(classroom.classroomId)
         b = []
         for reservation in reservations:
             if not is_same_date(date, str(reservation.startTime)):
@@ -87,14 +90,17 @@ def filter_classrooms(capacity_range = [0, 9999], equipments = [], date = get_cu
             continue
         
         valid_time_slots = []
-        for i in range(len(time_slot_map.keys())):
+        key_num = len(time_slot_map.keys())
+        require_date = datetime.strptime(date, '%Y-%m-%d')
+        today_date = datetime.now().date()
+        for i in range(key_num):
             starttime = time_slot_map[i]['start']
             starttime = datetime.strptime(starttime, '%H:%M:%S')
-            require_date = datetime.strptime(date, '%Y-%m-%d')
 
-            if require_date.date() < datetime.now().date():
+
+            if require_date.date() < today_date:
                 continue
-            if starttime.time() < datetime.now().time() and require_date.date() == datetime.now().date():
+            if starttime.time() < datetime.now().time() and require_date.date() == today_date:
                 continue
             if i not in b:
                 valid_time_slots.append(i)
