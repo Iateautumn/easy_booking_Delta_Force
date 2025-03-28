@@ -99,6 +99,7 @@ def signup_send_email_code():
         return success_response("send email successfully")
     except BusinessError as e:
         return error_response(e.message, e.code)
+
     
 @email_auth_bp.route('/registration-code/register', methods=['POST'])
 def code_signup():
@@ -123,3 +124,4 @@ def profile():
         "status": current_user.status.value,
         "email": current_user.email
     }])
+

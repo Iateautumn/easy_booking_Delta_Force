@@ -45,6 +45,7 @@ def generate_password_hash(password, salt=None):
 def register_user(status, username, email, password):
     if not email.endswith("@dundee.ac.uk"):
         raise BusinessError("Please use DIICSU email to register", 403)
+
     password_hash, salt = generate_password_hash(password)
     email_hash = hmac.new(
         key=Config.HMAC_KEY,
