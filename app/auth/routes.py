@@ -86,7 +86,6 @@ def send_email_code():
         asyncio.run(send_email_async(**data))
         return success_response("send email successfully")
     except BusinessError as e:
-
         return error_response(e.message, e.code)
 
 @email_auth_bp.route('/registration-code/send', methods=['POST'])
@@ -115,3 +114,14 @@ def code_signup():
         return success_response("register successfully")
     except BusinessError as e:
         return error_response(e.message, e.code)
+    
+@auth_bp.route('/profile')
+def profile():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return success_response([{
+        "username": current_user.name,
+        "status": current_user.status.value,
+        "email": current_user.email
+    }])
+

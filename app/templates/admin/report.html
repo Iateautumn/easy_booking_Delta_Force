@@ -60,10 +60,18 @@
                    </li>
                 </ul>
             </nav>
-            <a href="/auth/logout" class="sidebar-item">
-                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
-                Logout
-            </a>
+            
+            <div class="profile-container">
+                <div class="profile" style="padding:0 10px 0 5px;">
+                    <img src="../../static/icon/profile.svg" class="icon" alt="Logout Icon">
+                    Loading...        
+                </div>
+                <a href="/auth/logout" class="sidebar-item">
+                    <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                    Logout
+                </a>
+            </div>
+
         </aside>
 
         <main>
@@ -121,6 +129,14 @@
                                 Report
                             </a>
                         </div>
+
+                        <div style="position: absolute; bottom: 120px; padding-left: 12px;">
+                            <div class="profile">
+                                <img src="../../static/icon/profile.svg" class="icon" alt="Logout Icon">
+                                Loading...
+                            </div>
+                        </div>
+
                         <div class="menu-item" style="position: absolute; bottom: 80px;">
                             <a href="/auth/logout" class="sidebar-item">
                                 <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">

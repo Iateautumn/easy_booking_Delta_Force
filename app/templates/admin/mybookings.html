@@ -58,10 +58,18 @@
                     </li>
                 </ul>
             </nav>
-            <a href="/auth/logout" class="sidebar-item">
-                <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
-                Logout
-            </a>
+
+            <div class="profile-container">
+                <div class="profile" style="padding:0 10px 0 5px;">
+                    <img src="../../static/icon/profile.svg" class="icon" alt="Logout Icon">
+                    Loading...
+                </div>
+                <a href="/auth/logout" class="sidebar-item">
+                    <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
+                    Logout
+                </a>
+            </div>
+
         </aside>
 
         <main>
@@ -92,6 +100,7 @@
                         <div class="menu-item">
                             <a href="./allreservations" class="sidebar-item">
                                 <img src="../../static/icon/all_reservations.svg" class="icon" alt="All Reservations Icon">
+
                                 All Reservations
                             </a>
                         </div>
@@ -119,6 +128,14 @@
                                 Report
                             </a>
                         </div>
+
+                        <div style="position: absolute; bottom: 120px; padding-left: 12px;">
+                            <div class="profile">
+                                <img src="../../static/icon/profile.svg" class="icon" alt="Logout Icon">
+                                Loading...
+                            </div>
+                        </div>
+
                         <div class="menu-item" style="position: absolute; bottom: 80px;">
                             <a href="/auth/logout" class="sidebar-item">
                                 <img src="../../static/icon/logout.svg" class="icon" alt="Logout Icon">
@@ -140,10 +157,10 @@
                 </svg>
                 <p id="loading-hint">Loading Reservations...</p>
             </div>
-            
+
             <section id="my-bookings-section" class="content-section">
                 <div class="booking-list">
-                   
+
                 </div>
             </section>
 
@@ -186,8 +203,8 @@
             <button class="apply-btn" id="apply-modify">Modify Booking</button>
         </div>
     </div>
-   
-    
+
+
     <script src="../../static/js/mybookings.js"></script>
     <script src="../../static/js/mobile.js"></script>
 </body>
