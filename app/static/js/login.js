@@ -97,8 +97,10 @@ async function sendRegistrationCode() {
         switch (data.code) {
             case 200:
                 alert('Verification code sent to your email.');
+                break;
             default:
                 alert(data.message);
+                break;
         }
     }
 }
@@ -110,7 +112,7 @@ function handleRegister() {
     const code = document.getElementById('registration-code').value;
     const status = document.getElementById('status').value;
 
-    if (!username || !email || !password || status === "Select Your Identity...") {
+    if (!username || !email || !password || status === "Select Your Identity..." || !code) {
         alert("Please fill in all fields!");
         return;
     }
