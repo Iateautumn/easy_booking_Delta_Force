@@ -84,6 +84,28 @@ body {
 }
 
 
+.profile-container{
+    margin-top: auto;
+}
+
+.profile {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+    overflow: auto;
+}
+
+.profile .icon {
+    display: inline-block;
+    width: 30px;
+    margin-right: 10px;
+}
+
+
 .menu-backdrop {
     position: fixed;
     top: 0;

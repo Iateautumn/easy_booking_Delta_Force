@@ -29,7 +29,10 @@ def create_app():
     @app.route('/')
     def root_redirect():
         if current_user.is_authenticated:
-            return redirect(url_for('user.bookroom'))
+            if current_user.status.value == 'Admin':
+                return redirect(url_for('admin.bookroom'))
+            else:
+                return redirect(url_for('user.bookroom'))
         return redirect(url_for('auth.login'))
 
     # @app.before_request
