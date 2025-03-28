@@ -11,7 +11,7 @@ loginBtn.addEventListener('click', () => {
 })
 
 async function registerUser(username, email, password, status, code) {
-    const apiUrl = '/auth/register';
+    const apiUrl = '/email/registration-code/register';
     const userData = {
         username,
         email,
@@ -74,6 +74,13 @@ async function loginUser(email, password) {
 
 async function sendRegistrationCode() {
     const email = document.getElementById('registration-email').value;
+    if (!email.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
+        alert('Invalid email address');
+        return;
+    } else if (!String(email).endsWith('@dundee.ac.uk')) {
+        alert('Please use Dundee email address');
+        return;
+    }
     document.getElementById('registration-code-box').style.display = 'block';
     document.getElementById('send-registration-code-btn').style.display = 'none';
     document.getElementById('register-btn').style.display = 'block';
