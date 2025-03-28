@@ -295,8 +295,7 @@ async function handleFilters() {
     const loading_item = document.getElementById('loading-item');
     loading_item.style.display = 'flex';
     const rooms = await getFilteredClassrooms(capacity_min, capacity_max, date, equipment,issue);
-
-
+    
     if (rooms.length > 0) {
         rooms.forEach(classroom => {
             const room = document.createElement('div')

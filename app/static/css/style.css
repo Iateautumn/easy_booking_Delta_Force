@@ -90,11 +90,19 @@ body {
 .profile {
     color: white;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
     display: flex;
     align-items: center;
-    padding-left: 15px;
     margin-bottom: 30px;
+    width: 100%;
+    overflow: auto;
+    cursor: none;
+}
+
+.profile .icon {
+    display: inline-block;
+    width: 30px;
+    margin-right: 10px;
 }
 
 .menu-backdrop {
@@ -303,7 +311,6 @@ header h1 {
     flex-direction: column;
     gap: 20px;
     height: 78vh;
-
     overflow: auto;
 }
 

@@ -100,6 +100,9 @@ def my_get_hash(str):
 async def send_email_async(email, type="login"):
     user = get_user_by_email(my_get_hash(email))
     
+    if not email.endswith("@dundee.ac.uk"):
+        raise BusinessError("Invalid email address", 403)
+
     if not user and type == "login":
         raise BusinessError("User not found", 404)
     if user and type == "register":

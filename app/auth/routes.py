@@ -113,3 +113,13 @@ def code_signup():
         return success_response("register successfully")
     except BusinessError as e:
         return error_response(e.message, e.code)
+    
+@auth_bp.route('/profile')
+def profile():
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return success_response([{
+        "username": current_user.name,
+        "status": current_user.status.value,
+        "email": current_user.email
+    }])
