@@ -184,7 +184,7 @@ def get_all_rooms():
          classroom_data.append({
             "capacity": room.capacity,
             "isDeleted": room.isDeleted,
-            "equipments": [get_equipment_dict(equipment) for equipment in room.Equipments if get_classequipment_by_classroom_id_and_equipment_id(room.classroomId, equipment.equipmentId).isDeleted == False],
+            "equipments": [get_equipment_dict(equipment) for equipment in room.Equipments if get_classequipment_by_classroom_id_and_equipment_id(room.classroomId, equipment.equipmentId)],
             "createdAt": room.createdAt,
             "updatedAt": room.updatedAt,
             "classroomName": room.classroomName,

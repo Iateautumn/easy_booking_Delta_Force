@@ -113,7 +113,7 @@ async function getFilteredClassrooms(capacity_min, capacity_max, date, equipment
         "equipment": equipment
     };
 
-    if (issue != 2){
+    if (issue != 2 && issue != "") {
         userData.issue = issue == 1 ? true : false;
     }
 
