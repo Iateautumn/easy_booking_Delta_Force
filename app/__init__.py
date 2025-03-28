@@ -33,7 +33,7 @@ def create_app():
                 return redirect(url_for('admin.bookroom'))
             else:
                 return redirect(url_for('user.bookroom'))
-    return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.login'))
 
     # @app.before_request
     # def check_authentication():
